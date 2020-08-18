@@ -1,0 +1,179 @@
+\documentclass[11pt,a4paper]{scrbook}
+\usepackage{geometry}	
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[pdftex]{graphicx}
+\usepackage[ngerman, english]{babel} % the language specified at the end of the list will be used !!
+\usepackage{colortbl}	
+\usepackage{soul}
+% For APA referencing style
+\usepackage{apacite}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{xcolor}
+\definecolor{uhhred}{cmyk}{0,100,100,0}
+\usepackage{float}
+\usepackage[ddmmyyyy]{datetime}
+\usepackage{comment}
+\usepackage[acronym,nomain]{glossaries}
+
+ 
+% Generate the glossary
+\makeglossaries
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newacronym{ER}{ER}{Emotion Recognition}
+\newacronym{EEG}{EEG}{Electroencephalography}
+\newacronym{ADR}{ADR}{Action Design Research}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\frontmatter  % The \frontmatter declaration makes the pages numbered in lowercase roman
+\newgeometry{centering,left=2cm,right=2cm,top=2cm,bottom=2cm}
+\begin{titlepage}
+\includegraphics[scale=0.3]{UHH-Logo_2010_Farbe_CMYK.pdf}
+\vspace*{2.0cm}
+\Large
+\begin{center}
+{\color{uhhred}\textbf{\so{MASTER THESIS}}}
+\vspace*{1.0cm}\\
+{\textbf{at the University of Hamburg in the Department of Computer Science in the master's programme IT Management and Consulting}}
+\vspace*{2.0cm}\\
+{\LARGE \textbf{Title:}}
+\vspace*{0.4cm}\\
+{\LARGE Visual Emotion Recognition In-The-Wild}
+%{\LARGE Visual Emotion Recognition In-The-Wild: Prediction of Valence/Arousal and Assessment of Application scenarios}
+%{\LARGE Identifying customer intentions in real-time video consultations through emotion recognition: Analysis of viability and value co-creation by implementation of a prototype}
+\vspace*{1.5cm}\\
+presented by
+\vspace*{0.4cm}\\
+Tobias Kick
+\end{center}
+\vspace*{2.0cm}
+
+\noindent
+MIN-Faculty \vspace*{0.25cm} \\
+Department of Computer Science\vspace*{0.25cm} \\
+Program: IT Management and Consulting\vspace*{0.25cm} \\
+Research group: Computer Vision\vspace*{0.25cm} \\
+Matriculation number: 7213712 \vspace*{0.5cm} \\
+%Submission date: 15/12/2020 \vspace*{0.5cm} \\  
+Supervisor: Noha Sarhan \vspace*{0.25cm} \\
+First assessor: Prof. Dr. Simone Frintrop \vspace*{0.25cm} \\
+Second assessor: Prof. Dr. Tilo Böhmann
+
+\end{titlepage}
+
+\restoregeometry
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\chapter{Abstract}
+Here is the abstract
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+
+\printglossary
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter
+\chapter{Introduction}
+%% (topic; problem with current research where is the flow; how do I suggest to make it different; goal; which dataset; what will the contribution be)
+
+
+%%%%%%%%%%%%%%%%
+{\LARGE Collection of literature} 
+\newline
+Paper in 2007 used a two stream architecture, from acoustic features, as well as the semantics of the conversation. They could prove that it is significant for Call-Center data to have semantics associated and deliver better results than just the use of acoustic features. \cite{Gupta:2007:Two-StreamER}
+\newline
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\include{Thesis/include/related_work}
+\include{Thesis/include/methodology}
+\include{Thesis/include/implementation}
+\include{Thesis/include/analysis}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Application}
+\section{Identification of human intention in real time video consultations}
+%Is it viable to use Emotion Recognition to analyse consultations during video call in real-time in order to draw conclusions about human intentions (e.g. interest)?
+
+The conducted approach is based upon an idea from a 2016 paper.\cite{Kamaruddin:2016:MeasuringCustomerSatisfaction} The idea is to determine the level of interest/appreciation only through considering how positive or negative the average value of valence is. This approach will also be used in this application.
+\newline\newline
+Furthermore, the authors classified their VA-values into four emotion categories and made use of a threshold to determine a neutral emotion category. Inspired by this approach, a threshold will be used to better identify whether a person is interested, neutral, or uninterested.
+
+
+\section{Improving dynamic content generation in real time video consultations}
+Connecting emotion recognition with a "chatbot" to make more intelligent decisions on what content to display to the customer.
+\newline\newline
+Hypothese: Emotion recognition allows to dynamically generate content and thus co-create value together with the customer.
+% How can Emotion Recognition contribute to the co-creation of value in video call consultations? / How can based on Emotion Recognition results content be generated dynamically, in order to close the Human-in-the-loop cycle?
+
+
+\chapter{Conclusion}
++ Could the research questions be answered? -> How?
++ How are the achievements of ER Applications to be interpreted?
+
+\section{Improvements}
+AFEW-VA dataset only contains about 30.000 images. The model could be honed with more training data from different datasets and thus even perform better. This could be an improvement step for the actual implementation of such an approach. However, this step was purposefully not taken in this thesis, as it would make an objective comparison with other work very difficult.
+
+\section{Recommendations for PPI AG}
++ next steps after this Master thesis
++ further fields of application
+
+\section{Outlook}
++ further fields of research
+        -> combination of eye movements and physiological measurements as it was done, for example, in Noldus's product 'Cube' \cite{Noldus:2020:Facereader}
+        How can this\textbf{ combination} influence the identification of human behaviors, like interest?
+        
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\backmatter
+% APA STYLE:
+\bibliographystyle{apacite}
+%\bibliographystyle{plaindin}
+
+%Zum Einbinden des BibTeX Files:
+\bibliography{literature.bib}{\nocite{*}}
+
+
+\newpage
+\thispagestyle{empty}
+\vspace*{\fill}
+\pagestyle{empty}
+
+{\normalsize
+\begin{center}\textbf{Sworn declaration}\end{center}
+I hereby affirm in lieu of oath that I have independently written the present thesis in the Master's program IT Management and Consulting and that I have not used any tools other than those indicated -- especially no Internet sources not mentioned in the list of sources. All passages that have been taken literally or analogously from publications are marked as such. I further affirm that I have not previously submitted the paper in any other examination procedure and that the submitted written version corresponds to the version on the electronic storage medium.
+\vspace*{1cm}\\
+Hamburg, \today
+\hspace*{\fill}\begin{tabular}{@{}l@{}}\hline
+\makebox[5cm]{Tobias Kick}
+\end{tabular}
+\vspace*{3cm}
+
+%TODO Dies ist optional, ggf. löschen!
+\begin{center}\textbf{Publication}\end{center}
+I agree to the placement of the work in the library of the Department of Computer Science.
+\vspace*{1cm}\\
+Hamburg, \today
+\hspace*{\fill}\begin{tabular}{@{}l@{}}\hline
+\makebox[5cm]{Tobias Kick}
+\end{tabular}
+}
+\vspace*{\fill}
+
+\end{document}

@@ -1,0 +1,51 @@
+\documentclass[11pt,a4paper]{scrbook}
+\usepackage{geometry}	
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[pdftex]{graphicx}
+\usepackage[ngerman, english]{babel} % the language specified at the end of the list will be used !!
+\usepackage{colortbl}	
+\usepackage{xcolor}
+\usepackage{soul}
+% For APA referencing style
+\usepackage{apacite}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\chapter{Collection of Literature}
+\section{General}
+
+\section{Emotion Recognition}
+Paper in 2007 used a two stream architecture, from acoustic features, as well as the semantics of the conversation. They could prove that it is significant for Call-Center data to have semantics associated and deliver better results than just the use of acoustic features. \cite{Gupta:2007:Two-StreamER}
+
+\begin{quote}
+... concluded that some emotions are more easily
+recognized using audio information than using video information
+and vice versa. \cite{Ayadi:2010:SurveyOnSER}
+\end{quote} 
+
+It also found, that when only using acoustic features for emotion recognition the recognition results were better than when only using facial expression features for emotion recognition. However, when combining both features, the recognition rate of emotions outperformed the former two distinctively. \cite{Ayadi:2010:SurveyOnSER}
+\newline\newline
+\begin{quote}
+    The SER performances are heavily dependent on the effectiveness of emotional features extracted from the speech. However, most emotional features are sensitive to emotionally irrelevant factors, such as the speaker, speaking styles, and environment. \cite{Chen:2018:3DConvRecurrentNN}
+\end{quote}
+
+The paper made use of linguistic based features (=language features) to identify emotions from the words uttered by a customer and thus provide a basis for measuring the customer satisfaction.\newline Even though they didn't actually propose a way of deriving customer satisfaction, they underlined the importance of Emotion Analysis for this field. \cite{Ren:2012:Linguistic-basedEmotionAnalysis}
+
+
+\section{Technical Implementation}
+Attention Model: This paper used an attention model to focus only on parts of an audio stream that has emotionally significant parts.
+3D-Input: Furthermore, it used the audio data transformed into a mel-spectogram as a 3 dimensional input into the Machine Learning Model. \cite{Chen:2018:3DConvRecurrentNN}
+\newline\newline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+% APA STYLE:
+\bibliographystyle{apacite}
+%\bibliographystyle{plaindin}
+
+%Zum Einbinden des BibTeX Files:
+\bibliography{literature.bib}{\nocite{*}}
+
+\end{document}
