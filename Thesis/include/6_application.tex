@@ -1,0 +1,56 @@
+
+\chapter{Application}
+The goal for PPI AG with the Emotion Recognition approach proposed in this thesis, is to use it a scientific basis for an application in their business area. Thus, the idea is to assess in this chapter whether such an real-life application for the assistance of consultants during video-calls is viable. In order to provide consultants insightful assistance, it is necessary to go beyond the mere emotions and provide a meaningful metric. It was chosen to use interest as the metric for identifying the intention of a customer.
+\newline\newline
+In order to assess the viability of such an application in real-time video calls, it is necessary to develop an identification approach based upon current literature, design an experiment and compare the achieved results. A detailed explanation of these points will be provided in the following sections, starting with the identification approach.
+
+\section{Identification approach}
+%Is it viable to use Emotion Recognition to analyse consultations during video call in real-time in order to draw conclusions about human intentions (e.g. interest)?
+% Unlike in the FaceReader application which bases their Interest prediction on action units, the selected approach is based upon an idea from a 2016 paper \citep{Kamaruddin:2016:MeasuringCustomerSatisfaction} The idea is to determine the level of interest/appreciation only through considering how positive or negative the average value of valence is.
+% \newline\newline
+% Furthermore, the authors classified their VA-values into four emotion categories and made use of a threshold to determine a neutral emotion category. Inspired by this approach, a threshold will be used to better identify whether a person is interested, neutral, or uninterested.
+% \newline\newline
+% However interesting from the FaceReader application \citep{Noldus:2020:Facereader} is, that they use an interval o f2 seconds to calculate their value of 'Interest'. This means that the currently calculated value for interest is based on video-frames from the last two seconds.
+
+% This Master thesis is based on the utilized data set and thus is taking over the underlying assumption that facial expressions equate emotions. 
+% However, in this application scenario new data is utilized that is not based upon this assumption. As the label, an actual purchase, doesn't care about that.
+
+\section{Experimental setup \& results}
+Goal is to compare the test person's perceived subjective interest of a (sales) video-clip with the interest predicted by the before mentioned approach from the web-cam video. Thus, an experiment needs to be set up that allows to record a video from the test person's webcam. Furthermore, a mechanism for obtaining the test person's feedback in terms of interest needs to devised.
+\newline\newline
+Considerations about different experiment setups are presented in the following table. Hereby, an 'X' indicates the non-fulfillment of an indispensable quality of an approach, while '/' indicates a constraint and ':)' indicates that the quality is fully fulfilled by the approach.
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+\hline
+\textbf{} & \begin{tabular}[c]{@{}c@{}}Web-Cam\\ Video\end{tabular} & \begin{tabular}[c]{@{}c@{}}Continuous\\ interest rating\end{tabular} & \begin{tabular}[c]{@{}c@{}}Easily\\ deployable\end{tabular} & \begin{tabular}[c]{@{}c@{}}Results\\ retrievable\end{tabular} \\ \hline
+\textbf{\begin{tabular}[c]{@{}c@{}}Questionnaire\\ (e.g. Google Forms)\end{tabular}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
+\textbf{\begin{tabular}[c]{@{}c@{}}Packaged Python\\ Application\end{tabular}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{FFC702} \textbf{/}} \\
+\textbf{\begin{tabular}[c]{@{}c@{}}Web-based Python\\ Application - Server side\\ (hosted by PythonAnywhere)\end{tabular}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
+\textbf{\begin{tabular}[c]{@{}c@{}}Web-based ReactJS\\ Application - Client Side\end{tabular}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FFC702} \textbf{/}} \\ \hline
+\end{tabular}
+\caption{Consideration of experimental setups}
+\label{tab:appExperiment}
+\end{table}
+
+
+
+
+\section{Assessment of viability in real-time video calls}
+% especially focus on the time aspect for detecting the bounding box + landmark detection/shape model construction.
+
+% Comparison dlib's shape model vs. Active Appearance Model
+% \begin{quote}
+%     The dlib 'Face Landmark Detection' algorithm is blazing fast, in fact it takes about 1–3ms (on desktop platform) to detect (align) a set of 68 landmarks on a given face.
+% \end{quote} 
+% https://medium.com/datadriveninvestor/training-alternative-dlib-shape-predictor-models-using-python-d1d8f8bd9f5c
+
+% @InProceedings{Kazemi_2014_CVPR,
+% author = {Kazemi, Vahid and Sullivan, Josephine},
+% title = {One Millisecond Face Alignment with an Ensemble of Regression Trees},
+% booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+% month = {June},
+% year = {2014}
+% }

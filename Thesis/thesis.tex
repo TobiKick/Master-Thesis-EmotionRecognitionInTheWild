@@ -7,7 +7,10 @@
 \usepackage{colortbl}	
 \usepackage{soul}
 % For APA referencing style
-\usepackage{apacite}
+\usepackage[natbibapa]{apacite}
+\bibliographystyle{apacite}
+\usepackage{textcomp}
+
 \renewcommand{\familydefault}{\sfdefault}
 \usepackage{xcolor}
 \definecolor{uhhred}{cmyk}{0,100,100,0}
@@ -16,7 +19,9 @@
 \usepackage{comment}
 \usepackage[acronym,nomain]{glossaries}
 
- 
+\specialcomment{tobi}{\begingroup\sffamily\color{blue}\commentstyle=\color{codegreen},}{\endgroup}
+\specialcomment{shan}{\begingroup\sffamily\color{red}}{\endgroup}
+
 % Generate the glossary
 \makeglossaries
  
@@ -25,6 +30,9 @@
 \newacronym{ER}{ER}{Emotion Recognition}
 \newacronym{EEG}{EEG}{Electroencephalography}
 \newacronym{ADR}{ADR}{Action Design Research}
+\newacronym{MTCNN}{MTCNN}{Multi-Task Cascaded Convolutional Neural Network}
+\newacronym{AAM}{AAM}{Active Appearance Model}
+\newacronym{NN}{NN}{Neural Network}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -83,69 +91,18 @@ Here is the abstract
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
-\chapter{Introduction}
-%% (topic; problem with current research where is the flow; how do I suggest to make it different; goal; which dataset; what will the contribution be)
-
-
-%%%%%%%%%%%%%%%%
-{\LARGE Collection of literature} 
-\newline
-Paper in 2007 used a two stream architecture, from acoustic features, as well as the semantics of the conversation. They could prove that it is significant for Call-Center data to have semantics associated and deliver better results than just the use of acoustic features. \cite{Gupta:2007:Two-StreamER}
-\newline
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\include{Thesis/include/related_work}
-\include{Thesis/include/methodology}
-\include{Thesis/include/implementation}
-\include{Thesis/include/analysis}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\chapter{Application}
-\section{Identification of human intention in real time video consultations}
-%Is it viable to use Emotion Recognition to analyse consultations during video call in real-time in order to draw conclusions about human intentions (e.g. interest)?
-
-The conducted approach is based upon an idea from a 2016 paper.\cite{Kamaruddin:2016:MeasuringCustomerSatisfaction} The idea is to determine the level of interest/appreciation only through considering how positive or negative the average value of valence is. This approach will also be used in this application.
-\newline\newline
-Furthermore, the authors classified their VA-values into four emotion categories and made use of a threshold to determine a neutral emotion category. Inspired by this approach, a threshold will be used to better identify whether a person is interested, neutral, or uninterested.
-
-
-\section{Improving dynamic content generation in real time video consultations}
-Connecting emotion recognition with a "chatbot" to make more intelligent decisions on what content to display to the customer.
-\newline\newline
-Hypothese: Emotion recognition allows to dynamically generate content and thus co-create value together with the customer.
-% How can Emotion Recognition contribute to the co-creation of value in video call consultations? / How can based on Emotion Recognition results content be generated dynamically, in order to close the Human-in-the-loop cycle?
-
-
-\chapter{Conclusion}
-+ Could the research questions be answered? -> How?
-+ How are the achievements of ER Applications to be interpreted?
-
-\section{Improvements}
-AFEW-VA dataset only contains about 30.000 images. The model could be honed with more training data from different datasets and thus even perform better. This could be an improvement step for the actual implementation of such an approach. However, this step was purposefully not taken in this thesis, as it would make an objective comparison with other work very difficult.
-
-\section{Recommendations for PPI AG}
-+ next steps after this Master thesis
-+ further fields of application
-
-\section{Outlook}
-+ further fields of research
-        -> combination of eye movements and physiological measurements as it was done, for example, in Noldus's product 'Cube' \cite{Noldus:2020:Facereader}
-        How can this\textbf{ combination} influence the identification of human behaviors, like interest?
-        
- 
-
+\include{Thesis/include/1_introduction}
+\include{Thesis/include/2_related_work}
+\include{Thesis/include/3_methodology}
+\include{Thesis/include/4_implementation}
+\include{Thesis/include/5_analysis}
+\include{Thesis/include/6_application}
+\include{Thesis/include/7_conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \backmatter
-% APA STYLE:
-\bibliographystyle{apacite}
-%\bibliographystyle{plaindin}
-
 %Zum Einbinden des BibTeX Files:
 \bibliography{literature.bib}{\nocite{*}}
 
