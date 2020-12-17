@@ -10,6 +10,8 @@
 \usepackage[natbibapa]{apacite}
 \bibliographystyle{apacite}
 \usepackage{textcomp}
+\usepackage{booktabs} % for latext table
+\usepackage{subfig}
 
 \renewcommand{\familydefault}{\sfdefault}
 \usepackage{xcolor}
@@ -18,6 +20,7 @@
 \usepackage[ddmmyyyy]{datetime}
 \usepackage{comment}
 \usepackage[acronym,nomain]{glossaries}
+\usepackage{enumitem}
 
 \specialcomment{tobi}{\begingroup\sffamily\color{blue}\commentstyle=\color{codegreen},}{\endgroup}
 \specialcomment{shan}{\begingroup\sffamily\color{red}}{\endgroup}
@@ -27,12 +30,11 @@
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newacronym{ER}{ER}{Emotion Recognition}
+\newacronym{ML}{ML}{Machine Learning}
 \newacronym{EEG}{EEG}{Electroencephalography}
 \newacronym{ADR}{ADR}{Action Design Research}
 \newacronym{MTCNN}{MTCNN}{Multi-Task Cascaded Convolutional Neural Network}
 \newacronym{AAM}{AAM}{Active Appearance Model}
-\newacronym{NN}{NN}{Neural Network}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -70,7 +72,7 @@ Matriculation number: 7213712 \vspace*{0.5cm} \\
 %Submission date: 15/12/2020 \vspace*{0.5cm} \\  
 Supervisor: Noha Sarhan \vspace*{0.25cm} \\
 First assessor: Prof. Dr. Simone Frintrop \vspace*{0.25cm} \\
-Second assessor: Prof. Dr. Tilo Böhmann
+Second assessor: Dr. Mikko Lauri
 
 \end{titlepage}
 
@@ -80,7 +82,29 @@ Second assessor: Prof. Dr. Tilo Böhmann
 
 
 \chapter{Abstract}
-Here is the abstract
+\hl{Why this Master thesis?}\newline
+It explores the possibilities of Emotion Recognition In-The-Wild with a specific application focus on video call consultations. (together with PPI AG)
+\newline\newline
+\hl{Research questions/hypothesis}\newline
+The following three research hypothesis are tackled through the thesis:\newline
+\begin{itemize}
+    \item When using In-The-Wild data for training and testing, emotions can still be recognized reliably and possibly beat the state-of-the-art results in current literature.
+    \item When examining the implemented modules separately, each module contributes positively towards the performance of the overall architecture.
+    \item When implementing Emotion Recognition in a prototype application, it performs well with real-time video input from a webcam and can map recognized emotions to human intentions.
+\end{itemize}
+
+\hl{What was achieved?}\newline
+Outperformance of the current benchmark from the years .. and .. in terms of ...
+- prototype application
+- Experiment results - 
+
+\hl{Discussion of results / Interpretation}
+
+
+
+
+% abstract shouldn't be longer than 150 words   / about one page
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

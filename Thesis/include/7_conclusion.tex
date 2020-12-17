@@ -3,26 +3,43 @@
 + Could the research questions be answered? -> How?
 + How are the achievements of ER Applications to be interpreted?
 
+
+% This Master thesis is based on the utilized data set and thus is taking over the underlying assumption that facial expressions equate emotions. 
+% However, in this application scenario new data is utilized that is not based upon this assumption. As the label, an actual purchase, doesn't care about that.
+
+
+For PPI :   Emotions exhibited during normal video call are not very strong, thus it is hard to predict with conventional Emotion Recognition approaches the emotions needed for identifying human intentions, e.g. interest.
+---> Recommendation: to use a separate datset that is actually labellend, and thus trained, on the human intention that should be identified. For example, such a metric could be whether after a video call the customer did actually buy the offered product or not.
+
 \section{Improvements/Limitation}
 AFEW-VA dataset only contains about 30.000 images. The model could be honed with more training data from different datasets and thus even perform better. This could be an improvement step for the actual implementation of such an approach. However, this step was purposefully not taken in this thesis, as it would make an objective comparison with other work very difficult.
 
+limitation: even though In-The-Wild
+the selected exampled for emotions are very extreme. The movie / talk show examples are chosen from situation with clear emotions that were expressed strongly in a few seconds.
+\newline\newling
+Selecting different database: like SEMAINE database, where participants interact with a human operator. Therefore, the material is supposedly more realistic. However, even there the scenarios and videos are specifically designed to elicit emotions in participants, which is not necessarily happens during a 'normal' business video call.
 
-\section{Recommendations}
-\subsubsection{Next steps after this Master thesis}
+\section{Next steps}
 => PPI sales already contacted online banks (ING and DKB) who are very interested into ER to identify whether their costumers are interested/what intention they have.
 The idea is to refine the work from this Master thesis with real-life data from the banks online consultations. This video data can be combined with a label, of whether a purchase followed the consultation. This allows to further fine-tune the proposed neural network architecture.
 
-\subsubsection{Further areas of research}
+
+\section{Further areas of research}
 - Making annotations more subject orientated \& culturally independent
 e.g. either maybe using an EEG to detect areas of brain activity and mapping these to values of valence and arousal
+%\item Even though there is research on identifying human interest by using an EEG analysis, further research is lacking on how to combine the insights provided of an EEG analysis with Emotion Recognition insights.
 e.g. actually asking subjects themselves how they felt during a video clip and using this as annotations
 
-\subsubsection{Further fields of application}
+
+- - human intention/interest identification with Emotion Recognition and EEG at the same time, so results are more reliable
+
++ further fields of research
+        -> combination of eye movements and physiological measurements as it was done, for example, in Noldus's product 'Cube' \citep{Noldus:2020:Facereader}
+        How can this\textbf{ combination} influence the identification of human behaviors, like interest?
+
+\section{Further fields of application}
 => Call center application for customer satisfaction
 => Enhancement of dynamic content generation through integrating a chatbot who's answers are being guided by the emotions/intentions/interest of a calling person.
 
 
-\section{Outlook}
-+ further fields of research
-        -> combination of eye movements and physiological measurements as it was done, for example, in Noldus's product 'Cube' \citep{Noldus:2020:Facereader}
-        How can this\textbf{ combination} influence the identification of human behaviors, like interest?
+

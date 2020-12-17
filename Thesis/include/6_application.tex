@@ -1,44 +1,153 @@
 
 \chapter{Application}
-The goal for PPI AG with the Emotion Recognition approach proposed in this thesis, is to use it a scientific basis for an application in their business area. Thus, the idea is to assess in this chapter whether such an real-life application for the assistance of consultants during video-calls is viable. In order to provide consultants insightful assistance, it is necessary to go beyond the mere emotions and provide a meaningful metric. It was chosen to use interest as the metric for identifying the intention of a customer.
+For PPI AG, the goal is to use the research conducted during this Master thesis as a scientific basis for a future application of this technology in one of their own business use cases. Therefore, this chapter will assess, whether Emotion Recognition is a viable assistance for consultants, as well as customers in the selected use case of video-call consultations.
 \newline\newline
-In order to assess the viability of such an application in real-time video calls, it is necessary to develop an identification approach based upon current literature, design an experiment and compare the achieved results. A detailed explanation of these points will be provided in the following sections, starting with the identification approach.
-
-\section{Identification approach}
-%Is it viable to use Emotion Recognition to analyse consultations during video call in real-time in order to draw conclusions about human intentions (e.g. interest)?
-% Unlike in the FaceReader application which bases their Interest prediction on action units, the selected approach is based upon an idea from a 2016 paper \citep{Kamaruddin:2016:MeasuringCustomerSatisfaction} The idea is to determine the level of interest/appreciation only through considering how positive or negative the average value of valence is.
-% \newline\newline
-% Furthermore, the authors classified their VA-values into four emotion categories and made use of a threshold to determine a neutral emotion category. Inspired by this approach, a threshold will be used to better identify whether a person is interested, neutral, or uninterested.
-% \newline\newline
-% However interesting from the FaceReader application \citep{Noldus:2020:Facereader} is, that they use an interval o f2 seconds to calculate their value of 'Interest'. This means that the currently calculated value for interest is based on video-frames from the last two seconds.
-
-% This Master thesis is based on the utilized data set and thus is taking over the underlying assumption that facial expressions equate emotions. 
-% However, in this application scenario new data is utilized that is not based upon this assumption. As the label, an actual purchase, doesn't care about that.
-
-\section{Experimental setup \& results}
-Goal is to compare the test person's perceived subjective interest of a (sales) video-clip with the interest predicted by the before mentioned approach from the web-cam video. Thus, an experiment needs to be set up that allows to record a video from the test person's webcam. Furthermore, a mechanism for obtaining the test person's feedback in terms of interest needs to devised.
+Firstly, a prototype was developed to prove that Emotion Recognition is a viable option for real-time predictions from a webcam stream.
 \newline\newline
-Considerations about different experiment setups are presented in the following table. Hereby, an 'X' indicates the non-fulfillment of an indispensable quality of an approach, while '/' indicates a constraint and ':)' indicates that the quality is fully fulfilled by the approach.
-% Please add the following required packages to your document preamble:
-% \usepackage[table,xcdraw]{xcolor}
-% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+Secondly, a more meaningful interpretation of emotions was needed to provide consultants or customers with a more actionable metric. Interest was chosen to be the metric used to identify a customer's intention. Thus, an user experiment was conducted that compares the predicted interest based on emotions recognized from facial expressions with the stated level of interest by participants.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Prototype}
+The first prototype was constructed as a local application that takes its video input from the PC's webcam. When the user presses the 'SPACE' key, the programm extracts the current frame of the video stream, detects the human face, recognizes its emotion in terms of valence and arousal, and prints the results onto the screen. A snapshot of this is provided in the following figure \ref{fig:PrototypeRealTime}. 
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[angle=0, width=0.8\textwidth]{Figures/webcam_foto.PNG}
+  \caption{Prototype application for real-time demonstration}
+  \label{fig:PrototypeRealTime}
+  \end{center}
+\end{figure}
+
+\textbf{Landmarks}\newline
+It was from special interest to PPI AG whether such an approach would be suitable for real-time usage, especially in regards to utilizing landmarks. 
+\newline\newline
+A small test of 10 probes indicated that it took on average 0.7 seconds to perform Emotion Recognition without any landmarks in production. In comparison to that, additionally detecting landmarks and feeding them into the model did not result in any delay, as its performance was also on average 0.7 seconds. Such a low number, with less than 1 second, proves that this approach is definitely suitable for real-time use cases. 
+\newline\newline
+However, it needs to be pointed out that this could only be achieved with the dlib shape predictor, unlike an Active Appearance Model which would likely need more time to be constructed. Furthermore, it is to be expected that the average duration of 0.7 seconds further decreases when taking into account that the prediction be performed on a powerful server with GPU support instead of a laptop computer.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{User Experiment (Interest)}
+The experiment provided further insights into the utilization of Emotion Recognition for the identification of human interest. Thus, the goal was to be able to draw conclusions about the suspected correlation between recognized emotions and human interest. Before diving into the design and outcomes of the experiment, an identification approach of interest had to be created based upon current literature.
+\newline\newline
+There herein presented approach for identifying interest was based on the ideas from two different scientific contributions:
+\begin{itemize}
+    \item \citet{Kamaruddin:2016:MeasuringCustomerSatisfaction} determined a level of interest/appreciation by measuring how positive or negative an emotion (= valence) experience was on average.
+    \item \citet{Poirier:2016:AdsFacialExpression} measured the effectiveness of ads by analyzing facial expressions. They claimed that the emotional journey is the strongest predictor of ad appreciation which is why they focused on the curve/profile created by the predicted emotion values for valence.
+\end{itemize}
+
+% \citet{Poirier:2016:AdsFacialExpression} measured the effectiveness of ads by analyzing facial expressions. \citet{Poirier:2016:AdsFacialExpression} claimed that the emotional journey is the strongest predictor of ad appreciation. The researchers predicted the emotional values for valence and arousal, and focused at the curve/profile created by values for valence. The researchers' assumption seemed to be that a certain profile of the valence curve is the main determinant of whether an ad was successful. While this sounds promising, it also raises the question of whether these ad appreciation in commercial ads also converts into actual positive ratings, or even product sales
+
+% Even though their actual interval duration is not known, the FaceReader \citep{Noldus:2020:Facereader} application, a commercial solution that was tested during this Master thesis, already offers a calculation for 'Interest' that was based on a interval length of 2 seconds. Moreover, \citet{Kamaruddin:2016:MeasuringCustomerSatisfaction} introduced a threshold for determining a neutral emotion category.
+
+Inspired by these approaches, the prototype application imitates some of this behaviour and based its 'Interest' measurement solely on valence. For each frame extracted every second from the video stream, valence is predicted. Interest was calculated by averaging the predicted values of valence for the last 5 frames.
+% If the value of valence is below the threshold of -0.2 it is counted as 'negative', if it is above +0.2 it is counted as 'positive' and if it is inside those two threshold values it is regarded as 'neutral'. Depending on ratio of the number of emotions that were classified as 'positive' vs 'negative', the 'Interest' is determined with a range from 0 to +1.
+% \newline\newline
+% \textbf{Example calculation:}
+
+% \begin{table}[H]
+% \begin{center}
+% \begin{tabular}{@{}cccl@{}}
+% \toprule
+% Image & Valence & Classif. & \multicolumn{1}{c}{Interest calculation} \\ \midrule
+% \#1 & -0.58 & negative &  \\
+% \#2 & -0.24 & negative &  \\
+% \#3 & 0.00 & neutral & neutral is not considered \\
+% \#4 & 0.17 & neutral & neutral is not considered \\
+% \#5 & 0.36 & positive &  \\
+% \begin{tabular}[c]{@{}c@{}}...\\ (up to 20)\end{tabular} & ... & ... &  \\
+% \multicolumn{1}{l}{} & \multicolumn{1}{l}{} & \begin{tabular}[c]{@{}c@{}}COUNT:\\ 2x negative\\ 1x positive\end{tabular} & \begin{tabular}[c]{@{}l@{}}= (\#pos * 100) / (\#pos + \#neg)\\ = (1 * 100) / (1 + 2) = 33.3\end{tabular} \\ \bottomrule
+% \end{tabular}
+% \caption{Example: Interest Calculation}
+% \label{tab:InterestCalculation}
+% \end{center}
+% \end{table}
+
+% In the table \ref{tab:InterestCalculation} an example calculation for Interest is presented. It starts with taking the last 20 frames/images taken (in this case only 5 are presented for illustration reasons). The Valence of these frames is predicted and subsequently classified as negative, neutral or positive depending on the threshold of -0.2 and +0.2. Afterwards, the number of frames classified are counted and the Interest is calculated with the following formula: (\#positive * 100)/(\#positive + \#negative). Thus, the result in the presented example is 33.33.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Experiment design}
+The goal of this experiment is to compare the test person's perceived subjective interest of a (sales) video-clip with the interest predicted by the before mentioned approach from the web-cam video. Thus, an experiment had to be set up that allowed for the recording of a video from the test person's webcam. A mechanism for obtaining the test person's feedback in terms of interest was devised.
+\newline\newline
+\hl{chosen: no direct interaction to preserve objectivity + comparability   and commercial ads in order to create real-life responses    ... as most datasets are specifically set up so that the participants exhibit a high emotional content}
+\newline\newline
+Considerations about different setups are presented in the following table. An 'X' indicates the non-fulfillment of an indispensable quality of an approach, while '/' indicates a constraint and ':)' indicates that the quality is fully fulfilled by the approach.
+
 \begin{table}[H]
-\begin{tabular}{ccccc}
+\begin{center}
+\begin{tabular}{cccccc}
 \hline
-\textbf{} & \begin{tabular}[c]{@{}c@{}}Web-Cam\\ Video\end{tabular} & \begin{tabular}[c]{@{}c@{}}Continuous\\ interest rating\end{tabular} & \begin{tabular}[c]{@{}c@{}}Easily\\ deployable\end{tabular} & \begin{tabular}[c]{@{}c@{}}Results\\ retrievable\end{tabular} \\ \hline
-\textbf{\begin{tabular}[c]{@{}c@{}}Questionnaire\\ (e.g. Google Forms)\end{tabular}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
-\textbf{\begin{tabular}[c]{@{}c@{}}Packaged Python\\ Application\end{tabular}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{FFC702} \textbf{/}} \\
-\textbf{\begin{tabular}[c]{@{}c@{}}Web-based Python\\ Application - Server side\\ (hosted by PythonAnywhere)\end{tabular}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
-\textbf{\begin{tabular}[c]{@{}c@{}}Web-based ReactJS\\ Application - Client Side\end{tabular}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FFC702} \textbf{/}} \\ \hline
+\textbf{} & Effort & \begin{tabular}[c]{@{}c@{}}Web-Cam\\ Video\end{tabular} & \begin{tabular}[c]{@{}c@{}}Continuous\\ interest rating\end{tabular} & \begin{tabular}[c]{@{}c@{}}Easily\\ deployable\end{tabular} & \begin{tabular}[c]{@{}c@{}}Results\\ retrievable\end{tabular} \\ \hline
+\textbf{\begin{tabular}[c]{@{}c@{}}Questionnaire\\ (e.g. w/ Google Forms)\end{tabular}} & low & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
+\textbf{\begin{tabular}[c]{@{}c@{}}Advanced survey tool\\ (e.g. w/ Phonic)\end{tabular}} & low & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FFC702} \textbf{/}} \\
+\textbf{\begin{tabular}[c]{@{}c@{}}Packaged Local Appl.\\ (e.g. w/ Python)\end{tabular}} & high & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{FFC702} \textbf{/}} \\
+\textbf{\begin{tabular}[c]{@{}c@{}}Web-based Server Appl.\\ (e.g. w/ PythonAnywhere)\end{tabular}} & high & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
+\textbf{\begin{tabular}[c]{@{}c@{}}Web-based Client Appl.\\ (e.g. w/ ReactJS)\end{tabular}} & high & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FFC702} \textbf{/}} \\ \hline
 \end{tabular}
-\caption{Consideration of experimental setups}
+\caption{Options for conducting the experiment}
 \label{tab:appExperiment}
+\end{center}
 \end{table}
 
+The approaches mentioned in table \ref{tab:appExperiment} were verified from top to bottom. First, the questionnaire and survey tools were investigated, because they, on the one hand, allowed for a quick implementation, but also did not allow room for customization required to conduct this experiment. A locally-run, stand-alone application would have accommodated all of this. However, due to its nature and size, it would be difficult to provide the participants with the program needed for the experiment and to retrieve its results. The best choice was for the researcher to develop a web-based application.
+\newline\newline
+A web-based server application hosted by PythonEverywhere would have fulfilled all the requirements, however, hooking onto participants’ webcams did not prove to be possible. As a result, the researcher decided to develop a browser-based standalone web-application with ReactJS. It allowed for the needed customization and only posed a constraint in terms of result retrieval (the participant needs to download the results and send them to the researcher).
+\newline\newline
+The user interface for the developed application is comprised of the presented video to be watched by the participant, as well as another smaller video that captures and records the webcam of the participant. There is  a slider for the indication of the current Interest level of the participant, as well as a 'Start', 'Stop' and 'Download' button. The following graphic shows the default screen when accessing the web page:
+
+\begin{center}
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[angle=0, width=1.0\textwidth]{Figures/UserExperiment.PNG}
+  \caption{Interface of the user experiment}
+  \label{fig:InterfaceUserExperiment}
+  \end{center}
+\end{figure}
+\end{center}
+
+There are three video clips from YouTube embedded into the web page. These video clips are successful ads that are supposed to induce a broad range of emotions in participants.
+\newline\newline
+For participants to watch those video clips and indicate their currently experienced level of interest, they had to follow the following instructions that were also sent to them:
+
+\begin{enumerate}[noitemsep]
+    \item Open the website: experiment.tobiaskick.com
+    \item Make sure your laptop/PC camera is not blocked and works
+    \item In case of a pop-up: Allow the usage of your camera
+    \item Make sure you can see yourself in the small rectangular box on the right-hand side
+    \item Start the video with a click on 'Start Capture'. This will also activate the recording of your face.
+    \item Watch the video and simultaneously indicate your current level of interest by setting the slider on the appropriate level (from 0 to +10)
+    \item Adjust your interest continuously. You can pause and resume the video/recording.
+    \item When video finished: Download results by clicking on 'Download results'
+    \item In case of a pop-up: Allow the download of multiple files at the same time. It should download one .csv file and a .webm file
+    \item Go on to the next video by clicking on the button 'Next video'
+    \item Start the same process again for the next video by clicking the button 'Start Capture'
+    \item Finally, send the results, consisting of a *.webm and *.csv file for each video clip, back to tkick93@gmail.com (totalling 6 files). Alternatively, drop the files in the following Google Driver folder and indicate your name.
+\end{enumerate}
+
+After the participant conducted all these tasks, the researcher received a *.webm and *.csv file for each video watched. The *.webm files had to be converted to MP4 with an Online Converter (frame rate of 24 per second). After that the VLC media player was used to filter frames so that it returned a frame for each second of the video.
+\newline\newline
+In the next step, these frames were read into a Python program that predicted the values for valence and arousal for each frame and calculated a measure of interest based on the previously presented approach. The results were then compared to the stated interest in the *.csv file.
 
 
+\subsection{Experiment outcomes}
+\hl{X amount of test persons participated:  of all X participants}.
+The goal of the experiment was to compare the indicated level of interest of all participants with a calculated value of interest which was based on predictions from the proposed model architecture in this thesis.
+\newline\newline
+Due to different video conditions between participant's web camera, as well as the discrepancy between discretely stated interest by participants and continuously predicted interest, the model is not expected to be able to match the subjectively stated level of interest exactly. However, the underlying hypothesis is that there exists a trend between subjectively stated interest and continuously predicted interest, even though the magnitude might be different.
+\newline\newline
+This hypothesis was tested by calculating the Pearson Correlation between the interest stated by participants and the interest predicted with Emotion Recognition. An average was calculated over the correlation measure of all participants. 
+\newline\newline
+Generally speaking, a Pearson Correlation between 0.3 and 0.5 is regarded as a low correlation, between 0.5 and 0.7 as moderate correlation and above 0.7 as high correlation. For this Master's thesis the researcher set out to achieve a correlation of at least 0.5 in order to make the claim that emotional valence is a reliable indicator for human interest.
+\newline\newline
+\hl{Results}\newline
+- The average correlation over all presented video clips and participants was ...
+\newline
+Interesting points to consider:
+- the predictions for the emotional valence don't vary much throughout the span of the video clip. However, the magnitude of valence is very much different for each participant. This probably means that the underlying Neural Network learns to differentiate between features of different faces instead of differentiating between facial expressions resulting in emotions.
 
-\section{Assessment of viability in real-time video calls}
+
+% \textbf{Viability in real-time video calls}
 % especially focus on the time aspect for detecting the bounding box + landmark detection/shape model construction.
 
 % Comparison dlib's shape model vs. Active Appearance Model

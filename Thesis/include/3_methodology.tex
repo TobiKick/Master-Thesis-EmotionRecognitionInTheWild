@@ -1,9 +1,8 @@
 \chapter{Methodology}
 % (diagram: data flow ; from input to output, everything in between; a paragraph on each module)
 
-
 \section{Machine Learning Workflow}
-The Machine Learning workflow utilized during this Master thesis is based upon a universal blueprint proposed by \citet{Chollet:2017:DeepLearningPython} and will lay out how the underlying Machine Learning problem got tackled. It consists of the following 7 steps which are displayed with a few keywords describing the approach proposed by this Master thesis:
+The Machine Learning workflow used in this Master thesis is based upon a universal blueprint proposed by \citet{Chollet:2017:DeepLearningPython}. The blueprint consists of the following seven steps, outlined below, followed by a few keywords describing the approach proposed by this Master's thesis.
 
 \begin{enumerate}
     \item \textbf{Defining the problem and assembling a dataset}\newline
@@ -13,9 +12,9 @@ The Machine Learning workflow utilized during this Master thesis is based upon a
     \item \textbf{Deciding on an evaluation protocol}\newline
     5-fold-Cross-Validation
     \item \textbf{Preparing your data}\newline
-    Restructure frames, Resize range of label's value
+    Restructure frames, resize the range of label's value
     \item \textbf{Developing a model that does better than baseline}\newline
-    Implementing a first version model
+    Implementing a first model that performs better than by chance
     \item \textbf{Scaling up: developing a model that overfits}\newline
     Implementing the pre-trained neural network ResNet50
     \item \textbf{Regularizing your model and tuning your hyperparameters}\newline
@@ -24,16 +23,16 @@ The Machine Learning workflow utilized during this Master thesis is based upon a
 
 
 
-\section{Research paradigm: Ablation study}
+\section{Research paradigm: Ablation Study}
 
 \begin{quote}
-    An Ablation Study, in medical and psychological research, is a research method in which the roles and functions of an organ, tissue, or any part of a living organism, is examined through its surgical removal and observing the behaviour of the organism in its absence.\citep{Sheikholeslami:2019:AblationProgrammingML}
+    An Ablation Study, in medical and psychological research, is a research method in which the roles and functions of an organ, tissue, or any part of a living organism, is examined through its surgical removal and observing the behaviour of the organism in its absence.\citep[~p. 15]{Sheikholeslami:2019:AblationProgrammingML}
 \end{quote}
 
 
-Ablation Study in Machine Learning is derived from its medical/psychological background and can be defined as a scientific examination of Machine Learning systems by purposefully removing features or components, in order to observe its effects on the system's performance. Thus, every design choice or module can be included in an ablation study. As a result, Ablation Study can provide valuable insights to researchers, albeit it doesn't provide sufficient proof for drawing direct conclusion on the module's contribution. \citep{Sheikholeslami:2019:AblationProgrammingML}
+Ablation Study, in the context of Machine Learning, is derived from its medical/psychological background. \citet{Sheikholeslami:2019:AblationProgrammingML} described Ablation study as a scientific examination of a \gls{ML} system by purposefully removing features or components in order to observe its effects on the system's performance wherein every design choice or module can be included. Ablation Study, therefore, allows for the gleaning of valuable insights; however it doesn't have the capability to provide sufficient proof to draw direct conclusions regarding the module's contribution.
 \newline\newline
-The idea behind ablation study applied to Artificial Neural Networks (ANNs) in this Master thesis is that the network is first trained to perform its Emotion Recognition task. Afterwards, modules or design choices are removed from the network which allows the researcher to measure the performance change due to the caused damage. This paradigm will be mostly used in chapter 5.4, where experiments on top of the already developed Neural Network will be conducted. \citep{Fadelli:2018:AblationInANN}
+The idea behind Ablation Study being applied to Artificial Neural Networks (ANNs) in this Master's thesis was to make a Neural Network perform better on Emotion Recognition than its baseline. After this step was completed, modules or design choices were removed from the network in order to analysis outcomes separately. According to \citet{Fadelli:2018:AblationInANN}, this allows the researcher to measure the performance change due to the caused damage.
 
 
 % \subsection{Development technique: Minimum Viable Product (MVP)}
@@ -55,7 +54,7 @@ The idea behind ablation study applied to Artificial Neural Networks (ANNs) in t
 
 \section{Methods}	
 
-The approach proposed in this Master thesis is comprised of multiple methods which are illustrated in the following figure \ref{fig:MachineLearningModelMethods}. On the left hand side of the figure, a summary of the approach is illustrated in a consecutive order from top to bottom. Each important step has a number assigned to it which can be found on the right hand side with a corresponding example picture of the output of this step.
+The approach proposed in this Master's thesis was composed of multiple methods \ref{fig:MachineLearningModelMethods}. The left hand side of the figure is a summary of the approach, in consecutive order, from top to bottom. Each step has a number assigned to it, which can be found on the right hand side with a corresponding example picture of the output of the said step.
 
 \begin{figure}[H]
   \begin{center}
@@ -67,14 +66,14 @@ The approach proposed in this Master thesis is comprised of multiple methods whi
 \end{figure}
 
 
-
-
 \subsection{Preprocessing}
-First of all, the data structure of the selected database needs to be analyzed and according to this structure data is being imported and structured. A list of all the filenames of the images and their respective labels for valence and arousal is created for each, the training and testing data. While the training data set is being shuffled for a better generalization during training, the testing data is used for validating the training results on a previously unseen part of the dataset.
+Before any approach could be implemented that automatically read in frames of video clips and their respective target labels in a specific data structure, the data structure of the selected database had to be analyzed.
 \newline\newline
-Based upon the list of filenames the actual image data is being read in and converted into RGB values. Furthermore, the values of valence and arousal are divided by 10, as the labels need to be brought into a range of -1 to 1 in order to fit the 'tanh' activation function of the model's final output layer.
+Afterwards, a program was written, that automatically created a list of filenames for all the (video-)frames inside the database, along with corresponding labels for valence and arousal. Based on the list of file names, actual image data was read in and converted into RGB values. Data got split into five different folds, each containing about 20 \% of subject-independent video clips, in order to facilitate a separation of data into training, validation and testing data at a later stage.
 \newline\newline
-The labels and image data used for training are subsequently split into 80 \% training and 20 \% cross-validation data. 
+Furthermore, the target values of valence and arousal were brought into the same data structure. Additionally, the values were divided by a factor of 10, as the labels had to be brought into a range of -1 to 1 in order to fit the 'tanh' activation function of the model's final output layer. The following figure is a plot representing the outcome of the preprocessing step together with its target values.
+% While the training data set is being shuffled for a better generalization during training, the testing data is used for validating the training results on a previously unseen part of the dataset.
+
 % The last preprocessing step involves loading all the images, converting it into RGB values and then extracting the face while using the face detection techniques described in the next chapter. The cropped output image will have a shape of 224x224x3 and will be permanently saved so that this step doesn't have to be repeated each time the model is being trained. Furthermore, the model can then reach back to this array of extracted images and directly use them to train or finetune the model.
 
 \begin{center}
@@ -87,11 +86,23 @@ The labels and image data used for training are subsequently split into 80 \% tr
 \end{figure}
 \end{center}
 
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{@{}ccc@{}}
+\toprule
+ & Valence & Arousal \\ \midrule
+\multicolumn{1}{r}{label / target} & - 0.5 & + 0.3 \\ \bottomrule
+\end{tabular}
+\caption{Label / Target of input image}
+\label{tab:LabelTarget}
+\end{center}
+\end{table}
 
-\subsection{Face detection \& bounding box}
-The \gls{MTCNN} poroposed by \citet{Zhang:2016:MTCCN} is a pre-trained neural network optimized for the tasks of simultaneous face detection, face alignment, bounding boxing and landmark detection.\citep{Brownlee:2019:VggFace2HowToFaceRec}
+
+\subsection{Face Detection \& Bounding Box}
+The \gls{MTCNN} proposed by \citet{Zhang:2016:MTCCN} is a pre-trained neural network optimized for the tasks of simultaneous face detection, face alignment, bounding boxing and landmark detection \citep{Brownlee:2019:VggFace2HowToFaceRec}.
 \newline\newline
-In this Master thesis, the \gls{MTCNN} model was used to detect the face in an image and determine it's coordinates for the bounding box. Thus, after a new image was read in and converted into RGB color values, the \gls{MTCNN} module can detect the face and determine its bounding box. With the bounding box coordinates a rectangle is being drawn on the input image and saved for further processing.
+In this Master's thesis, the \gls{MTCNN} model was used to detect the face in an image and determine its coordinates for the bounding box. Thus, after successful performance of the preprocessing step, the \gls{MTCNN} module detected the face and determined its bounding box. For illustration purposes, a rectangle was drawn on the following figure, corresponding to the bounding box coordinates determined by the \gls{MTCNN} module.
 
 \begin{center}
 \begin{figure}[H]
@@ -104,15 +115,15 @@ In this Master thesis, the \gls{MTCNN} model was used to detect the face in an i
 \end{center}
 
 \subsection{Landmark detection \& Heatmap generation}
-For the detection of landmarks the 'Face Landmark Detection' algorithm from the dlib library is implemented. This algorithm creates a shape model which it is aligning to the face at hand by refining its positions through a cascade of regressors. Additionally, dlib offers an already pre-trained version of their 'Face Landmark Detection' algorithm as a pre-trained shape predictor that can determine 68 facial landmarks.\citep{Kazemi:2014:ShapePredictor}
+The pre-trained 'Face Landmark Detection' algorithm \citep{Kazemi:2014:ShapePredictor} from the dlib library was implemented in order to detect 68 facial landmarks of a person's face. This algorithm determined landmarks by creating a shape model that is successively aligned to the specific features of the face at hand with the help of a cascade of regressors.
 \newline\newline
-For the implementation, the shape predictor requires, next to the input image, the bounding box of the person's face appearing in the input image. As the bounding box was already determined during the previous step by the \gls{MTCNN} module it can be directly used as an input for the landmark detection. \citep{Datahacker:2020:DlibFacialLandmarks}
+For the implementation, the shape predictor requires, next to the input image, the bounding box of the person's face appearing in the input image. As the bounding box was already determined during the previous step by the \gls{MTCNN} module it was being used as an input for the landmark detection. \citep{Datahacker:2020:DlibFacialLandmarks}
 \newline\newline
 
 \begin{quote}
-    imgaug is a library for image augmentation in machine learning experiments. It supports a wide range of augmentation techniques ... it can not only augment images, but also keypoints/landmarks, bounding boxes, heatmaps and segmentation maps. \citep{Jung:2020:Imgaug}
+    imgaug is a library for image augmentation in machine learning experiments. It supports a wide range of augmentation techniques ... it can not only augment images, but also keypoints/landmarks, bounding boxes, heatmaps and segmentation maps. \citep[~para. 1]{Jung:2020:Imgaug}
 \end{quote}
-For the proposed approach, imgaug was used to convert the previously detected landmarks into an heatmap and apply it as an overly onto the image.
+Imgaug was used to convert the previously detected landmarks into a heatmap and to apply it as an overlay onto the image.
 
 \begin{center}
 \begin{figure}[H]
@@ -124,8 +135,8 @@ For the proposed approach, imgaug was used to convert the previously detected la
 \end{figure}
 \end{center}
 
-\subsection{Face extraction}
-The input for this step consists of the image with a heatmap as an overlay and the coordinates for the face's bounding box. Thus, the face is simply cropped along the lines of the rectangle, comprised by the bounding boxe's coordinates. % \citep{Brownlee:2019:VggFace2HowToFaceRec}
+\subsection{Face Extraction}
+The input for this step consisted of the image with a heatmap as an overlay, as well as the coordinates for the face's bounding box. Hence, the face was simply cropped along the lines of the rectangle, composed of the bounding box's coordinates. % \citep{Brownlee:2019:VggFace2HowToFaceRec}
 
 \begin{center}
 \begin{figure}[H]
@@ -137,14 +148,23 @@ The input for this step consists of the image with a heatmap as an overlay and t
 \end{figure}
 \end{center}
 
+A new image was created with the heatmap integrated into the RGB image. Thehe shape dimension of the image stayed the same, as required by the pre-trained Neural Network. However, the image was first utilized for data augmentation purposes.
+
+\subsection{Data Preparation}
+After the face was extracted from all the frames, the data had to be prepared in order to be finally consumed by the Neural Network.
+\newline\newline
+Firstly, data standardization was conducted which had to be the same as the one used for VGGFace model pre-training. The authors of the keras-vggface library provided a method that does this standardization method by subtracting the training mean for all three image channels. This function was applied in this thesis which resulted in the mean for each channel being equal to zero.
+\newline\newline
+Afterwards, the data was split into training, validation and testing in a subject-independent manner. The training data was fed into the Data Augmentation model, the validation went directly as input into the model's training process, and testing data was utilized during the evaluation of the model.
+
 \subsection{Data Augmentation}
-In order to make my model generalize better, Data Augmentation is being aplied beforehand to the pictures themselves using the ImageDataGenerator provided by Keras. It works as follows:
+In order to improve the model's generalization capabilities, Data Augmentation was applied beforehand to the training images using the ImageDataGenerator provided by Keras. It worked as follows:
 \begin{itemize}
-    \item Taking a batch of images
+    \item Taking a batch of training images
     \item Apply random transformations on it
     \item Replace the original batch with the newly transformed batch
 \end{itemize}
-For this proposed approach data is being transformed randomly in terms of rotation, width shift, height shift, horizontal flip, brightness and zoom.
+Data was transformed randomly in terms of rotation, width shift, height shift, horizontal flip, brightness and zoom.
 
 \begin{center}
 \begin{figure}[H]
@@ -158,10 +178,8 @@ For this proposed approach data is being transformed randomly in terms of rotati
 
 
 \subsection{Machine Learning Model for Emotion Recognition}
-In order to get a state-of-the-art Machine Learning model for Emotion Recognition, the author decided to make use of a pre-trained model that was already trained to solve a similar challenge and fine-tune it then. 
+As Emotion Recognition poses similar challenges for researchers as Face Detection, the goal was to reuse already learnt abstractions and facial features from the pre-trained VGGFace Neural Network optimized for face detection challenges. This Neural Network model was then further fine-tuned on the AFEW-VA dataset during this research which should lay the foundation for high quality results at the Emotion Recognition at hand.
 \newline\newline
-The decision fell on the VGGFace Model which is optimized for face recognition and was pre-trained on a large-scale face dataset named VGGFace2. The dataset contains about 3.31 million images of 9131 subjects and poses additionally a great variety in pose, age, etc. The architecture used for the VGGFace Model is a ResNet-50 Convolutional Neural Network that was trained on the VGGFace2 dataset for the purpose of face recognition. When the VGGFace2 paper\citet{Cao:2018:VGGFace2} was published in \citeyear{Cao:2018:VGGFace2}, its performance exceeded the pevious state-of-the-art by a large margin. \citep{Cao:2018:VGGFace2}
+The VGGFace model architecture is based on the famous ResNet-50 Convolutional Neural Network which the authors \citet{Cao:2018:VGGFace2} pre-trained on a large-scale face dataset, named VGGFace2. The dataset contains about 3.31 million images of 9131 subjects and poses, which provided a wide variety of poses, ages, etc. When the VGGFace2 paper written by \citet{Cao:2018:VGGFace2} was published in \citeyear{Cao:2018:VGGFace2}, its performance exceeded the previous state-of-the-art by a large margin \citep{Cao:2018:VGGFace2}.
 \newline\newline
-Due to the fact, that VGGFace is optimized for face recognition it had to learn similar facial features to what is needed by emotion recognition. Therefore, the VGGFace model's main selling point is that it already learned how to extract facial features from an image. However, the last Dense layers of the model cannot be reused as they are trimmed to learn the connection between facial features and the output of the face recognition challenge. As a result, the last Dense layers are replaced by custom made layers which consist of a Dropout layer, a single Dense layer with 1024 units, another Dropout layer, a Batch Normalization layer and two Dense layers, one for each output value.
-\newline\newline
-Using the above described architecture, finetuning needs to be conducted in order to fit the pre-trained model better to the Emotion Recognition challenge at hand. This means, that the weights of the pre-trained model are used as a basis for training on the AFEW-VA dataset with its images and respective labels.
+Due to the fact that VGGFace is optimized for face recognition, it had to learn similar facial features to what was required by Emotion Recognition. Therefore, the weights of the VGGFace model already encapsulate the extracted information from a person's facial features. However, the classifier of the model, usually consisting of a few Dense layers at the end of the mode, was not reusable. Instead it got trimmed in order to allow the newly added classifier to learn the correlation between facial features and the target labels of the Emotion Recognition challenge. As a result, the last Dense layers was replaced by custom made layers consisting of a Dropout layer, a single Dense layer with 1024 units, another Dropout layer, a Batch Normalization layer and two Dense layers, one for each output value.
