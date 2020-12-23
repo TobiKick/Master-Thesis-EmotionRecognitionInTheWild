@@ -68,11 +68,11 @@ Inspired by these approaches, the prototype application imitates some of this be
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Experiment design}
-The goal of this experiment is to compare the test person's perceived subjective interest of a (sales) video-clip with the interest predicted by the before mentioned approach from the web-cam video. Thus, an experiment had to be set up that allowed for the recording of a video from the test person's webcam. A mechanism for obtaining the test person's feedback in terms of interest was devised.
+The goal of this experiment is to compare the test person's perceived subjective interest with the interest predicted by the before mentioned approach. In order to make this experiment objective and comparable between different participants, it was chosen that instead of direct interaction, participants get to watch commercial ads. Through these ads the researcher expected to get the closest to inducing emotional responses similar to real-life video calls.
 \newline\newline
-\hl{chosen: no direct interaction to preserve objectivity + comparability   and commercial ads in order to create real-life responses    ... as most datasets are specifically set up so that the participants exhibit a high emotional content}
+For the analysis of the participants interest, the webcam video stream was needed to be recorded exactly at the same time when the video was played. Additionally, a mechanism had to be devised to calculate a level of interest from the recognized emotions. For this, an experiment had to be implemented that could be given to participants, and that allows them to indicate their own current level of interest.
 \newline\newline
-Considerations about different setups are presented in the following table. An 'X' indicates the non-fulfillment of an indispensable quality of an approach, while '/' indicates a constraint and ':)' indicates that the quality is fully fulfilled by the approach.
+For such an implementation there were multiple considerations about the setup type. The possible options are presented in the following table, where a 'X' indicates the non-fulfillment of an indispensable quality of an setup, while '/' indicates a constraint and ':)' indicates that the quality is fully fulfilled by the setup.
 
 \begin{table}[H]
 \begin{center}
@@ -90,11 +90,11 @@ Considerations about different setups are presented in the following table. An '
 \end{center}
 \end{table}
 
-The approaches mentioned in table \ref{tab:appExperiment} were verified from top to bottom. First, the questionnaire and survey tools were investigated, because they, on the one hand, allowed for a quick implementation, but also did not allow room for customization required to conduct this experiment. A locally-run, stand-alone application would have accommodated all of this. However, due to its nature and size, it would be difficult to provide the participants with the program needed for the experiment and to retrieve its results. The best choice was for the researcher to develop a web-based application.
+The setups mentioned in table \ref{tab:appExperiment} were verified from top to bottom. First, the questionnaire and survey tools were investigated, because they, on the one hand, allowed for a quick implementation, but also did not allow room for customization required to conduct this experiment. A locally-run, stand-alone application would have accommodated all of this. However, due to its nature and size, it would be difficult to provide the participants with the program needed for the experiment and to retrieve its results. The best choice was for the researcher to develop a web-based application.
 \newline\newline
-A web-based server application hosted by PythonEverywhere would have fulfilled all the requirements, however, hooking onto participants’ webcams did not prove to be possible. As a result, the researcher decided to develop a browser-based standalone web-application with ReactJS. It allowed for the needed customization and only posed a constraint in terms of result retrieval (the participant needs to download the results and send them to the researcher).
+A web-based server application hosted by PythonEverywhere would have fulfilled all the requirements, however, hooking onto participants’ webcams did not prove to be possible. As a result, the researcher decided to develop a browser-based standalone web-application with ReactJS. It allowed for the needed customization and only posed a constraint in terms of result retrieval (the participants had to download the results and send them manually to the researcher).
 \newline\newline
-The user interface for the developed application is comprised of the presented video to be watched by the participant, as well as another smaller video that captures and records the webcam of the participant. There is  a slider for the indication of the current Interest level of the participant, as well as a 'Start', 'Stop' and 'Download' button. The following graphic shows the default screen when accessing the web page:
+The user interface for the developed application is comprised of the presented video to be watched by the participant, as well as another smaller video that captures and records the webcam of the participant. There is also a slider for the indication of the current interest level of the participant, as well as a 'Start', 'Stop' and 'Download' button. The following figure shows the default screen when accessing the web page:
 
 \begin{center}
 \begin{figure}[H]
@@ -106,9 +106,9 @@ The user interface for the developed application is comprised of the presented v
 \end{figure}
 \end{center}
 
-There are three video clips from YouTube embedded into the web page. These video clips are successful ads that are supposed to induce a broad range of emotions in participants.
+There are three video clips from YouTube embedded into the web page. These video clips are successful commercial ads that are supposed to induce a broad range of emotions in participants.
 \newline\newline
-For participants to watch those video clips and indicate their currently experienced level of interest, they had to follow the following instructions that were also sent to them:
+For participants to watch those video clips and indicate their currently experienced level of interest, they had to follow the following instructions:
 
 \begin{enumerate}[noitemsep]
     \item Open the website: experiment.tobiaskick.com
@@ -131,7 +131,6 @@ In the next step, these frames were read into a Python program that predicted th
 
 
 \subsection{Experiment outcomes}
-\hl{X amount of test persons participated:  of all X participants}.
 The goal of the experiment was to compare the indicated level of interest of all participants with a calculated value of interest which was based on predictions from the proposed model architecture in this thesis.
 \newline\newline
 Due to different video conditions between participant's web camera, as well as the discrepancy between discretely stated interest by participants and continuously predicted interest, the model is not expected to be able to match the subjectively stated level of interest exactly. However, the underlying hypothesis is that there exists a trend between subjectively stated interest and continuously predicted interest, even though the magnitude might be different.
@@ -140,12 +139,14 @@ This hypothesis was tested by calculating the Pearson Correlation between the in
 \newline\newline
 Generally speaking, a Pearson Correlation between 0.3 and 0.5 is regarded as a low correlation, between 0.5 and 0.7 as moderate correlation and above 0.7 as high correlation. For this Master's thesis the researcher set out to achieve a correlation of at least 0.5 in order to make the claim that emotional valence is a reliable indicator for human interest.
 \newline\newline
-\hl{Results}\newline
-- The average correlation over all presented video clips and participants was ...
-\newline
-Interesting points to consider:
-- the predictions for the emotional valence don't vary much throughout the span of the video clip. However, the magnitude of valence is very much different for each participant. This probably means that the underlying Neural Network learns to differentiate between features of different faces instead of differentiating between facial expressions resulting in emotions.
-
+The average Pearson correlation over the three presented video clips and \hl{ XX participants} in the experiment was for the here proposed solution with Multi-Phase FT on average \hl{ XX.XX}.
+\hl{HERE: Put number in context!! Is this good or bad?}
+\newline\newline
+Next to the actual result, the experiment gave way to further insights:\newline
+\begin{itemize}
+    \item \textbf{Emotional valence:} The emotional valence predicted by the Neural Network is not varying much throughout the participants. However, the magnitude of valence is slightly different for each participant. This might indicate that the expression of emotions is really low during the experiment of watching commercial ads, which in turn makes it very hard for the network to differentiate facial expressions. This is an interesting insight, as this would probably also be the case during real-life video calls.
+    \item \textbf{Time required for interest identification:} A sample taken during the analysis revealed that loading all the components for the Neural Network to be constructed took 3 minutes and 44 seconds. After the model was loaded, the actual prediction of emotions and interest calculation was performed which took 2 minutes and 8 seconds for 84 analyzed frames. This translates into 1.52 seconds per frame that are needed on average to predict an emotion and to identify the corresponding interest (The analysis was conducted on a fairly standard laptop with a Intel Core i5-5200U CPU processor).
+\end{itemize}
 
 % \textbf{Viability in real-time video calls}
 % especially focus on the time aspect for detecting the bounding box + landmark detection/shape model construction.

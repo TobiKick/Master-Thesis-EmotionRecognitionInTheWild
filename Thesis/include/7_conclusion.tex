@@ -1,45 +1,51 @@
 
 \chapter{Conclusion}
-+ Could the research questions be answered? -> How?
-+ How are the achievements of ER Applications to be interpreted?
+This Master's thesis started off with setting out three hypotheses which are now being scrutinized whether the researcher could confirm or disprove those hypotheses.\newline\newline
+\textbf{Hypothese \#1: Emotions can be recognized reliably from In-The-Wild data used for training and testing. Furthermore, the results can beat the state-of-the-art outcomes demonstrated in current literature.}\newline
+Under the assumption, that the AFEW-VA dataset, consiting of talk-show and movie clips, represents authentic In-The-Wild data, the researcher could prove that emotions could be recognized reliably as the reported results confirm. The researcher could indeed beat the results of one out of two state-of-the-art scientific papers.
+\newline\newline
+\textbf{Hypothese \#2: When examining the implemented modules separately, each module contributes positively towards the performance of the overall architecture.}\newline
+Through the rigorous ablation study of separate modules, the researcher underlined the importance of individual modules and could show that all major components contribute positively towards the architecture's performance.
+\newline\newline
+\textbf{Hypothese \#3: In a prototype application, Emotion Recognition will perform well with real-time video input from a webcam. It will be able to map recognized emotions to human intentions effectively.}\newline
+In order to prove this hypothese, the researcher created a small prototype application that could recognize emotions in real-time from the person's face in front of the web camera. Furthermore, the researcher devised a mapping mechanism from emotional valence to interest and he tried to further validate the viability of this approach through a user experiment. The experiment, however, disproved that one can map recognized emotions to human intentions effectively.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+\section{Limitations \& Improvements}
+\begin{itemize}
+    \item The size of the dataset with about 30.000 frames from 120 subjects is to be categorized as rather small. This results in a strong tendency for the model to overfit during training. A bigger dataset would of course be an advantage, but is not always available. A further solution might also be the combination of multiple datasets which would however make it hard to objectively compare the work to others.
+    \item The selected video clips in the AFEW-VA database are very extreme for In-The-Wild data as they stem from movies or talk shows where emotions are clearly and strongly expressed. The optimal solution would be to utilise real-life data from the specific application scenario. However, as this is often not possible other sources need to be tapped. An alternative might be the SEMAINE database, where participants are recorded while interacting with a human operator.
+    \item The Master's thesis is based on the underlying assumption that facial expressions equate emotions. This needs to be kept in mind when analyzing results. This flaw could be mitigated through additional data, e.g. from an EEG analysis.
+    \item The emotions exhibited during a video call consultations are generally weak which makes it very hard for the Neural Network, that was trained on strong facial expressions, to recognize these emotions. This in turn makes it hard to deduct a measure of interest. A solution might only be the use of a separate dataset that consists of real-life video calls and is labelled for the whole video clip with a measure of interest.
+\end{itemize}
 
 
-% This Master thesis is based on the utilized data set and thus is taking over the underlying assumption that facial expressions equate emotions. 
-% However, in this application scenario new data is utilized that is not based upon this assumption. As the label, an actual purchase, doesn't care about that.
-
-
-For PPI :   Emotions exhibited during normal video call are not very strong, thus it is hard to predict with conventional Emotion Recognition approaches the emotions needed for identifying human intentions, e.g. interest.
----> Recommendation: to use a separate datset that is actually labellend, and thus trained, on the human intention that should be identified. For example, such a metric could be whether after a video call the customer did actually buy the offered product or not.
-
-\section{Improvements/Limitation}
-AFEW-VA dataset only contains about 30.000 images. The model could be honed with more training data from different datasets and thus even perform better. This could be an improvement step for the actual implementation of such an approach. However, this step was purposefully not taken in this thesis, as it would make an objective comparison with other work very difficult.
-
-limitation: even though In-The-Wild
-the selected exampled for emotions are very extreme. The movie / talk show examples are chosen from situation with clear emotions that were expressed strongly in a few seconds.
-\newline\newling
-Selecting different database: like SEMAINE database, where participants interact with a human operator. Therefore, the material is supposedly more realistic. However, even there the scenarios and videos are specifically designed to elicit emotions in participants, which is not necessarily happens during a 'normal' business video call.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Next steps}
-=> PPI sales already contacted online banks (ING and DKB) who are very interested into ER to identify whether their costumers are interested/what intention they have.
-The idea is to refine the work from this Master thesis with real-life data from the banks online consultations. This video data can be combined with a label, of whether a purchase followed the consultation. This allows to further fine-tune the proposed neural network architecture.
+A logical first step would be to obtain real-life video-call consultation data for refining the work in this Master's thesis. The idea would be for PPI AG to obtain video consultation data from clients who are already interested into the prospects of this technology. As these companies also know whether for example a purchase followed the consultation, the video data could be combined with this information as a label. This would allow to further fine-tune the proposed neural network architecture.
+\newline\newline
+In a second stage, the creation of a real-life application should be pursued that provides tangible value to all participants. Such an application could give customers the ability to rate their experience and give feedback, but also to give hints to the consultant before or during the call on how to improve the customer's interest / satisfaction. The ideal would be that the interest identification brings tangible value to both the consultant and customer, e.g. through additional feedback possibilities, or visualizations.
 
 
-\section{Further areas of research}
-- Making annotations more subject orientated \& culturally independent
-e.g. either maybe using an EEG to detect areas of brain activity and mapping these to values of valence and arousal
-%\item Even though there is research on identifying human interest by using an EEG analysis, further research is lacking on how to combine the insights provided of an EEG analysis with Emotion Recognition insights.
-e.g. actually asking subjects themselves how they felt during a video clip and using this as annotations
-
-
-- - human intention/interest identification with Emotion Recognition and EEG at the same time, so results are more reliable
-
-+ further fields of research
-        -> combination of eye movements and physiological measurements as it was done, for example, in Noldus's product 'Cube' \citep{Noldus:2020:Facereader}
-        How can this\textbf{ combination} influence the identification of human behaviors, like interest?
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Further fields of application}
-=> Call center application for customer satisfaction
-=> Enhancement of dynamic content generation through integrating a chatbot who's answers are being guided by the emotions/intentions/interest of a calling person.
+Next to the application of Emotion Recognition and the identification of interest during real-time video call consultations, further scenarios could include the following:\newline
+\begin{itemize}
+    \item Utilizing Emotion Recognition and the interest identification for scenarios in a call center.
+    \item Enriching a video-call-bot or chat-bot through Emotion Recognition and/or interest identification. The results obtained from a user's recognized emotions could influence the way the chat-bot respond. This would allow the chat-bot to create a more dynamic and personalized output based on Emotion Recognition.
+\end{itemize}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Further areas of research}
+\begin{itemize}
+    \item \textbf{Combination of multiple input signals}: It is unclear, how different signals are best combined and which signals are best for the identification of human intention, like interest. Such signals include visual, audio, EEG, mouse clicks, eye movements, and physiological measurements.
+    \item \textbf{Subject oriented \& culturally independent annotation}: As annotations are often very different across cultures and it is even argued that they are different from subject to subject, research is need on how it is possible to annotate images with these considerations in mind. 
+    \item \textbf{Experienced vs. observed emotion}: Annotations are based on observed clues, like facial expressions while in reality and emotion is depending on the subject's experience. There is more research needed on how to capture the individual experience of subjects during situation instead of relying on professional annotators 'to guess' emotions from visual or audio clues. Some databases already include EEG analysis to observe the experience through brain activity, which is a step in the right direction. However, it should also be considered how far this reflects the experienced emotion by the subject.
+\end{itemize}
+
+All in all, the Master thesis contribution is a detailed review of literature, as well as an approach to tackle the very complex problem of recognizing emotions from a small dataset, and an approach to identify interest from recognized emotions. The final analysis of the hypotheses, set out before the start of this thesis, show that this Master's thesis is at the current edge of research and outline the difficulties tackled during this thesis. It is to be highlighted that this Master's thesis was able to beat the Emotion Recognition state-of-the-art on the AFEW-VA database from 2017 by a wide margin. Furthermore, many valuable insights were gained throughout the thesis's journey as was outlined by the previous sections. 
+\newline\newline
+In the researchers opinion, Emotion Recognition is and will play a big role in research for the upcoming future and many more applications will sprout that combine practice with research. The researcher hopes that this Master's thesis will contribute towards a foundation for this trend.
 
