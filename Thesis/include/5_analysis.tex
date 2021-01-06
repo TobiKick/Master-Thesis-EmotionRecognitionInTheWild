@@ -149,12 +149,24 @@ This chapter is dedicated to the study of specific modules/design choices taken 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Network architecture}
-Both, the ResNet50 and VGG16 architecture are available for the pre-trained VGGFace and are very appreciated in the community. They have shown their qualities in the famous ImageNet competition with ResNet50 ending up winning the first price in 2015. ResNet50 is a deep neural network with 50 layers stacked upon each other and about 25 million parameters. Through their 'skip connection' concept their deep network is still able to train in deeper layers. VGG16 in comparison does not have as many layers, but is comprised of around 40 million parameters to be trained.
+The VGGFace dataset was pre-trained on both, the ResNet50 and VGG16 architecture and are available through the keras-vggface package. Both model architectures are very appreciated in the community and have shown their qualities in the famous ImageNet competition with ResNet50 ending up winning the first price in 2015. ResNet50 is a deep neural network with 50 layers stacked upon each other and about 25 million parameters. Through their 'skip connection' concept their deep network is still able to train in deeper layers. VGG16 in comparison does not have as many layers, but is comprised of around 40 million parameters to be trained.
 \newline\newline
 ResNet50 was initially chosen due to it's deep layered approach and was compared to VGG16 in order to confirm its superiority in the challenge at hand. A comparison between both can be seen in the following table:
 
-\hl{here table with results form ResNet50 vs. VGG16 (with DataAug + Standardization)}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{@{}rcccc@{}}
+\toprule
+\multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR\\ Arousal\end{tabular} \\ \midrule
+with ResNet50 & 0.21 & 0.20 & 0.15 & 0.21 \\
+with VGG16 & 0.20 & 0.19 & 0.15 & 0.22 \\ \bottomrule
+\end{tabular}
+\caption{Fine-tunning of the model with ResNet50 vs. VGG16}
+\label{tab:ResNet50vsVGG16}
+\end{center}
+\end{table}
 
+The comparison above shows that with the chosen settings, e.g. with Data Augmentation, the VGG16 architecture performs slightly better than the ResNet50 architecture. However, it needs to be pointed out, that a different number of layers were unfrozen with the Multi-Phased Fine-Tuning approach. With the VGG16 model one convolutional layer was unfrozen at a time, while for the ResNet50 it was two convolutional layers. Even though the number of unfrozen layers was bigger for ResNet50, the number of optimized parameters was way smaller. Therefore, the results achieved can be seen as equally good, as probably both models could still be further optimized. This leads to the conclusion that the ResNet50 model is equally suitable for the problem as VGG15 and was therefore used during this Master's thesis.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{MTCNN (Multi-task Cascaded Convolutional Neural Network)}

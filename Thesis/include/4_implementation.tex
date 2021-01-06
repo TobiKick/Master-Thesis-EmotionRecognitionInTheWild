@@ -2,7 +2,7 @@
 % (more or less telling whats in my code; implementation details; describing dataset; which network and which hyper parameters do I use; how does the application look like)
 \section{Setup}
 
-In order to conduct the training process described by the methods used in the previous chapter, it was necessary to have a computer with a powerful GPU in order to speed up training. For this Master thesis, the experiments/training were conducted on a Nvidia Titan X (Pascal) GPU with 12 GB of memory. 
+In order to conduct the training process described in the previous chapter, it was necessary to have a computer with a powerful GPU in order to speed up training. For this Master thesis, the experiments/training were conducted on a Nvidia Titan X (Pascal) GPU with 12 GB of memory. 
 \newline\newline
 The framework used for Machine Learning was TensorFlow. It provides a specific software package for GPU usage which was called 'tensorflow-gpu' and was installed in version '1.14.0'. Furthermore, Keras was used on top of Tensorflow, which was a neural network library that made it faster and easier to interact with the underlying Machine Learning framework. Keras version used was 2.2.5.
 \newline\newline
@@ -12,35 +12,34 @@ Further important third-party software packages include:
     \item MTCNN:         Version 0.1.0
     \item OpenCV:        Version 4.1
 \end{itemize}
-All these frameworks and packages were used inside the Python programming language. The utilized version was 3.6.
-
+All these frameworks and packages were used based on the Python programming language with version 3.6.
 
 \section{Dataset}
 \textbf{Background}
 \newline
-The selected AFEW-VA dataset \citet{Kossaifi:2017:AFEW-VADatabase} is based upon the Acted Facial Expressions In-The-Wild database (AFEW) proposed in \citeyear{Dhall:2012:AFEW} by \citet{Dhall:2012:AFEW}. The AFEW dataset is composed of video clips that try to depict a real-world environment. It captures facial expressions, natural head pose movements, occlusions, subjects' races, gender, diverse ages, and multiple subjects in a scene. The authors labeled the video clips with one of six basic expressions: anger, disgust, fear, happiness, sadness, surprise, or neutral.
+The selected Acted Facial Expressions In-The-Wild - Valence Arousal (AFEW-VA) dataset \citet{Kossaifi:2017:AFEW-VADatabase} is based upon the Acted Facial Expressions In-The-Wild database (AFEW) introduced in \citeyear{Dhall:2012:AFEW} by \citet{Dhall:2012:AFEW}. The AFEW dataset is composed of video clips that try to depict a real-world environment. It captures facial expressions, natural head pose movements, occlusions, subjects' races, gender, diverse ages, and multiple subjects in a scene. The authors labeled the video clips with one of six basic expressions: anger, disgust, fear, happiness, sadness, surprise, or neutral.
 \newline\newline
-The AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} uses the same underlying real-world video data, but it did not annotate its video clips with one of six basic expressions. Instead it used the two dimensional affective space with valence and arousal. While valence expressed how positive or negative an emotion is, arousal expresses how strong or weak an emotion is.
+The AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} uses the same underlying real-world video data, but it did not annotate its video clips with one of six basic expressions. Instead it used the two dimensional affective space with valence and arousal. While valence expresses how positive or negative an emotion is, arousal expresses how strong or weak an emotion is.
 \newline\newline
 Furthermore, as the name of the dataset already suggests, the dataset is compopsed of data that was collected under 'In-The-Wild' conditions. 'In-The-Wild' refers to real-life conditions in video clips, which make it very difficult to recognize emotions. \citet{Salah:2018:VideoBasedER} explained that these difficulties can be caused by, for example, uncontrolled illumination or uncontrolled video quality due to a different recording medium, like webcams by individuals vs. professional cameras. Such 'In-The-Wild' data is usually acquired from talk shows, movies or other naturalistic interactions. 
 \newline\newline
 As the research conducted during this Master thesis is intended to serve as a basis for a further real-life application in video-call scenarios, it was clear that the dataset needed to be as close to 'In-The-Wild' conditions as possible. Furthermore, it was decided that it was more important to capture as much of an emotion's information as possible rather than placing value on the interpretation of emotions. As a result, the AFEW-VA dataset got chosen because of its 'In-the-Wild' conditions, its 2D Affective Space model for emotion representation and its backing by the scientific community when it comes to providing comparable results.
 \newline\newline
 \textbf{Data structure}\newline
-The dataset is split into 600 folders, each representing a different video clip. Each video clip is taken from a different subject. Each of these folders holds multiple frames which together make up the video clip. Moreover, the folder also holds a .json file which holds the label for each frame and describes it in terms of valence, arousal and landmark points.
+The dataset is split into 600 folders, each representing a different video clip. Each video clip is taken from a different subject. Each of these folders holds multiple frames which together make up the video clip. Moreover, the folder also holds a .json file which contains the labels for each frame in terms of valence and arousal. Both values have an annotation level ranging from -10 to +10 in full integer values. This results in a total of 21 levels.\citep{Kossaifi:2017:AFEW-VADatabase} 
 \newline\newline
-This .json file contains for each frame a value for the valence and another value for the arousal. Both values have an annotation level ranging from -10 to +10 in full integer values. This results in a total of 21 levels.\citep{Kossaifi:2017:AFEW-VADatabase} Additionally, the file also includes pre-labeled landmarks for face detection purposes. However, these landmarks were not utilized in the training of the proposed model, as third-party modules were being used for performing face detection and landmark determination tasks.
+Additionally, the file also includes pre-labeled landmarks for face detection purposes. However, these landmarks were not utilized in the training of the proposed model, as third-party modules were being used for performing face detection and landmark determination tasks.
 \newline\newline
 \textbf{Benchmark}
 \newline
-In order to objectively compare the results from the original AFEW-VA paper proposed by \citet{Kossaifi:2017:AFEW-VADatabase}, it was essential to lay out the circumstances under which the results were obtained. In the case of the AFEW-VA paper \citep{Kossaifi:2017:AFEW-VADatabase}, as well as the simulatenous VA prediction paper \citep{Handrich:2020:SimultaneousPredVA}, the data got divided in 5 disjoint folds in a subject-independent manner, meaning a subject did not appear in different folds. Subsequently, they performed a 5-fold-cross-validation for the prediction of valence and arousal values for each frame of a video clip.\citep{Kossaifi:2017:AFEW-VADatabase}
+In order to objectively compare the results from the original AFEW-VA paper proposed by \citet{Kossaifi:2017:AFEW-VADatabase}, it was essential to lay out the circumstances under which the results were obtained. In the case of the AFEW-VA paper \citep{Kossaifi:2017:AFEW-VADatabase}, as well as the simulatenous VA prediction paper \citep{Handrich:2020:SimultaneousPredVA}, the data got divided in 5 disjoint folds in a subject-independent manner, meaning a subject did not appear in different folds. Subsequently, they performed a 5-fold-cross-validation for the prediction of valence and arousal values for each frame of a video clip.
 \newline\newline
 \citet{Roehrich:2020:TrainValidateTest} argued that when comparing different models it is not enough to use a training and a testing set, as it might still be possible that one model is better than the other due to randomness during the training process. Thus, in addition to the above-mentioned approach of creating 5 folds in a subject independent manner, it was important to separate the folds into training, validation and testing subsets. The split of the database into subsets is shown in figure \ref{fig:TrainTestSplit} and these subsets fulfill the following purposes:
 
 \begin{itemize}
-    \item The training dataset will be used for the actual training of the model
-    \item The validation dataset is used for testing during the training process. Thus, it serves as a metric that needs to be improved by, for example, adapting the model architecture. Moreover, it serves as the metric for the EarlyStopping mechanism which ends the training process when the observed metric stales in its performance
-    \item The testing dataset is all about the actual measurement of the model's performance on a third previously unseen dataset
+    \item The training dataset was used for the actual training of the model.
+    \item The validation dataset was used for testing during the training process. The loss, RMSE, and CORR metrics can then be applied to the validation dataset which allows to observe these metrics in a more independent way. Improvements of these metrics can be achieved by adapting the model architecture. 
+    \item The testing dataset is all about the actual measurement of the model's performance on a third previously unseen dataset.
 \end{itemize}
 
 \begin{figure}[H]
@@ -51,17 +50,17 @@ In order to objectively compare the results from the original AFEW-VA paper prop
   \end{center}
 \end{figure}
 
-For the final results of the proposed approach, 5-fold-cross-validation was conducted by splitting the 600 subjects/video-clips into five folds with each containing 120 subjects. Four out of those five folds were used for training, while one fold was reserved for the evaluation of the model after the finished training. The four folds were again split into training and validation, with one fold serving as the validation set. This approach can also be seen in figure \ref{fig:CrossValidationSplit}.
+For the final results of the proposed approach, 5-fold-cross-validation was conducted by splitting the 600 subjects/video-clips into five folds, each containing 120 subjects. Four out of these five folds were used for training, while one fold was reserved for the evaluation of the model after the finished training. The four folds were again split into training and validation, with one fold serving as the validation set. This approach can also be seen in figure \ref{fig:CrossValidationSplit}.
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.8\textwidth]{Figures/CrossValidation_Split.png}
-  \caption{Cross-Validation split}
+  \caption{5-fold-Cross-Validation split}
   \label{fig:CrossValidationSplit}
   \end{center}
 \end{figure}
 
-This approach ensured that there was no overlap in terms of subjects between the training and testing/evaluation. Therefore, the subset for the evaluation of the model performance contained only frames from subjects that were previously not seen by the model during the training process.
+Following this approach ensured that there was no overlap in terms of subjects between the training, validation and testing dataset. As a result, the testing data subset serves to evaluate the model performance, as it contained only frames from subjects that were previously not seen by the model during the training process.
 
 % \begin{quote}
 %     To compare the performance of various features, we sampled regularly an equal number of frames from each sequence to obtain a set of frames representative of the whole dataset, which we then divided in 5 disjoint folds in a subject-independent manner (i.e. a subject does not appear in two different folds). We then performed a 5-fold cross-validation (i.e. we iteratively used one of the set for testing and the other 4 for training) to predict the valence and arousal values for each frame. \citep{Kossaifi:2017:AFEW-VADatabase}
