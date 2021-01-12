@@ -79,14 +79,14 @@ Following this approach ensured that there was no overlap in terms of subjects b
 Figure \ref{fig:NNArchitecture} describes the architecture of the neural network with the following elements:
 
 \begin{itemize}
-    \item Line \#2: the pre-trained VGGFace model is being loaded with 'resnet50' as its neural network architecture. With the parameter 'include\_top' set to False allows to exclude the classifier of th pre-trained network on face detection.
-    \item Line \#5 to line \#10: The VGGFace model is set to trainable or non-trainable. For the first three epochs of fune-tuning, the model gets set to non-trainable. Afterwards it is set to trainable, and allows the model to update its weights.
-    \item Line \#12: The output of the VGGFace model is being accessed in in line \#13 reduced in dimensionality in order to fit the input requirements for the following layer.
+    \item Line \#2: the pre-trained VGGFace model is being loaded with 'resnet50' as its neural network architecture. With the parameter 'include\_top' set to False allows to exclude the classifier of the pre-trained network on face detection.
+    \item Line \#5 to line \#10: The VGGFace model is either set to trainable or non-trainable. For the first three epochs of fune-tuning, the model gets set to non-trainable. Afterwards it is set to trainable, and allows the model to update its weights.
+    \item Line \#12: The output of the VGGFace model is being accessed and in line \#13 reduced in dimensionality in order to fit the input requirements for the following layer.
     \item Line \#15 to line \#18 contains the classifier consisting of a Dense layer (1024 units), together with two Dropout and a Batch Normalization layer in order to improve generalization capabilities.
-    \item Line \#20 and \#21: The output for each evaluation metric is defined individually. This separation makes it possible to neatly visualize the outcomes and the 'tanh' activation resized the output to a floating-point number range of -1 to +1.
+    \item Line \#20 and \#21: The output for each evaluation metric is defined individually. This makes it possible to neatly visualize the outcomes separately. The 'tanh' activation function resized the output to a floating-point number in the range of -1 to +1.
 \end{itemize}
 
-The choice of only using a single Dense layer in the block of fully connected layers was based on a paper \citep{Pittaras:2017:FineTuningStrategiesComparison} that compared different fine-tuning strategies on pre-trained neural networks which could show that
+The choice of using only a single Dense layer in the classifier was based on a comparison of fine-tuning strategies by \citep{Pittaras:2017:FineTuningStrategiesComparison}. Through this comparison of fine-tuning strategies on pre-trained neural networks, they could show that
 \begin{quote}
     increasing the depth of a pre-trained network with one more fully-connected layer and fine-tuning the rest of the layers on the target dataset can improve the network’s concept detection accuracy compared to other fine-tuning approaches. \citep[~p. 103]{Pittaras:2017:FineTuningStrategiesComparison}
 \end{quote}
@@ -98,7 +98,7 @@ Moreover, \citet{Pittaras:2017:FineTuningStrategiesComparison} could obtained th
 
 \section{Fine-tuning}
 \subsubsection{ResNet50 model}
-ResNet50, short for Residual Network, is a very deep neural network architecture that was invented for the purpose of image classification, resulting in winning the ImageNet challenge in 2015. \citep{Dwivedi:2019:ResNetInKeras}
+ResNet50, short for Residual Network, is a very deep neural network architecture that was invented for the purpose of image classification, resulting the win of the ImageNet challenge in 2015. \citep{Dwivedi:2019:ResNetInKeras}
 
 \begin{figure}[H]
   \begin{center}
@@ -114,7 +114,7 @@ ResNet50, short for Residual Network, is a very deep neural network architecture
 
 ResNet50 is defined by a very deep-layered neural network which traditionally posed a difficult challenge to researchers, as the training process gets worse the deeper the neural network due to the notorious vanishing gradient problem. The vanishing gradient leads to a rapid saturation of the model's weights which results in a degradation of the overall model performance. To fight this problem, ResNet introduced a novel concept, named skip connection, where the results of a block are added together with the original input before applying an activation function. \citep{Dwivedi:2019:ResNetInKeras}
 \newline\newline
-This concept is also illustrated in the following figure \ref{fig:ResNet50IdentityBlock} for the an identity block:
+This concept is also illustrated in the following figure \ref{fig:ResNet50IdentityBlock} for the identity block:
 
 \begin{figure}[H]
   \begin{center}
@@ -124,7 +124,7 @@ This concept is also illustrated in the following figure \ref{fig:ResNet50Identi
   \end{center}
 \end{figure}
 
-This operation is however, only possible when the two inputs for the addition have the same shape. Due to the layout of the ResNet50 architecture, this is inherently the case for the Identity Block. For the Convolution Block a further operation is needed to transform the block's original input into the same shape as the outcome of the Convolutional layers. As can be seen in figure \ref{fig:ResNet50ConvBlock}, this was done by applying a separate Convolutional plus Batch Normalization layer to the original input and choosing its hyperparameters in a way that the output will be in the same shape as the outcome of the Convolutional layers.
+However, this operation is only possible when the two inputs for the addition have the same shape. Due to the layout of the ResNet50 architecture, this is inherently the case for the Identity Block. For the Convolution Block a further operation is needed to transform the block's original input into the same shape as the outcome of the Convolutional layers. As can be seen in figure \ref{fig:ResNet50ConvBlock}, this was done by applying a separate Convolutional plus Batch Normalization layer to the original input and choosing its hyperparameters in a way that the output will be in the same shape as the outcome of the Convolutional layers.
 
 \begin{figure}[H]
   \begin{center}
@@ -134,10 +134,10 @@ This operation is however, only possible when the two inputs for the addition ha
   \end{center}
 \end{figure}
 
-\citet{Dwivedi:2019:ResNetInKeras} argued that this approach is helpful in mitigating the problem of vanishing gradients, as its skip connection concepts, firstly, provided an alternate shortcut path for gradients to flow through and secondly, ensured that the subsequent block will perform at least as well as the previous.
+\citet{Dwivedi:2019:ResNetInKeras} argued that this approach is helpful in mitigating the problem of vanishing gradients, as its skip connection concept provided an alternate shortcut path for gradients to flow through. This ensured that the subsequent block will perform at least as well as the previous.
 
 \subsubsection{Pre-trained network}
-As recommended by \citet{Chollet:2017:DeepLearningPython} using a pre-trained neural network is a highly effective approach to deep learning on a small image dataset. The AFEW-VA dataset with its 30.000 frames (= 600 video clips) can be considered a rather small dataset \citep{Kossaifi:2017:AFEW-VADatabase}.
+As recommended by \citet{Chollet:2017:DeepLearningPython} using a pre-trained neural network is a highly effective approach to use deep neural networks on a small image dataset. The AFEW-VA dataset with its 30.000 frames (= 600 video clips) can be considered a rather small dataset \citep{Kossaifi:2017:AFEW-VADatabase}.
 
 \begin{quote}
     A pretrained network is a saved network that was previously trained on a large dataset, typically on a large-scale image-classification task. If this original dataset is large enough and general enough, then the spatial hierarchy of features learned by the pretrained network can effectively act as a generic model of the visual world, and hence its features can prove useful for many different Computer Vision problems, even though these new problems may involve completely different classes than those of the original task. \citep[~p. 143]{Chollet:2017:DeepLearningPython}
@@ -145,7 +145,7 @@ As recommended by \citet{Chollet:2017:DeepLearningPython} using a pre-trained ne
 
 \citet{Chollet:2017:DeepLearningPython} further elaborated that using a pre-trained network for small-data problems makes deep learning a very effective approach due to its portability of learned features across different problems.
 \newline\newline
-This is why, it seemed promising to solve the Emotion Recognition challenge at hand with a neural network that was pre-trained on a more general and holistic dataset. Therefore, a ResNet50 neural network architectur, pre-trained on a large-scale face recognition dataset containing 3.31 million images, called VGGFace2 \citep{Cao:2018:VGGFace2} was used.
+This is why it seemed promising to solve the Emotion Recognition challenge at hand with a neural network that was pre-trained on a more general and holistic dataset. Therefore, a ResNet50 neural network architectur, pre-trained on a large-scale face recognition dataset containing 3.31 million images, called VGGFace2 \citep{Cao:2018:VGGFace2} was used.
 
 
 \subsubsection{Fine-tuning strategy}
@@ -160,10 +160,9 @@ The exact steps for fine-tuning a neural network were summarized by \citet{Choll
     \item Jointly train both these layers and the part you added
 \end{enumerate}
 
-\citet{Chollet:2017:DeepLearningPython} further highlighted that if the classifier isn't already trained and the whole model, including the pre-trained convolutional base, gets fine-tuned, the error being propagated through the network will be too big. This might result in the destruction of previously learned representations by the layers. As a result, the custom network part (in the case of the here proposed approach: the classifier) needed to be trained first separately as mentioned in step 3. 
+\citet{Chollet:2017:DeepLearningPython} further highlighted that if the classifier isn't already trained and the whole model (including the pre-trained convolutional base) gets fine-tuned, the error being propagated through the network will be too big. This might result in the destruction of previously learned representations by the layers. As a result, the custom network part (in the case of the here proposed approach: the classifier) had to be trained separately, as in indicated by step 3. 
 \newline\newline
-As mentioned in step 4 only some layers of the base network were unfrozen and thus, used during training. According to \citet{Chollet:2017:DeepLearningPython}, it is more useful to fine-tune the higher layers because these encode more specialized features and need to be readjusted to the new problem. Fine-tuning all the layers was theoretically possible, although it would have increased the risk of overfitting. Therefore, it was better to keep the lower layers of the convolutional base frozen as they encoded more generic features which can be useful for a wide variety of tasks/problems.
-
+As mentioned in step 4 only some layers of the base network were unfrozen and thus, used during training. According to \citet{Chollet:2017:DeepLearningPython}, it is more useful to fine-tune the higher layers because these encode more specialized features and needed to be readjusted to the new task/problem. Fine-tuning all layers was theoretically possible, although it would have increased the risk of overfitting. Therefore, it was chosen to keep the lower layers of the convolutional base frozen as they encoded more generic features, and only unfreeze the higher layers.
 
 % \citet{Yan:2016:MultiClueFusion} made use of multi clue fusion to further enhance the accuracy of an emotion recognition in the Wild. They showed that with using only the VGGFace model as a predictor for the Emotion Recognition challenge, they got a surprisingly high accuracy of about 36 per cent. They also mention that it the model will perform better as they recognize emotions over multiple frames and conduct fine-tuning on the VGGFace model. (Fintuning = the adaption of a pre-trained model to the current challenge, usually done together with a new dataset)
 % \newline\newline
@@ -176,7 +175,7 @@ As mentioned in step 4 only some layers of the base network were unfrozen and th
 \section{Metrics}
 Metrics, in Machine Learning, are used to evaluate the performance of a Neural Network. Probably the most widely-used metric is 'accuracy' which tells you about the share of correctly predicted data points. 
 \newline\newline
-As the present challenge of predicting values for valence and arousal is better solved through regression, the 'accuracy' metric will not be able to deliver meaningful and actionable results. Instead it is better to use better suited and more comparable metrics, as were already proposed by \citet{Kossaifi:2017:AFEW-VADatabase}. The researcher decided to use the RMSE (Root-mean-squared error) and CORR (Pearson product-moment correlation coefficient) as metrics for this challenge.
+As the present challenge of predicting values for valence and arousal is better solved through regression, the 'accuracy' metric will not be able to deliver meaningful and actionable results. Instead the researcher decided to use the RMSE (Root-mean-squared error) and CORR (Pearson product-moment correlation coefficient) as metrics for this challenge. These metrics were already proposed by \citet{Kossaifi:2017:AFEW-VADatabase} which makes them very comparable to the results proposed in their paper.
 \newline\newline
 RMSE gives the observer a notion of how close the predicted values are to the actual values. It can also be defined as follows:
 
@@ -208,7 +207,7 @@ A central role in developing a successful solution with Machine Learning is maki
 In order to prevent overfitting and generalize a model better, \citet{Chollet:2017:DeepLearningPython} highlighted that the best solution is to get more training data, because more data means the model needs to learn to represent all data points, thus the lower the chance that it would overfit. However, when it is not possible to expose the model to more data, \citet{Chollet:2017:DeepLearningPython} recommended utilizing regularization techniques, which will force the model to focus on the most prominent patterns. These techniques constrain a model in a way that it can only store a certain amount or a certain type of information. According to \citet{Chollet:2017:DeepLearningPython}, the easiest way to prevent overfitting is to reduce the network's size, or in other words, to remove features. As a result, the number of trainable parameters in the model is reduced and thus, the model's capacity shrinks.
 
 \subsubsection{Feature removal}
-For the here proposed Machine Learning model it was not possible to increase the amount of training data, as this would make an objective comparison with benchmark paper impossible. Thus, further regularization techniques were applied. The first choice was also to reduce the network's size. The pre-trained VGGFace network already provides a big stack of layers that cannot be removed without losing valuable information. Therefore, the custom layers were reduced to a single Dense layer, which was proposed in a similar way by \citet{Pittaras:2017:FineTuningStrategiesComparison}.
+For the here proposed Machine Learning model it was not possible to increase the amount of training data, as this would make an objective comparison with benchmark paper impossible. Thus, further regularization techniques were applied. The first choice was also to reduce the network's size. The pre-trained VGGFace network already provides a big stack of layers that cannot be removed without losing valuable information. Therefore, the custom layers were reduced to a single Dense layer, which was proposed in a similar way by \citet{Pittaras:2017:FineTuningStrategiesComparison}, and Dropout was chosen to make the network purposefully forget some information.
 
 \subsubsection{Dropout}
 According to \citet{Chollet:2017:DeepLearningPython}, Dropout is one of the most effective and commonly used regularization techniques. When applied, noise is introduced during training by randomly setting a certain percentage of the layer's output values to zero. The Dropout applied in the proposed architecture was determined through extensive experimentation and was applied before and after the single Dense layer with a rate of 0.7 and 0.6 respectively. The following figure shows an example with a dropout rate of 0.5.
@@ -216,7 +215,7 @@ According to \citet{Chollet:2017:DeepLearningPython}, Dropout is one of the most
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.7\textwidth]{Figures/dropout.PNG}
-  \caption{Dropout applied to an activation matrix at training time.\citep{Chollet:2017:DeepLearningPython}}
+  \caption{Dropout applied to an activation matrix at training time \citep{Chollet:2017:DeepLearningPython}}.
   \label{fig:Dropout}
   \end{center}
 \end{figure}
@@ -228,7 +227,7 @@ The Data Augmentation applied in the here proposed solution augmented the images
 \begin{itemize}
     \item rotation range from 0 to 30 degrees
     \item width shift range from 0 to 25 percent of the total width
-    \item height shift range from 0 to 25 percent of the total width
+    \item height shift range from 0 to 25 percent of the total height
     \item horizontal flip
     \item brightness shift range from 50 to 150 percent
     \item zoom range from 0 to 30 percent
@@ -261,8 +260,6 @@ To sum things up, the Model Checkpoint kept track of the currently best result i
 \subsubsection{Hyper-parameter optimization}
 Optimization of important hyper-parameters also greatly reduces the effects of overfitting. Two of the most impactful parameters are the learning rate and the batch size.
 \newline\newline
-An analysis conducted by \citet{Yuanzhi:2019:RegularizationInitialLargeLearningRate} on Initial Learning Rates confirmed that an initially large learning rate can have a regularization effect on the training process. Even though a small initial learning rate might allow for better performance initially, it will not be able to generalize as well as initially large learning rates. The training performed in this Master's thesis made use of an initial learning rate of 0.0001 for the first 3 epochs. Afterwards it was lowered down to 0.00001.
+An analysis conducted by \citet{Yuanzhi:2019:RegularizationInitialLargeLearningRate} on Initial Learning Rates confirmed that an initially large learning rate can have a regularization effect on the training process. Even though a small initial learning rate might allow for better performance initially, it will not be able to generalize as well as initially large learning rates. The training performed in this Master's thesis made use of an initial learning rate of 0.0001 for the first 3 epochs. Afterwards it was lowered to 0.00001.
 \newline\newline
-Along with the effects of the initial learning rate on improving generalization and reducing the effects of overfitting, \citet{Keskar:2016:LargeBatchTrainingGeneralization} posited that choosing small-batch methods consistently generalize better than large batch methods. 
-\newline\newline
-To sum everything up, both the learning rate and batch size can offer a regularizing effect due to the noise they add during the training process.
+Along with the effects of the initial learning rate on improving generalization and reducing the effects of overfitting, \citet{Keskar:2016:LargeBatchTrainingGeneralization} posited that choosing small-batch methods consistently generalizes better than large batch methods. For the here proposed approach, utilized during 5-fold-cross-validation, made use of a batch size of 16.

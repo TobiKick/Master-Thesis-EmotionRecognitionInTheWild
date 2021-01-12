@@ -2,13 +2,11 @@
 \chapter{Application}
 For PPI AG, the goal is to use the research conducted during this Master thesis as a scientific basis for a future application of this technology in one of their own business use cases. Therefore, this chapter will assess, whether Emotion Recognition is a viable assistance for consultants, as well as customers in the selected use case of video-call consultations.
 \newline\newline
-Firstly, a prototype was developed to prove that Emotion Recognition is a viable option for real-time predictions from a webcam stream.
-\newline\newline
-Secondly, a more meaningful interpretation of emotions was needed to provide consultants or customers with a more actionable metric. Interest was chosen to be the metric used to identify a customer's intention. Thus, an user experiment was conducted that compares the predicted interest based on emotions recognized from facial expressions with the stated level of interest by participants.
+Firstly, a prototype was developed to prove that Emotion Recognition is a viable option for real-time predictions from a webcam stream. Secondly, a more meaningful interpretation of emotions was needed to provide consultants or customers with a more actionable metric. Interest was chosen to be the metric used to identify a customer's intention. Thus, an user experiment was conducted that compares the predicted interest based on emotions recognized from facial expressions with the stated level of interest by participants.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Prototype}
-The first prototype was constructed as a local application that takes its video input from the PC's webcam. When the user presses the 'SPACE' key, the programm extracts the current frame of the video stream, detects the human face, recognizes its emotion in terms of valence and arousal, and prints the results onto the screen. A snapshot of this is provided in the following figure \ref{fig:PrototypeRealTime}. 
+The first prototype was constructed as a local application that takes its video input from the PC's webcam. When the user presses the 'SPACE' key, the program extracts the current frame of the video stream, detects the human face, recognizes its emotion in terms of valence and arousal, and prints the results onto the screen. A snapshot of this is provided in the following figure \ref{fig:PrototypeRealTime}. 
 
 \begin{figure}[H]
   \begin{center}
@@ -21,7 +19,7 @@ The first prototype was constructed as a local application that takes its video 
 \textbf{Landmarks}\newline
 It was from special interest to PPI AG whether such an approach would be suitable for real-time usage, especially in regards to utilizing landmarks. 
 \newline\newline
-A small test of 10 probes indicated that it took on average 0.7 seconds to perform Emotion Recognition without any landmarks in production. In comparison to that, additionally detecting landmarks and feeding them into the model did not result in any delay, as its performance was also on average 0.7 seconds. Such a low number, with less than 1 second, proves that this approach is definitely suitable for real-time use cases. 
+A small test of 10 probes indicated that it took on average 0.7 seconds to perform Emotion Recognition without any landmarks in production. In comparison to that, additionally detecting landmarks with the dlib shape predictor \citep{Kazemi:2014:ShapePredictor} and feeding them into the model did not result in any delay, as it also took on average 0.7 seconds. Such a low number, with less than 1 second, proves that this approach is definitely suitable for real-time use cases. 
 \newline\newline
 However, it needs to be pointed out that this could only be achieved with the dlib shape predictor, unlike an Active Appearance Model which would likely need more time to be constructed. Furthermore, it is to be expected that the average duration of 0.7 seconds further decreases when taking into account that the prediction be performed on a powerful server with GPU support instead of a laptop computer.
 
@@ -90,9 +88,9 @@ For such an implementation there were multiple considerations about the setup ty
 \end{center}
 \end{table}
 
-The setups mentioned in table \ref{tab:appExperiment} were verified from top to bottom. First, the questionnaire and survey tools were investigated, because they, on the one hand, allowed for a quick implementation, but also did not allow room for customization required to conduct this experiment. A locally-run, stand-alone application would have accommodated all of this. However, due to its nature and size, it would be difficult to provide the participants with the program needed for the experiment and to retrieve its results. The best choice was for the researcher to develop a web-based application.
+The setups mentioned in table \ref{tab:appExperiment} were verified from top to bottom. First, the questionnaire and survey tools were investigated, because they, on the one hand, allowed for a quick implementation, but also did not allow room for the required customization to conduct this experiment. A locally-run, stand-alone application would have accommodated all of this. However, due to its nature and size, it would be difficult to provide the participants with the program needed for the experiment and to retrieve its results. The best choice was for the researcher to develop a web-based application.
 \newline\newline
-A web-based server application hosted by PythonEverywhere would have fulfilled all the requirements, however, hooking onto participants’ webcams did not prove to be possible. As a result, the researcher decided to develop a browser-based standalone web-application with ReactJS. It allowed for the needed customization and only posed a constraint in terms of result retrieval (the participants had to download the results and send them manually to the researcher).
+A web-based server application hosted by PythonEverywhere would have fulfilled all the requirements, however, hooking onto participants’ webcams did not prove to be possible. As a result, the researcher decided to develop a browser-based standalone web-application with ReactJS. It allowed for the needed customization and only posed a constraint in terms of results retrieval (the participants had to download the results and send them manually to the researcher).
 \newline\newline
 The user interface for the developed application is comprised of the presented video to be watched by the participant, as well as another smaller video that captures and records the webcam of the participant. There is also a slider for the indication of the current interest level of the participant, as well as a 'Start', 'Stop' and 'Download' button. The following figure shows the default screen when accessing the web page:
 
@@ -106,7 +104,7 @@ The user interface for the developed application is comprised of the presented v
 \end{figure}
 \end{center}
 
-There are three video clips from YouTube embedded into the web page. These video clips are successful commercial ads that are supposed to induce a broad range of emotions in participants.
+There are three video clips from YouTube embedded into the web page. These video clips are successful commercial ads that are supposed to induce a moderate range of emotions in participants.
 \newline\newline
 For participants to watch those video clips and indicate their currently experienced level of interest, they had to follow the following instructions:
 
@@ -122,7 +120,7 @@ For participants to watch those video clips and indicate their currently experie
     \item In case of a pop-up: Allow the download of multiple files at the same time. It should download one .csv file and a .webm file
     \item Go on to the next video by clicking on the button 'Next video'
     \item Start the same process again for the next video by clicking the button 'Start Capture'
-    \item Finally, send the results, consisting of a *.webm and *.csv file for each video clip, back to tkick93@gmail.com (totalling 6 files). Alternatively, drop the files in the following Google Driver folder and indicate your name.
+    \item Finally, send the results, consisting of a *.webm and *.csv file for each video clip, back to tkick93@gmail.com (totalling 6 files). Alternatively, drop the files in the following Google Driver folder (link was attached) and indicate your name.
 \end{enumerate}
 
 After the participant conducted all these tasks, the researcher received a *.webm and *.csv file for each video watched. The *.webm files had to be converted to MP4 with an Online Converter (frame rate of 24 per second). After that the VLC media player was used to filter frames so that it returned a frame for each second of the video.
@@ -139,7 +137,7 @@ This hypothesis was tested by calculating the Pearson Correlation between the in
 \newline\newline
 Generally speaking, a Pearson Correlation between 0.3 and 0.5 is regarded as a low correlation, between 0.5 and 0.7 as moderate correlation and above 0.7 as high correlation. For this Master's thesis the researcher set out to achieve a correlation of at least 0.5 in order to make the claim that emotional valence is a reliable indicator for human interest.
 \newline\newline
-The metric for the experiment is the average Pearson correlation. The gathered data includes three presented video clips for each of the 10 participants (participants with invalid data were not considered here). The best solution without cross validation achieved in this experiment on average a Pearson correlation of 0.12. This number indicates a positive, but very weak correlation. Due to such a weak correlation it cannot be excluded whether the results were just achieved by chance. This is why it can be assumed that the experiment disproved any meaningful correlation between emotional valence and the actual interest indicated by participants.
+The metric for the experiment is the average Pearson correlation. The gathered data includes three presented video clips for each of the 10 participants (participants with invalid data were not considered here). The best solution without cross validation achieved in this experiment on average a Pearson correlation of 0.12. This number indicates a positive, but very weak correlation. Due to such a weak correlation it cannot be excluded whether the results were just achieved by chance. This is why for this experiment is regarded as not being able to prove any meaningful correlation between emotional valence and the actual interest indicated by participants.
 \newline\newline
 Next to the actual result, the experiment gave way to further insights:\newline
 \begin{itemize}
