@@ -28,6 +28,14 @@
 \specialcomment{tobi}{\begingroup\sffamily\color{blue}\commentstyle=\color{codegreen},}{\endgroup}
 \specialcomment{shan}{\begingroup\sffamily\color{red}}{\endgroup}
 
+% for the legend of the conditions
+\usepackage{array,tabularx}
+\newenvironment{conditions*}
+  {\par\vspace{\abovedisplayskip}\noindent
+   \tabularx{\columnwidth}{>{$}l<{$} @{\ : } >{\raggedright\arraybackslash}X}}
+  {\endtabularx\par\vspace{\belowdisplayskip}}
+  
+
 % Generate the glossary
 \makeglossaries
  
@@ -56,8 +64,8 @@
 \vspace*{2.0cm}\\
 {\LARGE \textbf{Title:}}
 \vspace*{0.4cm}\\
-{\LARGE Visual Emotion Recognition In-The-Wild}
-%{\LARGE Visual Emotion Recognition In-The-Wild: Prediction of Valence/Arousal and Assessment of Application scenarios}
+{\LARGE Visual Emotion Recognition in The Wild}
+%{\LARGE Visual Emotion Recognition in The Wild: Prediction of Valence/Arousal and Assessment of Application scenarios}
 %{\LARGE Identifying customer intentions in real-time video consultations through emotion recognition: Analysis of viability and value co-creation by implementation of a prototype}
 \vspace*{1.5cm}\\
 presented by
@@ -85,15 +93,15 @@ Second assessor: Dr. Mikko Lauri
 
 
 \chapter{Abstract}
-This Master's thesis set out to explore the possibilities of the current state-of-the-art in Emotion Recognition In-The-Wild. A prototype was implemented that aims to possibly break records set in this field, and findings were applied to the business use-case of online video-call consultations.
+The goal of this Master's thesis is to explore the possibilities of the current state-of-the-art in emotion recognition in the wild. A prototype was implemented that aims to possibly break records set in this field. In addition, findings were applied to the business use-case of online video-call consultations.
 \newline\newline
-For this, the researcher utilized the AFEW-VA dataset, consisting of talk-show and movie clips. Under the assumption that this kind of data represents In-The-Wild data, the researcher could confirm that emotions can be recognized reliably using a Fine-Tuned Deep Convolution Neural Network (FT-DCNN). Furthermore, after optimizing the model and its hyper-parameters, the obtained results could indeed beat the results of one out of two state-of-the-art scientific papers that were handling the same dataset.
+For this, the Acted Facial Expressions in The Wild - Valence Arousal (AFEW-VA) dataset \citep{Kossaifi:2017:AFEW-VADatabase}, consisting of talk-show and movie clips, was utilized in this work. Under the assumption that this kind of data represents in-the-wild data, this work confirmed that emotions can be recognized reliably using a Fine-Tuned Deep Convolution Neural Network (FT-DCNN). Furthermore, after optimizing the model and its hyper-parameters, the obtained results could indeed beat the results of one out of two state-of-the-art scientific papers by decreasing the loss in terms of RMSE by 39 \%.
 \newline\newline
 The thesis will shed a light on the implemented modules through a detailed description and a diligent examination. This examination was done in the form of an ablation study which ensured that all major components contributed positively towards the overall performance of the architecture. The outcome of this scientific examination resulted in a prototype application that can recognize emotions from the webcam stream in real-time.
 \newline\newline
-An important practical aspect of this thesis is the question, how the results can be applied in the business use case of video consultations. Therefore, the researcher devised a mapping mechanism from emotional valence to interest and set up an user experiment to validate this approach. In the experiment, participants watched different commercials, during which they were recorded through their webcam. However, facial expressions were way weaker than expected. As a result, the outcome of the experiment disproved the original hypotheses that it is possible to map recognized emotion to human intentions effectively (= with a moderate correlation), at least from video data with weak facial expressions.
-\newline\newline
-All in all, there are still many open (research) questions to be answered that were revealed by this thesis. One concrete next step could be the utilization of real-life data from video consultations for honing the current model in a way that it better tackles the specific challenge at hand.
+An important practical aspect of this thesis is the question, how the results can be applied in the business use case of video consultations. Therefore, a mapping mechanism was devised from emotional valence to interest, and an user experiment was set up in order to validate this approach. In the experiment, participants watched different commercials, during which they were recorded through their webcam. However, facial expressions were way weaker than expected. As a result, the outcome of the experiment disproved the original hypotheses that it is possible to map recognized emotion to human intentions effectively (= with a moderate correlation), at least from video data with weak facial expressions.
+
+% All in all, there are still many open (research) questions to be answered that were revealed by this thesis. One concrete next step could be the utilization of real-life data from video consultations for honing the current model in a way that it better tackles the specific challenge at hand.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

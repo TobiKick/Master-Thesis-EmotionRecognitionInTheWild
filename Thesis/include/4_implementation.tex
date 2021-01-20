@@ -1,213 +1,120 @@
 \chapter{Implementation}
-% (more or less telling whats in my code; implementation details; describing dataset; which network and which hyper parameters do I use; how does the application look like)
-\section{Setup}
-
+\section{Experimental setup}
 In order to conduct the training process described in the previous chapter, it was necessary to have a computer with a powerful GPU in order to speed up training. For this Master thesis, the experiments/training were conducted on a Nvidia Titan X (Pascal) GPU with 12 GB of memory. 
 \newline\newline
-The framework used for Machine Learning was TensorFlow. It provides a specific software package for GPU usage which was called 'tensorflow-gpu' and was installed in version '1.14.0'. Furthermore, Keras was used on top of Tensorflow, which was a neural network library that made it faster and easier to interact with the underlying Machine Learning framework. Keras version used was 2.2.5.
-\newline\newline
-Further important third-party software packages include:
-\begin{itemize}
-    \item Keras-VggFace: Version 0.6
-    \item MTCNN:         Version 0.1.0
-    \item OpenCV:        Version 4.1
-\end{itemize}
-All these frameworks and packages were used based on the Python programming language with version 3.6.
+For the ease of reproducibility of this work, frameworks and major libraries are hightlighted as follows: For machine learning, Keras 2.2.5 with TensorFlow 1.14.0 as a backend. In addition to that, Keras-VggFace 0.6, MTCNN 0.1.0 and OpenCV 4.1 were used. The entire code was implemented in a Python 3.6 environment.
+
 
 \section{Dataset}
-\textbf{Background}
-\newline
-The selected Acted Facial Expressions In-The-Wild - Valence Arousal (AFEW-VA) dataset \citet{Kossaifi:2017:AFEW-VADatabase} is based upon the Acted Facial Expressions In-The-Wild database (AFEW) introduced in \citeyear{Dhall:2012:AFEW} by \citet{Dhall:2012:AFEW}. The AFEW dataset is composed of video clips that try to depict a real-world environment. It captures facial expressions, natural head pose movements, occlusions, subjects' races, gender, diverse ages, and multiple subjects in a scene. The authors labeled the video clips with one of six basic expressions: anger, disgust, fear, happiness, sadness, surprise, or neutral.
+The selected Acted Facial Expressions in the wild - Valence Arousal (AFEW-VA) dataset introduced by \citet{Kossaifi:2017:AFEW-VADatabase} is based upon the Acted Facial Expressions in the wild database (AFEW) introduced in \citeyear{Dhall:2012:AFEW} by \citet{Dhall:2012:AFEW}. The AFEW dataset is composed of video clips that try to depict a real-world environment. It captures facial expressions, natural head pose movements, occlusions, subjects' races, gender, diverse ages, and multiple subjects in a scene. The authors labeled the video clips with one of six basic expressions: anger, disgust, fear, happiness, sadness, surprise, or neutral. The AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} uses the same underlying real-world video data, but it did not annotate its video clips with one of six basic expressions. Instead it used the two dimensional affective space with valence and arousal. 
 \newline\newline
-The AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} uses the same underlying real-world video data, but it did not annotate its video clips with one of six basic expressions. Instead it used the two dimensional affective space with valence and arousal. While valence expresses how positive or negative an emotion is, arousal expresses how strong or weak an emotion is.
+Furthermore, as the name of the dataset already suggests, the dataset is compopsed of data that was collected under in-the-wild conditions. In-the-wild refers to real-life conditions in video clips, which make it significantly more challenging to recognize emotions in comparison to a dataset that has been captured in a controlled environment. \citet{Salah:2018:VideoBasedER} explained that these difficulties can be caused by, for example, uncontrolled illumination or uncontrolled video quality due to a different recording medium, like webcams by individuals vs. professional cameras. Such in-the-wild data is usually acquired from talk shows, movies or other natural interactions. 
 \newline\newline
-Furthermore, as the name of the dataset already suggests, the dataset is compopsed of data that was collected under 'In-The-Wild' conditions. 'In-The-Wild' refers to real-life conditions in video clips, which make it very difficult to recognize emotions. \citet{Salah:2018:VideoBasedER} explained that these difficulties can be caused by, for example, uncontrolled illumination or uncontrolled video quality due to a different recording medium, like webcams by individuals vs. professional cameras. Such 'In-The-Wild' data is usually acquired from talk shows, movies or other naturalistic interactions. 
+Since the research conducted during this Master's thesis is intended to serve as a basis for a further real-life application in video-call scenarios, it was clear that the dataset needed to be as close to in-the-wild conditions as possible. Furthermore, it was decided that it was more important to capture as much of an emotion's information as possible rather than placing value on the interpretation of emotions. As a result, the AFEW-VA dataset got chosen because of its in-the-wild conditions, its 2D Affective Space model for emotion representation and its backing by the scientific community when it comes to providing comparable results.
 \newline\newline
-As the research conducted during this Master thesis is intended to serve as a basis for a further real-life application in video-call scenarios, it was clear that the dataset needed to be as close to 'In-The-Wild' conditions as possible. Furthermore, it was decided that it was more important to capture as much of an emotion's information as possible rather than placing value on the interpretation of emotions. As a result, the AFEW-VA dataset got chosen because of its 'In-the-Wild' conditions, its 2D Affective Space model for emotion representation and its backing by the scientific community when it comes to providing comparable results.
-\newline\newline
-\textbf{Data structure}\newline
-The dataset is split into 600 folders, each representing a different video clip. Each video clip is taken from a different subject. Each of these folders holds multiple frames which together make up the video clip. Moreover, the folder also holds a .json file which contains the labels for each frame in terms of valence and arousal. Both values have an annotation level ranging from -10 to +10 in full integer values. This results in a total of 21 levels.\citep{Kossaifi:2017:AFEW-VADatabase} 
-\newline\newline
-Additionally, the file also includes pre-labeled landmarks for face detection purposes. However, these landmarks were not utilized in the training of the proposed model, as third-party modules were being used for performing face detection and landmark determination tasks.
-\newline\newline
-\textbf{Benchmark}
-\newline
-In order to objectively compare the results from the original AFEW-VA paper proposed by \citet{Kossaifi:2017:AFEW-VADatabase}, it was essential to lay out the circumstances under which the results were obtained. In the case of the AFEW-VA paper \citep{Kossaifi:2017:AFEW-VADatabase}, as well as the simulatenous VA prediction paper \citep{Handrich:2020:SimultaneousPredVA}, the data got divided in 5 disjoint folds in a subject-independent manner, meaning a subject did not appear in different folds. Subsequently, they performed a 5-fold-cross-validation for the prediction of valence and arousal values for each frame of a video clip.
-\newline\newline
-\citet{Roehrich:2020:TrainValidateTest} argued that when comparing different models it is not enough to use a training and a testing set, as it might still be possible that one model is better than the other due to randomness during the training process. Thus, in addition to the above-mentioned approach of creating 5 folds in a subject independent manner, it was important to separate the folds into training, validation and testing subsets. The split of the database into subsets is shown in figure \ref{fig:TrainTestSplit} and these subsets fulfill the following purposes:
-
-\begin{itemize}
-    \item The training dataset was used for the actual training of the model.
-    \item The validation dataset was used for testing during the training process. The loss, RMSE, and CORR metrics can then be applied to the validation dataset which allows to observe these metrics in a more independent way. Improvements of these metrics can be achieved by adapting the model architecture. 
-    \item The testing dataset is all about the actual measurement of the model's performance on a third previously unseen dataset.
-\end{itemize}
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.6\textwidth]{Figures/TrainTest_Split.png}
-  \caption{Train, Validation and Test split}
-  \label{fig:TrainTestSplit}
-  \end{center}
-\end{figure}
-
-For the final results of the proposed approach, 5-fold-cross-validation was conducted by splitting the 600 subjects/video-clips into five folds, each containing 120 subjects. Four out of these five folds were used for training, while one fold was reserved for the evaluation of the model after the finished training. The four folds were again split into training and validation, with one fold serving as the validation set. This approach can also be seen in figure \ref{fig:CrossValidationSplit}.
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.8\textwidth]{Figures/CrossValidation_Split.png}
-  \caption{5-fold-Cross-Validation split}
-  \label{fig:CrossValidationSplit}
-  \end{center}
-\end{figure}
-
-Following this approach ensured that there was no overlap in terms of subjects between the training, validation and testing dataset. As a result, the testing data subset serves to evaluate the model performance, as it contained only frames from subjects that were previously not seen by the model during the training process.
-
-% \begin{quote}
-%     To compare the performance of various features, we sampled regularly an equal number of frames from each sequence to obtain a set of frames representative of the whole dataset, which we then divided in 5 disjoint folds in a subject-independent manner (i.e. a subject does not appear in two different folds). We then performed a 5-fold cross-validation (i.e. we iteratively used one of the set for testing and the other 4 for training) to predict the valence and arousal values for each frame. \citep{Kossaifi:2017:AFEW-VADatabase}
-% \end{quote}
-
-\section{Architecture}
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=1.0\textwidth]{Figures/model_architecture.PNG}
-  \caption{Neural Network Architecture}
-  \label{fig:NNArchitecture}
-  \end{center}
-\end{figure}
-
-Figure \ref{fig:NNArchitecture} describes the architecture of the neural network with the following elements:
-
-\begin{itemize}
-    \item Line \#2: the pre-trained VGGFace model is being loaded with 'resnet50' as its neural network architecture. With the parameter 'include\_top' set to False allows to exclude the classifier of the pre-trained network on face detection.
-    \item Line \#5 to line \#10: The VGGFace model is either set to trainable or non-trainable. For the first three epochs of fune-tuning, the model gets set to non-trainable. Afterwards it is set to trainable, and allows the model to update its weights.
-    \item Line \#12: The output of the VGGFace model is being accessed and in line \#13 reduced in dimensionality in order to fit the input requirements for the following layer.
-    \item Line \#15 to line \#18 contains the classifier consisting of a Dense layer (1024 units), together with two Dropout and a Batch Normalization layer in order to improve generalization capabilities.
-    \item Line \#20 and \#21: The output for each evaluation metric is defined individually. This makes it possible to neatly visualize the outcomes separately. The 'tanh' activation function resized the output to a floating-point number in the range of -1 to +1.
-\end{itemize}
-
-The choice of using only a single Dense layer in the classifier was based on a comparison of fine-tuning strategies by \citep{Pittaras:2017:FineTuningStrategiesComparison}. Through this comparison of fine-tuning strategies on pre-trained neural networks, they could show that
-\begin{quote}
-    increasing the depth of a pre-trained network with one more fully-connected layer and fine-tuning the rest of the layers on the target dataset can improve the network’s concept detection accuracy compared to other fine-tuning approaches. \citep[~p. 103]{Pittaras:2017:FineTuningStrategiesComparison}
-\end{quote}
-
-Moreover, \citet{Pittaras:2017:FineTuningStrategiesComparison} could obtained their best results with a fine-tuning approach that replaced the pre-trained classifier of a network with a single Dense layer containing a high number of neurons.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The AFEW-VA dataset is made up of 600 video clips, each consisting of multiple frames that make up the video clip. Furthermore, each frame is then annotated in terms of valence and arousal. Both values have an annotation level ranging from -10 to +10 in full integer values. This results in a total of 21 levels.\citep{Kossaifi:2017:AFEW-VADatabase} 
 
 
-\section{Fine-tuning}
-\subsubsection{ResNet50 model}
-ResNet50, short for Residual Network, is a very deep neural network architecture that was invented for the purpose of image classification, resulting the win of the ImageNet challenge in 2015. \citep{Dwivedi:2019:ResNetInKeras}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Training \& Regularization}
+\subsection{Backbone Network}
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=1.0\textwidth]{Figures/resnet50.png}
-  \caption{ResNet50 Architecture \citep{Dwivedi:2019:ResNetInKeras}}
+  \caption{ResNet50 \citep{Dwivedi:2019:ResNetInKeras} is a very deep-layered architecture consisting of multiple layers inside each of the five stages.}
   \label{fig:ResNet50Architecture}
   \end{center}
 \end{figure}
 
-\begin{quote}
-    The ResNet-50 model consists of 5 stages each with a convolution and Identity block. Each convolution block has 3 convolution layers and each identity block also has 3 convolution layers. The ResNet-50 has over 23 million trainable parameters. \citep[~para. 14]{Dwivedi:2019:ResNetInKeras}
-\end{quote}
-
-ResNet50 is defined by a very deep-layered neural network which traditionally posed a difficult challenge to researchers, as the training process gets worse the deeper the neural network due to the notorious vanishing gradient problem. The vanishing gradient leads to a rapid saturation of the model's weights which results in a degradation of the overall model performance. To fight this problem, ResNet introduced a novel concept, named skip connection, where the results of a block are added together with the original input before applying an activation function. \citep{Dwivedi:2019:ResNetInKeras}
+The chosen ResNet50 model \citep{Dwivedi:2019:ResNetInKeras} consists of 50 layers, combined in 5 stages, and includes over 23 million trainable parameters. It was one of the very first deep-layered neural networks that introduced a solution to the notorious vanishing gradient problem by its 'skip connection' concept.
 \newline\newline
-This concept is also illustrated in the following figure \ref{fig:ResNet50IdentityBlock} for the identity block:
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.9\textwidth]{Figures/ResNet50_IdentityBlock.png}
-  \caption{ResNet50 Identity Block\citep{Dwivedi:2019:ResNetInKeras}}
-  \label{fig:ResNet50IdentityBlock}
-  \end{center}
-\end{figure}
-
-However, this operation is only possible when the two inputs for the addition have the same shape. Due to the layout of the ResNet50 architecture, this is inherently the case for the Identity Block. For the Convolution Block a further operation is needed to transform the block's original input into the same shape as the outcome of the Convolutional layers. As can be seen in figure \ref{fig:ResNet50ConvBlock}, this was done by applying a separate Convolutional plus Batch Normalization layer to the original input and choosing its hyperparameters in a way that the output will be in the same shape as the outcome of the Convolutional layers.
+'Skip connection' is done by adding a shortcut from the input to the output of a 'CONV' or 'ID' block, allowing the gradient to flow through. This behaviour, as illustrated in figure \ref{fig:ResNet50ConvBlock}, makes sure that the subsequent block performs as least as well as the previous. An overview of the composition of all blocks in ResNet50 is presented in figure \ref{fig:ResNet50Architecture}. 
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.9\textwidth]{Figures/ResNet50_ConvBlock.png}
-  \caption{ResNet50 Convolutional Block\citep{Dwivedi:2019:ResNetInKeras}}
+  \caption{In a Convolutional block of ResNet50 \citep{Dwivedi:2019:ResNetInKeras}, additionally to adding the result, a convolution is performed on the original input.}
   \label{fig:ResNet50ConvBlock}
   \end{center}
 \end{figure}
 
-\citet{Dwivedi:2019:ResNetInKeras} argued that this approach is helpful in mitigating the problem of vanishing gradients, as its skip connection concept provided an alternate shortcut path for gradients to flow through. This ensured that the subsequent block will perform at least as well as the previous.
 
-\subsubsection{Pre-trained network}
-As recommended by \citet{Chollet:2017:DeepLearningPython} using a pre-trained neural network is a highly effective approach to use deep neural networks on a small image dataset. The AFEW-VA dataset with its 30.000 frames (= 600 video clips) can be considered a rather small dataset \citep{Kossaifi:2017:AFEW-VADatabase}.
-
-\begin{quote}
-    A pretrained network is a saved network that was previously trained on a large dataset, typically on a large-scale image-classification task. If this original dataset is large enough and general enough, then the spatial hierarchy of features learned by the pretrained network can effectively act as a generic model of the visual world, and hence its features can prove useful for many different Computer Vision problems, even though these new problems may involve completely different classes than those of the original task. \citep[~p. 143]{Chollet:2017:DeepLearningPython}
-\end{quote}
-
-\citet{Chollet:2017:DeepLearningPython} further elaborated that using a pre-trained network for small-data problems makes deep learning a very effective approach due to its portability of learned features across different problems.
-\newline\newline
-This is why it seemed promising to solve the Emotion Recognition challenge at hand with a neural network that was pre-trained on a more general and holistic dataset. Therefore, a ResNet50 neural network architectur, pre-trained on a large-scale face recognition dataset containing 3.31 million images, called VGGFace2 \citep{Cao:2018:VGGFace2} was used.
-
-
-\subsubsection{Fine-tuning strategy}
-The layers inside a deep neural network are commonly divided into the convolutional base and the classifier. In the proposed approach, the ResNet50 architecture served as the convolutional base, while the classifier was added by manually defining the respective layers. The convolutional base was initialized with its pre-trained weights, while the classifier wasn't yet trained.
-\newline\newline
-The exact steps for fine-tuning a neural network were summarized by \citet{Chollet:2017:DeepLearningPython} as follows:
-\begin{enumerate}
-    \item Add your custom network on top of an already-trained base network
-    \item Freeze the base network
-    \item Train the part you added
-    \item Unfreeze some layers in the base network
-    \item Jointly train both these layers and the part you added
-\end{enumerate}
-
-\citet{Chollet:2017:DeepLearningPython} further highlighted that if the classifier isn't already trained and the whole model (including the pre-trained convolutional base) gets fine-tuned, the error being propagated through the network will be too big. This might result in the destruction of previously learned representations by the layers. As a result, the custom network part (in the case of the here proposed approach: the classifier) had to be trained separately, as in indicated by step 3. 
-\newline\newline
-As mentioned in step 4 only some layers of the base network were unfrozen and thus, used during training. According to \citet{Chollet:2017:DeepLearningPython}, it is more useful to fine-tune the higher layers because these encode more specialized features and needed to be readjusted to the new task/problem. Fine-tuning all layers was theoretically possible, although it would have increased the risk of overfitting. Therefore, it was chosen to keep the lower layers of the convolutional base frozen as they encoded more generic features, and only unfreeze the higher layers.
-
-% \citet{Yan:2016:MultiClueFusion} made use of multi clue fusion to further enhance the accuracy of an emotion recognition in the Wild. They showed that with using only the VGGFace model as a predictor for the Emotion Recognition challenge, they got a surprisingly high accuracy of about 36 per cent. They also mention that it the model will perform better as they recognize emotions over multiple frames and conduct fine-tuning on the VGGFace model. (Fintuning = the adaption of a pre-trained model to the current challenge, usually done together with a new dataset)
+% ResNet50 is defined by a very deep-layered neural network which traditionally posed a difficult challenge to researchers, as the training process got worse the deeper the neural network due to the notorious vanishing gradient problem. The vanishing gradient leads to a rapid saturation of the model's weights which results in a degradation of the overall model performance. To fight this problem, ResNet introduced a novel concept, named skip connection, where the results of a block are added together with the original input before applying an activation function. \citep{Dwivedi:2019:ResNetInKeras}
 % \newline\newline
-% Furthermore, they detect faces with Single Shot Detector (SSD) and whenever it fails, they crop the image manually so far, that the detector "has" to detect it. However, in the approach describe in this thesis, images with a non-detectable face will be passed into the model in their original size. Thus, no manual cropping is being conducted. Additionally, they focus on the concept of action units (AU) together with landmarks. They define a facial expression is a combination of several action units (AU) movements, with the action units being the trajectories of vital facial
-% landmarks.
-% \citep{Yan:2016:MultiClueFusion}
+% This concept is also illustrated in the following figure \ref{fig:ResNet50IdentityBlock} for the identity block:
+
+%\begin{figure}[H]
+%  \begin{center}
+%  \includegraphics[angle=0, width=0.9\textwidth]{Figures/ResNet50_IdentityBlock.png}
+%   \caption{In an Identity block of ResNet50 \citep{Dwivedi:2019:ResNetInKeras}, a shortcut is added by adding the results to the original input.}
+%   \label{fig:ResNet50IdentityBlock}
+%   \end{center}
+% \end{figure}
+
+% However, this operation is only possible when the two inputs for the addition have the same shape. Due to the layout of the ResNet50 architecture, this is inherently the case for the Identity Block. For the Convolution Block a further operation is needed to transform the block's original input into the same shape as the outcome of the Convolutional layers. As can be seen in figure \ref{fig:ResNet50ConvBlock}, this was done by applying a separate Convolutional plus Batch Normalization layer to the original input and choosing its hyperparameters in a way that the output will be in the same shape as the outcome of the Convolutional layers.
+
+% \citet{Dwivedi:2019:ResNetInKeras} argued that this approach is helpful in mitigating the problem of vanishing gradients, as its skip connection concept provided an alternate shortcut path for gradients to flow through. This ensured that the subsequent block will perform at least as well as the previous.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \begin{figure}[H]
+%   \begin{center}
+%   \includegraphics[angle=0, width=1.0\textwidth]{Figures/model_architecture.PNG}
+%   \caption{The neural network architecture is constructed by loading the pre-trained VGGFace model and adding a custom classifier.}
+%   \label{fig:NNArchitecture}
+%   \end{center}
+% \end{figure}
+
+% Figure \ref{fig:NNArchitecture} describes the architecture of the neural network with the following elements:
+
+% \begin{itemize}
+%     \item Line \#2: the pre-trained VGGFace model is being loaded with 'resnet50' as its neural network architecture. With the parameter 'include\_top' set to False allows to exclude the classifier of the pre-trained network on face detection.
+%     \item Line \#5 to line \#10: The VGGFace model is either set to trainable or non-trainable. For the first three epochs of fune-tuning, the model gets set to non-trainable. Afterwards it is set to trainable, and allows the model to update its weights.
+%     \item Line \#12: The output of the VGGFace model is being accessed and in line \#13 reduced in dimensionality in order to fit the input requirements for the following layer.
+%     \item Line \#15 to line \#18 contains the classifier consisting of a Dense layer (1024 units), together with two Dropout and a Batch Normalization layer in order to improve generalization capabilities.
+%     \item Line \#20 and \#21: The output for each evaluation metric is defined individually. This makes it possible to neatly visualize the outcomes separately. The 'tanh' activation function resized the output to a floating-point number in the range of -1 to +1.
+% \end{itemize}
+
+% The choice of using only a single Dense layer in the classifier was based on a comparison of fine-tuning strategies by \citep{Pittaras:2017:FineTuningStrategiesComparison}. Through this comparison of fine-tuning strategies on pre-trained neural networks, they could show that
+% \begin{quote}
+%     increasing the depth of a pre-trained network with one more fully-connected layer and fine-tuning the rest of the layers on the target dataset can improve the network’s concept detection accuracy compared to other fine-tuning approaches. \citep[~p. 103]{Pittaras:2017:FineTuningStrategiesComparison}
+% \end{quote}
+
+% Moreover, \citet{Pittaras:2017:FineTuningStrategiesComparison} could obtained their best results with a fine-tuning approach that replaced the pre-trained classifier of a network with a single Dense layer containing a high number of neurons.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Metrics}
-Metrics, in Machine Learning, are used to evaluate the performance of a Neural Network. Probably the most widely-used metric is 'accuracy' which tells you about the share of correctly predicted data points. 
+\subsection{Training}
+\subsubsection{Pre-trained network}
+A pre-trained network is a saved neural network that was previously learned spatial hierarchy of features on a large and general dataset. As recommended by \citet{Chollet:2017:DeepLearningPython} using a pre-trained neural network is a highly effective approach when dealing with a small image dataset. With around 30.000 frames (= 600 video clips), the AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} can be considers as such. This is why the VGGFace network, based on ResNet50 and pre-trained on the large-scale face recognition dataset VGGFace2 \citep{Cao:2018:VGGFace2}, was chosen as a basis for this work.
+
+\subsubsection{Fine-tuning}
+In order to be able to fine-tune a pre-trained network, it first had to be adapted to the current challenge. Therefore, in this work the classifier got replaced with a single Dense layer. This decision was based on a comparison of fine-tuning strategies conducted by \citet{Pittaras:2017:FineTuningStrategiesComparison} who found out that they achieved the best results fine-tuning results when only adding a single Dense layer with a high number of neurons.
 \newline\newline
-As the present challenge of predicting values for valence and arousal is better solved through regression, the 'accuracy' metric will not be able to deliver meaningful and actionable results. Instead the researcher decided to use the RMSE (Root-mean-squared error) and CORR (Pearson product-moment correlation coefficient) as metrics for this challenge. These metrics were already proposed by \citet{Kossaifi:2017:AFEW-VADatabase} which makes them very comparable to the results proposed in their paper.
+In the first fine-tuning step, only the classifier was trained on the dataset for a few epochs. According to \citet{Chollet:2017:DeepLearningPython}, this prevents the error being propagated through the network from getting to big, which would have happened when training the whole network from the start. 
 \newline\newline
-RMSE gives the observer a notion of how close the predicted values are to the actual values. It can also be defined as follows:
-
-\begin{quote}
-    Root Mean Square Error (RMSE) is the standard deviation of the residuals (prediction errors). Residuals are a measure of how far from the regression line data points are ... In other words, it tells you how concentrated the data is around the line of best fit. \citep[~para. 1]{2020:RMSE}
-\end{quote}
-
-The CORR metric tells you how strong the relationship between the prediction and the actual label is. In other words:
-
-\begin{quote}
-    CORR gives information about the magnitude of the association, or correlation, as well as the direction of the relationship. \citep[~para. 1]{2020:PearsonCorrelation}
-\end{quote}
-
-The RMSE metric is additionally used as the to-be-optimized loss function during the training process. Both metrics are being custom implemented by the following source code:
+In the second fine-tuning step, the pre-trained neural network was trained in accordance with the selected Multi-Phase Fine-Tuning (FT) \citep{Sarhan:2020:MultiPhaseFineTuning} strategy. In contrast to Single-Phase FT where network is trained by unfreezing a set amount of layers at once, in Multi-Phase FT the network is trained by successively unfreezing layers in phases. This is illustrated in figure \ref{fig:MultiPhaseFT}. According to \citet{Sarhan:2020:MultiPhaseFineTuning} this approach not only reached better accuracy, but also converged in a fewer epochs. 
 
 \begin{figure}[H]
   \begin{center}
-  \includegraphics[angle=0, width=0.9\textwidth]{Figures/model_metrics.PNG}
-  \caption{Model Custom Metrics}
-  \label{fig:ModelCustomMetrics}
+  \includegraphics[angle=0, width=0.8\textwidth]{Figures/MultiPhaseFT.PNG}
+  \caption{Multi-Phase Fine-Tuning (FT) leads to better accuracy in fewer training epochs in comparison to Single-Phase FT.}
+  \label{fig:MultiPhaseFT}
   \end{center}
 \end{figure}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Regularization}
-A central role in developing a successful solution with Machine Learning is making sure that an algorithm will perform well not only on the training data, but also on previously unseen data. In many Machine Learning challenges it is common, that a well performing algorithm on the training data performs bad on previously-unseen data. This happens when the model is trying to memorize the training dataset, instead of learning its underlying patterns. This behaviour is called 'overfitting'. Strategies explicitly designed for decreasing overfitting, even at the expense of increasing the training error, are known as regularization. \citep{Goodfellow:2016:DeepLearning}
+\subsection{Regularization}
+A central role in developing a successful solution with machine learning is making sure that an algorithm will perform well not only on the training data, but also on previously unseen data. In many machine learning challenges it is common, that a well performing algorithm on the training data performs bad on previously-unseen data. This happens when the model is trying to memorize the training dataset, instead of learning its underlying patterns. This behaviour is called 'overfitting'. Strategies explicitly designed for decreasing overfitting, even at the expense of increasing the training error, are known as regularization. \citep{Goodfellow:2016:DeepLearning}
 \newline\newline
 In order to prevent overfitting and generalize a model better, \citet{Chollet:2017:DeepLearningPython} highlighted that the best solution is to get more training data, because more data means the model needs to learn to represent all data points, thus the lower the chance that it would overfit. However, when it is not possible to expose the model to more data, \citet{Chollet:2017:DeepLearningPython} recommended utilizing regularization techniques, which will force the model to focus on the most prominent patterns. These techniques constrain a model in a way that it can only store a certain amount or a certain type of information. According to \citet{Chollet:2017:DeepLearningPython}, the easiest way to prevent overfitting is to reduce the network's size, or in other words, to remove features. As a result, the number of trainable parameters in the model is reduced and thus, the model's capacity shrinks.
 
 \subsubsection{Feature removal}
-For the here proposed Machine Learning model it was not possible to increase the amount of training data, as this would make an objective comparison with benchmark paper impossible. Thus, further regularization techniques were applied. The first choice was also to reduce the network's size. The pre-trained VGGFace network already provides a big stack of layers that cannot be removed without losing valuable information. Therefore, the custom layers were reduced to a single Dense layer, which was proposed in a similar way by \citet{Pittaras:2017:FineTuningStrategiesComparison}, and Dropout was chosen to make the network purposefully forget some information.
+For the here proposed machine learning model it was not possible to increase the amount of training data, as this would make an objective comparison with benchmark paper impossible. Thus, further regularization techniques were applied. The first choice was also to reduce the network's size. The pre-trained VGGFace network already provides a big stack of layers that cannot be removed without losing valuable information. Therefore, the custom layers were reduced to a single Dense layer, which was proposed in a similar way by \citet{Pittaras:2017:FineTuningStrategiesComparison}, and Dropout was chosen to make the network purposefully forget some information.
 
 \subsubsection{Dropout}
 According to \citet{Chollet:2017:DeepLearningPython}, Dropout is one of the most effective and commonly used regularization techniques. When applied, noise is introduced during training by randomly setting a certain percentage of the layer's output values to zero. The Dropout applied in the proposed architecture was determined through extensive experimentation and was applied before and after the single Dense layer with a rate of 0.7 and 0.6 respectively. The following figure shows an example with a dropout rate of 0.5.
@@ -215,7 +122,7 @@ According to \citet{Chollet:2017:DeepLearningPython}, Dropout is one of the most
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.7\textwidth]{Figures/dropout.PNG}
-  \caption{Dropout applied to an activation matrix at training time \citep{Chollet:2017:DeepLearningPython}}.
+  \caption{The applied dropout sets a defined percentage share of the parameters of an activation matrix to zero.\citep{Chollet:2017:DeepLearningPython}}.
   \label{fig:Dropout}
   \end{center}
 \end{figure}
@@ -234,32 +141,86 @@ The Data Augmentation applied in the here proposed solution augmented the images
 \end{itemize}
 
 
-\subsubsection{Early Stopping}
-Early Stopping is a callback that can be injected into the learning process of the Machine Learning model. Instead of running the training for a specified number of epochs, the Early Stopping callback can define a different criterion for the model to stop early. In the case of the here proposed solution, the Early Stopping callback monitored the validation loss metric. It stopped training 20 consecutive epochs after the last improvement on the validation loss was observed. The definition of this callback looks like this:
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.8\textwidth]{Figures/EarlyStopping.PNG}
-  \caption{Early Stopping Callback}
-  \label{fig:EarlyStopping}
-  \end{center}
-\end{figure}
-
-The Early Stopping callback was combined with a Model Checkpoint callback that kept track of the best model during training and saved it to a predefined destination. The Model Checkpoint callback in the proposed solution also monitored the validation loss, and saved the current weights of the model at the point of the validation loss being the lowest. The definition of this callback loss looks like this:
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.8\textwidth]{Figures/ModelCheckpoint.PNG}
-  \caption{Model Checkpoint Callback}
-  \label{fig:ModelCheckpoint}
-  \end{center}
-\end{figure}
-
-To sum things up, the Model Checkpoint kept track of the currently best result in terms of reducing validation loss and automatically backed up the model's weights for the latest 'best result'. The Early Stopping Checkpoint interrupted training as soon as there was no improvement for 20 consecutive epochs.
-
 \subsubsection{Hyper-parameter optimization}
 Optimization of important hyper-parameters also greatly reduces the effects of overfitting. Two of the most impactful parameters are the learning rate and the batch size.
 \newline\newline
 An analysis conducted by \citet{Yuanzhi:2019:RegularizationInitialLargeLearningRate} on Initial Learning Rates confirmed that an initially large learning rate can have a regularization effect on the training process. Even though a small initial learning rate might allow for better performance initially, it will not be able to generalize as well as initially large learning rates. The training performed in this Master's thesis made use of an initial learning rate of 0.0001 for the first 3 epochs. Afterwards it was lowered to 0.00001.
 \newline\newline
 Along with the effects of the initial learning rate on improving generalization and reducing the effects of overfitting, \citet{Keskar:2016:LargeBatchTrainingGeneralization} posited that choosing small-batch methods consistently generalizes better than large batch methods. For the here proposed approach, utilized during 5-fold-cross-validation, made use of a batch size of 16.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Evaluation \& Metrics}
+\subsection{Evaluation}
+Both benchmark papers, the AFEW-VA paper proposed by \citet{Kossaifi:2017:AFEW-VADatabase} and the simultaneous VA prediction paper proposed by \citet{Handrich:2020:SimultaneousPredVA}, compare their results through an evaluation on the AFEW-VA dataset that was split into five disjoint and subject-independent folds. Subsequently, they performed a 5-fold-cross-validation for the prediction of valence and arousal values. 
+\newline\newline
+As illustrated in figure \ref{fig:TrainTestSplit}, in this work the folds were then assigned to three subsets as follows: three folds were combined in the training subset, while validation and testing subsets contained exactly one fold. This setup, without performing 5-fold-cross-validation, was used to conduct various experiments in order to determine optimal hyper-parameter settings.
+
+%\citet{Roehrich:2020:TrainValidateTest} argued that when comparing different models it is not enough to only use a training and a testing subset, as it might still be possible that one model performs better than the other due to randomness during the training process. 
+
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[angle=0, width=0.7\textwidth]{Figures/TrainTestSplit.png}
+  \caption{After splitting the dataset into five folds, the folds are assigned to their respective subset.}
+  \label{fig:TrainTestSplit}
+  \end{center}
+\end{figure}
+
+As soon as optimal hyper-parameter settings were found during the training of the model, a 5-fold-cross-validation was conducted in order to make results comparable with the benchmark. For this 5-fold-cross-validation, previously determined optimal hyper-parameter settings were utilized for training the model five times. As illustrated in figure \ref{fig:CrossValidationSplit}, each time the model is trained during cross-validation, a different combination of folds was selected as training, validation and testing subset.\newline
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[angle=0, width=0.7\textwidth]{Figures/CrossValSplit.png}
+  \caption{The dataset is split into five equal and subject-independent folds. Cross-Validation is performed by alternating the folds for training, validation and testing.}
+  \label{fig:CrossValidationSplit}
+  \end{center}
+\end{figure}
+
+\subsection{Metrics}
+Considering the nature of the problem at hand, predicting the values for valence and arousal is better solved through regression, hence a metric such as accuracy, albeit common, will not provide useful information to reflect the performance of the system. Therefore, we stick to the measures used by \citet{Kossaifi:2017:AFEW-VADatabase}, namely root-mean-square error (RMSE) and Pearson product-moment correlation coefficient (CORR). 
+\newline\newline
+RMSE (eq. \ref{eq:RMSE}) is useful in giving the observer a notion of how close the predicted values are to the actual values, while CORR (eq. \ref{eq:CORR}) tells how strong the relationship between the prediction and the actual label is. \citep{2020:RMSE} \citep{2020:PearsonCorrelation}
+  
+\begin{equation} \label{eq:RMSE}
+RMSE = \sqrt{(\frac{1}{n})\sum_{i=1}^{n}(y_{i} - x_{i})^{2}}
+\end{equation}
+\newline\newline
+\begin{equation} \label{eq:CORR}
+CORR = \frac{{}\sum_{i=1}^{n} (x_i - \overline{x})(y_i - \overline{y})}
+{\sqrt{\sum_{i=1}^{n} (x_i - \overline{x})^2(y_i - \overline{y})^2}}
+\end{equation}
+
+where
+\begin{conditions*}
+ x_i  &  the actual ground truth value\\
+ y_i  &  the predicted output value \\
+ \overline{x}  &  the mean of all ground truth values \\
+ \overline{y}  &  the mean of all predicted output values
+\end{conditions*}
+
+The RMSE is additionally used as the loss function to be for optimization during training.
+
+
+\subsection{Observation}
+% Early Stopping & Model Checkpoint?
+The aforementioned metrics applied to the validation data were continuously observed by an early stopping callback, as well as a model checkpoint callback. These made sure that the last best model, in terms of validation loss, was automatically backed up and that training was stopped as soon as the model successively failed to improve. The callbacks for this work are clearly defined in figure \ref{fig:EarlyStopping} and \ref{fig:ModelCheckpoint}.
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[angle=0, width=0.8\textwidth]{Figures/EarlyStopping.PNG}
+  \caption{The early stopping callback stops the training process as soon as there has not been any learning progress after a set period of epochs.}
+  \label{fig:EarlyStopping}
+  \end{center}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[angle=0, width=0.8\textwidth]{Figures/ModelCheckpoint.PNG}
+  \caption{The Model Checkpoint Callback tracks the best performing epoch according to a defined metric and automatically saves the weights of the best model.}
+  \label{fig:ModelCheckpoint}
+  \end{center}
+\end{figure}
+
+In summary, the model checkpoint automatically saves the latest best model in terms of validation loss, while the early stopping callback automatically interrupted the training process after 20 consecutive epochs without showing any improvement.
