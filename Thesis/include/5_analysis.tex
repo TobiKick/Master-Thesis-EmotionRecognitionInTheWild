@@ -1,109 +1,58 @@
-\chapter{Results and Analysis}
-The following results and studies were based upon the AFEW-VA dataset. Results were compared with the metrics Root-Mean-Squared-Error (RMSE) and Pearson Correlation (CORR). The optimization goal was to reduce the RMSE error while improving the CORR.
+\chapter{Results and Analysis}\label{chap:Analysis}
+The goal of this chapter is to present and analyze the results of the proposed approach. In the first section, results of some baseline methods for the chosen dataset, AFEW-VA are highlighted. Afterwards this work's results are presented and then compared to current state-of-the-art results. Finally, an extensive ablation study is carried out in order to evaluate the impact of design choices.
 
-\section{Benchmark results}
-In the original paper from 2017 where the AFEW-VA database \citep{Kossaifi:2017:AFEW-VADatabase} was introduced, \citet{Kossaifi:2017:AFEW-VADatabase} already provided a baseline by comparing different methods such as SVR (Support Vector Machine - Regression) or DCNN (Deep Convolutional Neural Network). In the following table, the best performing deep neural network approach is compared to the overall best performing algorithm, called Multiple Kernel Learning (MKL):
+\section{Baseline methods}
+The authors of the AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} provide several baseline experiments for comparison all based on machine-learning methods. Several of these approaches rely on extracted features as input, such as extracting geometrical shapes or appearance features by using Discrete Cosine Transform. Other baseline methods rely on original RGB-Images as input. For fair comparison with our work, we only mention the methods that take as input RGB-images. 
+\newline\newline
+Table \ref{tab:BaselineMethods} summarizes the results of two baseline methods that take RGB-images as input: Deep Convolutional Neural Network (DCNN) and Fine-Tuned DCNN (FT-DCNN). The first method, DCNN, is a model trained from scratch using randomly sampled frames. The second method, FT-DCNN, uses a modified AlexNet architecture that was pre-trained on the ImageNet dataset. This neural network is then further fine-tuned in their work. As shown in table \ref{tab:BaselineMethods}, FT-DCNN outperforms DCNN. The authors reason that this might be due to not having enough samples for training the model from scratch.
 
 \begin{table}[H]
 \begin{center}
-\begin{tabular}{@{}lccc@{}}
+\begin{tabular}{@{}lcccc@{}}
 \toprule
-\multicolumn{1}{c}{}                                           &                             & RMSE $\downarrow$          & CORR $\uparrow$          \\ \midrule
-\begin{tabular}[c]{@{}l@{}}FT-DCNN\\ (RGB images)\end{tabular} & Valence                     & 0.37           & 0.26          \\
-\begin{tabular}[c]{@{}l@{}}FT-DCNN\\ (RGB images)\end{tabular} & \multicolumn{1}{l}{Arousal} & 0.39           & 0.31          \\
-\begin{tabular}[c]{@{}l@{}}MKL\\ (Shape + DCT)\end{tabular}    & \multicolumn{1}{l}{Valence} & \textbf{0.264} & \textbf{0.40} \\
-\begin{tabular}[c]{@{}l@{}}MKL\\ (Shape + DCT)\end{tabular}    & Arousal                     & \textbf{0.223} & \textbf{0.45} \\ \bottomrule
+ & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
+DCNN & 4.1 & 4.6 & 0.17 & 0.25 \\
+FT-DCNN & \textbf{3.7} & \textbf{3.9} & \textbf{0.26} & \textbf{0.31} \\
+\begin{tabular}[c]{@{}l@{}}Training from scratch\\ (this work)\end{tabular} & xx & xx & xx & xx \\ \bottomrule
 \end{tabular}
-\caption{Multiple Kernel Learning (MKL) algorithm substantially outperforms the Fine-Tuned Deep Convolutional Neural Network (FT-DCNN) in the AFEW-VA paper \citep{Kossaifi:2017:AFEW-VADatabase}}
-\label{tab:BenchmarkAFEWVA}
+\caption{The FT-DCNN baseline method provided by the authors of the AFEW-VA database \citep{Kossaifi:2017:AFEW-VADatabase} outperforms their DCNN approach, as well as the training from scratch in this work.}
+\label{tab:BaselineMethods}
 \end{center}
 \end{table}
 
-The best performing method in the aforementioned study was the MKL algorithm.The Fine-Tuned Deep Convolutional Neural Network approach is very similar to the one used in this thesis, which is trained on randomly sampled frames from video sequences. Fine-tuning is being done with AlexNet, a pretrained model on the ImageNet dataset.
-\newline\newline
-\citet{Theagarajan:2018:DeepDriver} used the AFEW-VA database to evaluate their approach in their 'DeepDriver' paper. It consisted of taking multiple frames as a sequence and feeding them into either a CNN-only architecture, as well as an CNN + LSTM architecture. Both methods heavily outperformed all benchmark results in terms of RMSE and CORR. The best result, using the CNN + LSTM, achieved the following results:
-
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{@{}rccc@{}}
-\toprule
-\multicolumn{1}{c}{} &  & RMSE $\downarrow$ & CORR $\uparrow$ \\ \midrule
-CNN + LSTM & Valence & 0.09 & 0.64 \\
- & \multicolumn{1}{l}{Arousal} & 0.09 & 0.63 \\ \bottomrule
-\end{tabular}
-\caption{Using two different datasets, the DeepDriver paper \citep{Theagarajan:2018:DeepDriver} heavily outperformed the previous state-of-the-art with a CNN + LSTM approach.}
-\label{tab:BenchmarkDeepDriver}
-\end{center}
-\end{table}
-
-These results were obtained using a 3-fold cross validation approach for training and evaluation. However, the author utilized two different datasets, the AFEW-VA and MotorTrend's dataset. Therefore, the training was conducted on two separate datasets, which made the approach objectively incomparable to the approach proposed in this Master's thesis. 
-\newline\newline
-\citet{Handrich:2020:SimultaneousPredVA} made use of cross-database validation for the recognition of valence and arousal in videos/images. They used the AFEW-VA database \citep{Kossaifi:2017:AFEW-VADatabase} as a validation dataset and achieved much better results for the CORR and ICC metrics. Needless to say, their approach is an improvement form the 2017 benchmark paper. Their proposed CNN architecture is also based upon RGB images as an input. The study achieved the following results:
-
-
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{@{}lccc@{}}
-\toprule
-\multicolumn{1}{c}{}                                          &         & RMSE $\downarrow$          & CORR $\uparrow$          \\ \midrule
-\begin{tabular}[c]{@{}l@{}}AFEW-VA\\ DB only\end{tabular}     & Valence & \textbf{0.26} & 0.39          \\
-                                                              & Arousal & \textbf{0.25} & 0.29          \\ \midrule
-\begin{tabular}[c]{@{}l@{}}Cross-DB\\ validation\end{tabular} & Valence & 0.28          & \textbf{0.58} \\
-                                                              & Arousal & 0.26          & \textbf{0.46} \\ \bottomrule
-\end{tabular}
-\caption{'Simultaneous VA prediction'
-\citep{Handrich:2020:SimultaneousPredVA} also outperforms the baseline (AFEW-VA paper \citep{Kossaifi:2017:AFEW-VADatabase}) with their approach. Additionally, their Cross-DB validation could achieved a strong improvement in terms of CORR over their validation on the AFEW-VA dataset only.}
-\label{tab:BenchmarkSimVA}
-\end{center}
-\end{table}
-
-
-These results were obtained using 5-fold cross validation on the AFEW-VA database, while training on 70 percent and validating on 30 percent of the whole dataset. The results are comparable to the approach taken in this Master's thesis. Looking closer at their results, an interesting trend becomes visible: While the CORR metric increased substantially when using the Cross-database validation, the RMSE metric on the other hand did slightly worse than training on the AFEW-VA database only.
-\newline\newline
-% The following graph illustrates the results from all the methods tested by \citet{Kossaifi:2017:AFEW-VADatabase} together with the results achieved by \citet{Handrich:2020:SimultaneousPredVA}. The results from \citet{Handrich:2020:SimultaneousPredVA} are marked as 'Pr. CNN', as this graph is taken out of their paper:
-
-% \begin{figure}[H]
-%   \begin{center}
-%   \includegraphics[angle=0, width=0.9\textwidth]{Figures/benchmark.PNG}
-%   \caption{Despite the Cross-database approach of the paper 'Simultaneous Prediction of Valence/Arousal and Emotions on AffectNet, Aff-Wild and AFEW-VA' \citep{Handrich:2020:SimultaneousPredVA} outperforming all the other approaches, it cannot be objectively compared to the AFEW-VA paper \citep{Kossaifi:2017:AFEW-VADatabase}, as it was trained on a different dataset.}
-%   \label{fig:BenchmarkOnAFEW-VA}
-%   \end{center}
-% \end{figure}
-
-The proposed CNN approach by \citet{Handrich:2020:SimultaneousPredVA} outperformed the results of neural network based approaches (DCNN and FT-DCNN) by \citet{Kossaifi:2017:AFEW-VADatabase}. Only when comparing the results to the best performing algorithm, Multiple Kernel Learning (MKL), in terms of RMSE did it reveal a slightly higher loss.
+Moreover, a ResNet50 architecture, similar to the proposed approach in this work, was trained from scratch to serve as an additional baseline.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Results}
-The results for the approach proposed in this Master thesis were achieved by shuffling data while making sure that training, validation and testing data stayed subject-independent. The following two graphs display the learning curves during training ('train') and validation ('test') for the selected metrics, namely RMSE and CORR, for the predicted Valence values.
+\section{Results of the proposed approach}
+Since the AFEW-VA dataset has no official validation set, as explained in section \ref{sec:TrainValTestSplit}, only training and testing results are reported. Results of preliminary experiments in order to choose a set of hyper-parameters that maximizes performance are shown in Appendix A.
+\newline\newline
+The optimal set of hyper-parameters as per the preliminary experiments are: batch size 16, for training the classifier 3 epochs with a learning rate of 0.00001, and to fine-tune on average 45 epochs with a learning rate of 0.0001. The model was trained with those hyper-parameters and the training progress per epoch was plotted for valence with respect to the RMSE and CORR in figure \ref{fig:LearningCurveResults}. For simplicity reasons, the learning curves for arousal are not illustrated throughout this work as they look very similar to the curves for valence.
 
 \begin{figure}[H]
   \centering
   \subfloat[Valence - RMSE]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1.png}\label{fig:ValenceRMSE}}
   \hfill
   \subfloat[Valence - CORR]{\includegraphics[width=0.5\textwidth]{Figures/correlation_out1.png}\label{fig:ValenceCORR}}
-  \caption{The learning curves show a satisfying result for RMSE, but unsatisfying for CORR as the lines for training and validation diverge from each other.}
+  \caption{Both 'train' curves clearly show ideal and the 'test' curves give further evidence that the model is a good choice as the RMSE loss is pretty low and CORR is continuously rising.
+.}
+  \label{fig:LearningCurveResults}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \subfloat[Arousal - RMSE]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out2.png}\label{fig:ArousalRMSE}}
-  \hfill
-  \subfloat[Arousal - CORR]{\includegraphics[width=0.5\textwidth]{Figures/correlation_out2.png}\label{fig:ArousalCORR}}
-  \caption{While the learning curve for RMSE looks almost perfect, the curve for CORR shows an increasing cleavage between training and validation.}
-\end{figure}
+point out the good parts of the curves + there might still be room for improvement
 
-Theoretically, the ideal learning curve would show an exact match between the curves for training and validation. In practice however, the goal is to minimize the difference between training and validation curve over training time and stop training before they diverge from each other. This behavior can be seen for the RMSE metric for valence and arousal. For the CORR metric however, the training and validation curves slowly diverged from each other.
+Theoretically, the ideal learning curve would show an exact match between the curves for training and validation (= 'test'). In practice however, the goal is to minimize the difference between training and validation curve over training time and stop training before they diverge from each other. 
 \newline\newline
-In summary, the learning curves show a rather positive trend, despite some worrying behaviour for the CORR metrics. This is confirmed by the results achieved in this Master's thesis. These are presented in the following table:
+Figure \ref{fig:LearningCurveResults} clearly shows ideal curve profiles for 'train' and gives further evidence that the model is a good choice as the RMSE loss is pretty low and CORR is continuously rising. However, improvements could still be achieved by taking measures to reduce overfitting which might lead to an even better convergence of the curves.
+\newline\newline
+The identified optimal hyper-parameters were then used for conducting a 5-fold cross-validation which produced the results presented in table \ref{tab:Results}
 
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 \multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}best result\\ (without 5-fold-CV)\end{tabular} & 0.24 & 0.22 & 0.38 & 0.46 \\
+%\begin{tabular}[c]{@{}l@{}}best result\\ (without 5-fold-CV)\end{tabular} & \textbf{0.24} & \textbf{0.22} & \textbf{0.38} & \textbf{0.46} \\
 \begin{tabular}[c]{@{}l@{}}best result\\ (with 5-fold-CV)\end{tabular} & 0.27 & 0.25 & 0.22 & 0.27 \\ \bottomrule
 \end{tabular}
 \caption{The best result differs greatly in terms of CORR when comparing the best result during training with the best result with 5-fold-CV}
@@ -111,39 +60,55 @@ In summary, the learning curves show a rather positive trend, despite some worry
 \end{center}
 \end{table}
 
-The best result without Cross-Validation was achieved when not utilizing any Data Augmentation nor landmarks. The best result with 5-fold-CV, on the other hand, was achieved with Data Augmentation and the utilization of landmarks in the form of a heatmap overlay.
+Compared to the baseline methods, the best result could outperform the DCNN method in all four categories. However, in comparison to the FT-DCNN baseline method, the proposed approach lacked in terms of CORR despite its low values for RMSE. A possible explanation for this might be that the utilized VGGFace model is too powerful with its huge amount of parameters with regards to fine-tuning on a very small dataset. This might result in the VGGFace model to base their output on the identification of faces instead of the different facial expressions.
+
+% The best result without Cross-Validation was achieved when not utilizing any Data Augmentation nor landmarks. The best result with 5-fold-CV, on the other hand, was achieved with Data Augmentation and the utilization of landmarks in the form of a heatmap overlay.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Comparison}
-The following table gives an overview of the results obtained by \citet{Kossaifi:2017:AFEW-VADatabase},  \citet{Handrich:2020:SimultaneousPredVA} as well as the approach taken in this Master's thesis. All the results are directly comparable as they were achieved by performing 5-fold-cross-validation with subject independent data in between folds.
+\section{Comparison to state-of-the-art}
+In this section, three methods achieving state-of-the-art results on the AFEW-VA dataset are presented. The first method, proposed by \citet{Theagarajan:2018:DeepDriver}, utilized a CNN + LSTM architecture which they fed with sequences of multiple frames. Furthermore, they used a 3-fold cross-validation approach to evaluate their performance which heavily outperforms the baseline results.
+\newline\newline
+The other two state-of-the-art methods were proposed by \citet{Handrich:2020:SimultaneousPredVA}. In the first method, called 'AFEW-VA DB only', they only used the AFEW-VA database to train and evaluate their Convolution Neural Network (CNN). In their second method, called 'Cross-DB validation', they trained their CNN model on the complete AffectNet training set and tested on the AFEW-VA database. In both methods they used a 5-fold cross-validation where they split data into 70\% training and 30\% testing.
+\newline\newline
+In table \ref{tab:StateOfTheArtResults} these state-of-the-art results are compared to the proposed approach. 
 
 \begin{table}[H]
 \begin{center}
-\begin{tabular}{@{}lcccccc@{}}
+\begin{tabular}{@{}lcccc@{}}
 \toprule
-\rowcolor[HTML]{FCFF2F} 
-\multicolumn{1}{l}{\cellcolor[HTML]{FCFF2F}} & \textbf{Method} & \textbf{Evaluation} & \textbf{\begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular}} & \cellcolor[HTML]{FCFF2F}\textbf{\begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular}} \\ \midrule
-AFEW-VA & FT-DCNN & \begin{tabular}[c]{@{}c@{}}5-fold CV\\ subject indep.\end{tabular} & 0.37 & 0.39 & 0.26 & 0.31 \\
-\begin{tabular}[c]{@{}l@{}}Simultaneous\\ VA prediction\end{tabular} & CNN & \begin{tabular}[c]{@{}c@{}}5-fold CV\\  subject indep.\end{tabular} & 0.26 & 0.25 & \textbf{0.39} & 0.29 \\
-\textbf{\begin{tabular}[c]{@{}l@{}}RESULTS\\ THESIS\end{tabular}} & \begin{tabular}[c]{@{}c@{}}FT-DCNN\\ (VGGFace)\end{tabular} & \begin{tabular}[c]{@{}c@{}}5-fold CV\\ subject indep.\end{tabular} & 0.27 & 0.25 & 0.22 & 0.27 \\
-\textbf{\begin{tabular}[c]{@{}l@{}}RESULTS\\ THESIS\end{tabular}} & \begin{tabular}[c]{@{}c@{}}FT-DCNN\\ (VGGFace)\end{tabular} & \begin{tabular}[c]{@{}c@{}}\textbf{no} 5-fold-CV\\ subject indep.\end{tabular} & \textbf{0.24} & \textbf{0.22} & 0.38 & \textbf{0.46} \\ \bottomrule
+ & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
+CNN + LSTM \citep{Theagarajan:2018:DeepDriver} & \textbf{0.09} & \textbf{0.09} & \textbf{0.64} & \textbf{0.63} \\
+AFEW-VA DB only \citep{Handrich:2020:SimultaneousPredVA} & 0.26 & 0.25 & 0.39 & 0.29 \\
+Cross-DB validation \citep{Handrich:2020:SimultaneousPredVA} & 0.28 & 0.26 & 0.58 & 0.46 \\
+Proposed approach & 0.27 & 0.25 & 0.22 & 0.27 \\ \bottomrule
 \end{tabular}
-\caption{The results of this thesis outperform the benchmark in terms of RMSE, however, in terms of CORR it could not perform as well when considering the 5-fold-CV.}
-\label{tab:ResultsComparison}
+\caption{The CNN+LSTM approach \citep{Theagarajan:2018:DeepDriver} provides the best state-of-the-art results on the AFEW-VA database.}
+\label{tab:StateOfTheArtResults}
 \end{center}
 \end{table}
 
-The results clearly show that the approach proposed in this Master thesis is substantially outperforming the results obtained by \citet{Kossaifi:2017:AFEW-VADatabase} in terms of Root-Mean-Squared-Error loss. It shows that RMSE is lower by 0.10 for valence and 0.14 for arousal, while the Correlation is lower by 0.04 for valence and 0.04 for arousal. In comparison to the approach proposed by \citet{Handrich:2020:SimultaneousPredVA} the results obtained in this work were pretty similar for the RMSE metric, but worse for the CORR with 0.17 lower for valence and 0.02 lower for arousal.
-\newline\newline
-In conclusion, it can be said that the results of this thesis are up to date with the state-of-the-art proposed by \citet{Handrich:2020:SimultaneousPredVA} in \citeyear{Handrich:2020:SimultaneousPredVA} for emotion recognition in the wild with the AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase}. The results also showed that fine-tuning a state-of-the-art pre-trained neural network is a very good way to go about beating current state-of-the-art machine learning challenges. It further showed that with additional optimization, the proposed approach could even outperform the recent results from 2017.
 
-\subsubsection{FaceReader application}
-The FaceReader product of the company Noldus \citep{Noldus:2020:Facereader} is an application that is optimized to recognize emotions from facial expressions shown in videos or images. The product records the user and outputs categorical values for emotions, as well as Valence and Arousal. The initial goal was to compare the outcomes of this Master thesis with the analysis results of the FaceReader application.
+All three methods demonstrate that they are able to outperform the baseline methods. Comparing the results in table \ref{tab:StateOfTheArtResults} it is visible that the CNN + LSTM method achieves the best results among the state-of-the-art methods.
 \newline\newline
-As confirmed through an sample experiment conducted, the FaceReader application failed to detect faces in every third frame due to imperfect conditions (e.g. a not-perfectly illuminated room). For this comparison no results can be presented as the approach for the FaceReader application is designed for laboratory conditions (they recommended the camera be placed slightly below eye-level, and that there be no shadow in the person's face). Therefore, their claimed accuracy (98 percent) cannot be compared to the in-the-wild data utilized in this Master's thesis.
-% However, as mentioned in the Quick Setup Guide, there approach is based upon the premise that the camera is placed slightly below eye-level of the test person and that good lightning, without shadow in the test person's face is crucial. Therefore, there claimed accuracy (from a phone call) with 98 percent cannot be compared to in-the-wild data with imperfect conditions.
-% Through a trial period the product was tested. As a camera an off-the-shelf integrated laptop camera was used in an weakly illuminated room. During the trial period the author realized, that the FaceReader often failed to provide information on expression intensity due to mostly not being able to find a face or also due to bad image quality. In total, in a 9 second experiment it was only able to detect the emotions during 3 of those 9 seconds.
+The approach proposed in this work is inferior to the CNN + LSTM method, but can keep up with both methods proposed by \citet{Handrich:2020:SimultaneousPredVA} in terms of RMSE. However,in terms of CORR, the proposed approach is lacking behind with 0.17 lower for valence and 0.02 lower for arousal in comparison to the AFEW-VA DB only method.
+\newline\newline
+In conclusion, it can be said that the results of this thesis can be classified as state-of-the-art for emotion recognition in the wild, but still leave room for improvement, especially when looking at the CORR metric. The authors of the state-of-the-art results, \citet{Theagarajan:2018:DeepDriver} and \citet{Handrich:2020:SimultaneousPredVA}, confirm that fine-tuning a pre-trained neural network achieves very good results that might even beat the current state-of-the-art.
 
+% \begin{table}[H]
+% \begin{center}
+% \begin{tabular}{@{}lcccccc@{}}
+% \toprule
+% \rowcolor[HTML]{FCFF2F} 
+% \multicolumn{1}{l}{\cellcolor[HTML]{FCFF2F}} & \textbf{Method} & \textbf{Evaluation} & \textbf{\begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular}} & \cellcolor[HTML]{FCFF2F}\textbf{\begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular}} \\ \midrule
+% AFEW-VA & FT-DCNN & \begin{tabular}[c]{@{}c@{}}5-fold CV\\ subject indep.\end{tabular} & 0.37 & 0.39 & 0.26 & 0.31 \\
+% \begin{tabular}[c]{@{}l@{}}Simultaneous\\ VA prediction\end{tabular} & CNN & \begin{tabular}[c]{@{}c@{}}5-fold CV\\  subject indep.\end{tabular} & 0.26 & 0.25 & \textbf{0.39} & 0.29 \\
+% \textbf{\begin{tabular}[c]{@{}l@{}}RESULTS\\ THESIS\end{tabular}} & \begin{tabular}[c]{@{}c@{}}FT-DCNN\\ (VGGFace)\end{tabular} & \begin{tabular}[c]{@{}c@{}}5-fold CV\\ subject indep.\end{tabular} & 0.27 & 0.25 & 0.22 & 0.27 \\
+% \textbf{\begin{tabular}[c]{@{}l@{}}RESULTS\\ THESIS\end{tabular}} & \begin{tabular}[c]{@{}c@{}}FT-DCNN\\ (VGGFace)\end{tabular} & \begin{tabular}[c]{@{}c@{}}\textbf{no} 5-fold-CV\\ subject indep.\end{tabular} & \textbf{0.24} & \textbf{0.22} & 0.38 & \textbf{0.46} \\ \bottomrule
+% \end{tabular}
+% \caption{The results of this thesis outperform the benchmark in terms of RMSE, however, in terms of CORR it could not perform as well when considering the 5-fold-CV.}
+% \label{tab:ResultsComparison}
+% \end{center}
+% \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Ablation Study}
@@ -177,12 +142,11 @@ The comparison above shows that with the chosen settings, e.g. with Data Augment
 \subsection{MTCNN (Multi-task Cascaded Convolutional Neural Network)}
 The MTCNN module is a pre-trained neural network that is used for detecting faces and determining its bounding box in an image/frame. Before talking about what difference the use of the MTCNN module makes towards the proposed solution, it is interesting to point out how often the module succeeds or fails to detect faces.
 \newline\newline
-A sample taken during training with the AFEW-VA dataset, the MTCNN module failed to detect the person's face in 961 cases. The dataset consisted of 30.051 frames which represents 3.2 percent of all images, or a success rate of 96.8 percent.
-% Out of 30051 frames it only failed to detect a face in 961 faces, this presents 3.2 percent of all images.
+A sample taken during training with the AFEW-VA dataset, the MTCNN module failed to detect the person's face in 961 cases. The dataset consisted of 30.051 frames which represents 3.2 percent of all images, or a success rate of 96.8 percent. To put this into perspective, these detection results were compared to FaceReader \citep{Noldus:2020:Facereader}, a software tool for scientific research in automatic recognition and analysis of facial expressions.
 \newline\newline
-The results were achieved with the use of the MTCNN module: faces inside an image were detected, the primary face was selcted, cut along its bounding box, and fed into the neural network. For images/frames where a face could not be detected, the original image was resized, and then fed into the neural network.
+In a short experiment, images were sampled from the AFEW-VA database and run through the FaceReader application. Despite their production-ready product the application failed to detect faces in every third frame. This is likely due to the face that their product is designed for laboratory conditions (e.g. they recommend the camera be placed slightly below eye-level and the face be fully illuminated, without any shadow). In summary, it can be said that a face detection rate of 96.8 percent on in-the-wild data is excellent, especially in comparison to a production-ready solution with a detection rate of 66.6 percent.
 \newline\newline
-The results presented in the following table were achieved with methods and hyper parameters similar to the ones in the proposed approach. The only difference being whether the model included the MTCNN module or not. This means that the framegot either directly fed into the VGGFace model, or was first cropped to fit the person's face.
+The pipeline for the usage of the MTCNN module includes the following steps: First, faces inside an image were detected. Second, the primary face was selected. Third, the face was cropped along its bounding box and fed into the neural network. For frames where the detection of a face was not possible, the original image was resized, and then fed into the neural network instead. The following table compares training results with and without the utilization of the MTCNN module. 
 
 \begin{table}[H]
 \begin{center}

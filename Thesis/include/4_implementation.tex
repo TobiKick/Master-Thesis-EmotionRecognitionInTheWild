@@ -88,7 +88,7 @@ The chosen ResNet50 model \citep{Dwivedi:2019:ResNetInKeras} consists of 50 laye
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Training}
+\subsection{Training} \label{sec:Training&Regularization}
 \subsubsection{Pre-trained network}
 A pre-trained network is a saved neural network that was previously learned spatial hierarchy of features on a large and general dataset. As recommended by \citet{Chollet:2017:DeepLearningPython} using a pre-trained neural network is a highly effective approach when dealing with a small image dataset. With around 30.000 frames (= 600 video clips), the AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} can be considers as such. This is why the VGGFace network, based on ResNet50 and pre-trained on the large-scale face recognition dataset VGGFace2 \citep{Cao:2018:VGGFace2}, was chosen as a basis for this work.
 
@@ -152,23 +152,21 @@ Along with the effects of the initial learning rate on improving generalization 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Evaluation \& Metrics}
-\subsection{Evaluation}
+\subsection{Evaluation} \label{sec:TrainValTestSplit}
 Both benchmark papers, the AFEW-VA paper proposed by \citet{Kossaifi:2017:AFEW-VADatabase} and the simultaneous VA prediction paper proposed by \citet{Handrich:2020:SimultaneousPredVA}, compare their results through an evaluation on the AFEW-VA dataset that was split into five disjoint and subject-independent folds. Subsequently, they performed a 5-fold-cross-validation for the prediction of valence and arousal values. 
 \newline\newline
-As illustrated in figure \ref{fig:TrainTestSplit}, in this work the folds were then assigned to three subsets as follows: three folds were combined in the training subset, while validation and testing subsets contained exactly one fold. This setup, without performing 5-fold-cross-validation, was used to conduct various experiments in order to determine optimal hyper-parameter settings.
-
+Before conducting cross-validation the optimal hyper-parameter settings had to be determined. Various experiments were conducted that used the setup as illustrated in figure \ref{fig:TrainTestSplit}. This figure shows that the dataset was split into five folds and subsequently assigned to one of three subsets as follows: three folds were combined in the training subset, while validation and testing subsets contained exactly one fold.
 %\citet{Roehrich:2020:TrainValidateTest} argued that when comparing different models it is not enough to only use a training and a testing subset, as it might still be possible that one model performs better than the other due to randomness during the training process. 
-
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.7\textwidth]{Figures/TrainTestSplit.png}
-  \caption{After splitting the dataset into five folds, the folds are assigned to their respective subset.}
+  \caption{For the determination of optimal hyper-parameter settings, the dataset was split into a training, validation and testing subset.}
   \label{fig:TrainTestSplit}
   \end{center}
 \end{figure}
 
-As soon as optimal hyper-parameter settings were found during the training of the model, a 5-fold-cross-validation was conducted in order to make results comparable with the benchmark. For this 5-fold-cross-validation, previously determined optimal hyper-parameter settings were utilized for training the model five times. As illustrated in figure \ref{fig:CrossValidationSplit}, each time the model is trained during cross-validation, a different combination of folds was selected as training, validation and testing subset.\newline
+As soon as optimal hyper-parameter settings were found during the training of the model, a 5-fold-cross-validation was conducted in order to make results comparable with the benchmark. For this 5-fold-cross-validation, previously determined optimal hyper-parameter settings were utilized for training and testing the model five times. As illustrated in figure \ref{fig:CrossValidationSplit}, each time the model is trained during cross-validation, a different combination of folds was selected as training and testing subset.\newline
 
 \begin{figure}[H]
   \begin{center}
@@ -205,7 +203,7 @@ The RMSE is additionally used as the loss function to be for optimization during
 
 \subsection{Observation}
 % Early Stopping & Model Checkpoint?
-The aforementioned metrics applied to the validation data were continuously observed by an early stopping callback, as well as a model checkpoint callback. These made sure that the last best model, in terms of validation loss, was automatically backed up and that training was stopped as soon as the model successively failed to improve. The callbacks for this work are clearly defined in figure \ref{fig:EarlyStopping} and \ref{fig:ModelCheckpoint}.
+In order to find optimal hyper-parameter settings during training, the aforementioned metrics were continuously observed through an early stopping callback, as well as a model checkpoint callback. These callbacks made sure that the last best model, in terms of validation loss, was automatically backed up and that training was stopped as soon as the model successively failed to improve. The callbacks for this work are clearly defined in figure \ref{fig:EarlyStopping} and \ref{fig:ModelCheckpoint}.
 
 \begin{figure}[H]
   \begin{center}
