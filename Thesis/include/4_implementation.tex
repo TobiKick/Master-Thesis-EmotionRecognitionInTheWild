@@ -12,7 +12,26 @@ Furthermore, as the name of the dataset already suggests, the dataset is compops
 \newline\newline
 Since the research conducted during this Master's thesis is intended to serve as a basis for a further real-life application in video-call scenarios, it was clear that the dataset needed to be as close to in-the-wild conditions as possible. Furthermore, it was decided that it was more important to capture as much of an emotion's information as possible rather than placing value on the interpretation of emotions. As a result, the AFEW-VA dataset got chosen because of its in-the-wild conditions, its 2D Affective Space model for emotion representation and its backing by the scientific community when it comes to providing comparable results.
 \newline\newline
-The AFEW-VA dataset is made up of 600 video clips, each consisting of multiple frames that make up the video clip. Furthermore, each frame is then annotated in terms of valence and arousal. Both values have an annotation level ranging from -10 to +10 in full integer values. This results in a total of 21 levels.\citep{Kossaifi:2017:AFEW-VADatabase} 
+The AFEW-VA dataset is made up of 600 video clips, each consisting of multiple frames that make up the video clip. Further statistics about the video-clips, frames and subjects of the dataset are presented in table \ref{tab:DatasetStatistics}. Furthermore, each frame is then annotated in terms of valence and arousal. Both values have an annotation level ranging from -10 to +10 in full integer values. This results in a total of 21 levels.\citep{Kossaifi:2017:AFEW-VADatabase} 
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{AFEW-VA dataset statistics} &  \\ \midrule
+total no. of video-clips & 600 \\
+total no. of frames & 30051 \\
+total no. of subjects & 240 \\
+avg. no. of videos per subject & 2.5 \\
+min. no. of frames per video & 10 \\
+max. no. of frames per video & 145 \\
+avg. no. of frames per video & 50.1 \\
+median no. of frames per video & 45.5 \\ \bottomrule
+\end{tabular}
+\caption{Gathered statistics about the no. of video-clips, frames and subjects in the AFEW-VA database.}
+\label{tab:DatasetStatistics}
+\end{center}
+\end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
