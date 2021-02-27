@@ -4,7 +4,7 @@ The goal of this chapter is to present and analyze the results of the proposed a
 \section{Baseline methods}
 The authors of the AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} provide several baseline experiments for comparison all based on machine-learning methods. Several of these approaches rely on extracted features as input, such as extracting geometrical shapes or appearance features by using Discrete Cosine Transform. Other baseline methods rely on original RGB-Images as input. For fair comparison with our work, we only mention the methods that take as input RGB-images. 
 \newline\newline
-Table \ref{tab:BaselineMethods} summarizes the results of two baseline methods that take RGB-images as input: Deep Convolutional Neural Network (DCNN) and Fine-Tuned DCNN (FT-DCNN). The first method, DCNN, is a model trained from scratch using randomly sampled frames. The second method, FT-DCNN, uses a modified AlexNet architecture that was pre-trained on the ImageNet dataset. This neural network is then further fine-tuned in their work. As shown in table \ref{tab:BaselineMethods}, FT-DCNN outperforms DCNN. The authors reason that this might be due to not having enough samples for training the model from scratch.
+Table \ref{tab:BaselineMethods} summarizes the results of three baseline methods that take RGB-images as input: Deep Convolutional Neural Network (DCNN), Fine-Tuned DCNN (FT-DCNN) and a ResNet50 model trained from scratch in this work.
 
 \begin{table}[H]
 \begin{center}
@@ -13,39 +13,50 @@ Table \ref{tab:BaselineMethods} summarizes the results of two baseline methods t
  & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
 DCNN & 4.1 & 4.6 & 0.17 & 0.25 \\
 FT-DCNN & \textbf{3.7} & \textbf{3.9} & \textbf{0.26} & \textbf{0.31} \\
-\begin{tabular}[c]{@{}l@{}}Training from scratch\\ (this work)\end{tabular} & xx & xx & xx & xx \\ \bottomrule
+\begin{tabular}[c]{@{}l@{}}Training from scratch\\ (this work)\end{tabular} & 0.21 & 0.22 & 0.04 & 0.08 \\ \bottomrule
 \end{tabular}
-\caption{The FT-DCNN baseline method provided by the authors of the AFEW-VA database \citep{Kossaifi:2017:AFEW-VADatabase} outperforms their DCNN approach, as well as the training from scratch in this work.}
+\caption{The FT-DCNN baseline method provided by the authors of the AFEW-VA database \citep{Kossaifi:2017:AFEW-VADatabase} outperforms their DCNN approach, as well as the training from scratch in this work in terms of CORR metric.}
 \label{tab:BaselineMethods}
 \end{center}
 \end{table}
 
-Moreover, a ResNet50 architecture, similar to the proposed approach in this work, was trained from scratch to serve as an additional baseline.
+The first method, DCNN, is a model trained from scratch using randomly sampled frames. The second method, FT-DCNN, uses a modified AlexNet architecture that was pre-trained on the ImageNet dataset. This neural network was then further fine-tuned in their work. As shown in table \ref{tab:BaselineMethods}, FT-DCNN outperforms DCNN. The authors reason that this might be due to not having enough samples for training the model from scratch. Moreover, a ResNet50 architecture, similar to the proposed approach in this work, was trained from scratch to serve as an additional baseline.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results of the proposed approach}
-Since the AFEW-VA dataset has no official validation set, as explained in section \ref{sec:TrainValTestSplit}, only training and testing results are reported. Results of preliminary experiments in order to choose a set of hyper-parameters that maximizes performance are shown in Appendix A.
+Since the AFEW-VA dataset has no official validation and test set, as explained in section \ref{sec:TrainValTestSplit}, the data was split subject-independently into a training, validation and test subset. The here presented results of the proposed approach are based on the final evaluation of the chosen model on the test set. Results of preliminary experiments on the training and validation that helped to find out the optimal hyper-parameters are shown in Appendix A.
 \newline\newline
-The optimal set of hyper-parameters as per the preliminary experiments are: batch size 16, for training the classifier 3 epochs with a learning rate of 0.00001, and to fine-tune on average 45 epochs with a learning rate of 0.0001. The model was trained with those hyper-parameters and the training progress per epoch was plotted for valence with respect to the RMSE and CORR in figure \ref{fig:LearningCurveResults}. For simplicity reasons, the learning curves for arousal are not illustrated throughout this work as they look very similar to the curves for valence.
+The optimal set of hyper-parameters as per the preliminary experiments are: a batch size of 2, a 3 epoch training of the classifier with a learning rate of 0.0001, and to fine-tune over 3 phases with a continuously decreasing learning rate, starting from 0.0001. These optimal hyper-parameters were used to train the final model in order to predict the outcome in terms of valence and arousal. The averaged training progress is illustrated in figure \ref{fig:LearningCurveResults} for the two metrics, RMSE and CORR.
+% For simplicity reasons, the learning curves for arousal are not illustrated throughout this work as they behave very similar to the results for valence.
 
 \begin{figure}[H]
   \centering
-  \subfloat[Valence - RMSE]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1.png}\label{fig:ValenceRMSE}}
+  \subfloat[Average RMSE during training and validation]{\includegraphics[width=0.5\textwidth]{Figures/curve_rmse.png}\label{fig:CurveRMSE}}
   \hfill
-  \subfloat[Valence - CORR]{\includegraphics[width=0.5\textwidth]{Figures/correlation_out1.png}\label{fig:ValenceCORR}}
-  \caption{Both 'train' curves clearly show ideal and the 'test' curves give further evidence that the model is a good choice as the RMSE loss is pretty low and CORR is continuously rising.
-.}
+  \subfloat[Average CORR during training and validation]{\includegraphics[width=0.5\textwidth]{Figures/curve_corr.png}\label{fig:CurveCORR}}
+  \caption{Both curves, for the RMSE and CORR metric, continuously improve during training which is evidence in favor of the proposed approach}
   \label{fig:LearningCurveResults}
 \end{figure}
 
+% \begin{figure}[H]
+%   \centering
+%   \subfloat[Valence - RMSE]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1.png}\label{fig:ValenceRMSE}}
+%   \hfill
+%   \subfloat[Valence - CORR]{\includegraphics[width=0.5\textwidth]{Figures/correlation_out1.png}\label{fig:ValenceCORR}}
+%   \caption{Both 'train' curves clearly show ideal and the 'test' curves give further evidence that the model is a good choice as the RMSE loss is pretty low and CORR is continuously rising.
+% .}
+%   \label{fig:LearningCurveResults}
+% \end{figure}
+
 point out the good parts of the curves + there might still be room for improvement
 
-Theoretically, the ideal learning curve would show an exact match between the curves for training and validation (= 'test'). In practice however, the goal is to minimize the difference between training and validation curve over training time and stop training before they diverge from each other. 
+
+A theoretically ideal learning curve would show an exact match between the curves for training and validation. In practice however, the goal is to minimize the difference between training and validation curve over training time and stop training before they diverge from each other. 
 \newline\newline
-Figure \ref{fig:LearningCurveResults} clearly shows ideal curve profiles for 'train' and gives further evidence that the model is a good choice as the RMSE loss is pretty low and CORR is continuously rising. However, improvements could still be achieved by taking measures to reduce overfitting which might lead to an even better convergence of the curves.
+This behaviour can clearly be seen in figure \ref{fig:LearningCurveResults} as the training and validation curve continuously improve (decrease the RMSE, and increase the CORR) while reducing the distance between them over time. Due to the usage of the early stopping and model checkpoint callback, as explained in section \ref{sec:Metrics}, the best model is automatically saved. This ensures that the best model is saved before the curves start diverging from each other.
 \newline\newline
-The identified optimal hyper-parameters were then used for conducting a 5-fold cross-validation which produced the results presented in table \ref{tab:Results}
+All in all, it can be said that the trajectory of the curves gives evidence that the proposed model is a good choice for solving this emotion recognition challenge. The optimal hyper-parameters of the model were then used to conduct a final evaluation on the test subset. The results of this evaluation were averaged over valence and arousal, and are clearly presented in table \ref{tab:Results}.
 
 \begin{table}[H]
 \begin{center}
@@ -53,24 +64,33 @@ The identified optimal hyper-parameters were then used for conducting a 5-fold c
 \toprule
 \multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
 %\begin{tabular}[c]{@{}l@{}}best result\\ (without 5-fold-CV)\end{tabular} & \textbf{0.24} & \textbf{0.22} & \textbf{0.38} & \textbf{0.46} \\
-\begin{tabular}[c]{@{}l@{}}best result\\ (with 5-fold-CV)\end{tabular} & 0.27 & 0.25 & 0.22 & 0.27 \\ \bottomrule
+\begin{tabular}[c]{@{}l@{}}VGGFace + RNN\\(this work)\\\end{tabular} & \multicolumn{2}{c}{avg. 0.25} & \multicolumn{2}{c}{avg. 0.50} \\ \bottomrule
 \end{tabular}
-\caption{The best result differs greatly in terms of CORR when comparing the best result during training with the best result with 5-fold-CV}
+\caption{The achieved results with the proposed approach beat the baseline results by far.}
 \label{tab:Results}
 \end{center}
 \end{table}
 
-Compared to the baseline methods, the best result could outperform the DCNN method in all four categories. However, in comparison to the FT-DCNN baseline method, the proposed approach lacked in terms of CORR despite its low values for RMSE. A possible explanation for this might be that the utilized VGGFace model is too powerful with its huge amount of parameters with regards to fine-tuning on a very small dataset. This might result in the VGGFace model to base their output on the identification of faces instead of the different facial expressions.
+The results achieved by the 'VGGFace + RNN' approach in this work outperform the baseline methods easily. It is clear that the achieved results clearly outperform the DCNN and FT-DCNN approach by far in all four categories. This can also be claimed in comparison to the the 'Training from scratch'. Despite the 'VGGFace + RNN' approach having higher RMSE values, it drastically increases the outcomes in terms of CORR.
+\newline\newline
+For a better illustration of the achieved results, figure \ref{fig:ScatterPlots} contains a scatter plot that shows how actual labels match the predicted values.
 
-% The best result without Cross-Validation was achieved when not utilizing any Data Augmentation nor landmarks. The best result with 5-fold-CV, on the other hand, was achieved with Data Augmentation and the utilization of landmarks in the form of a heatmap overlay.
+\begin{figure}[H]
+  \centering
+  \subfloat[Scatter plot for the prediction of valence on the test set]{\includegraphics[width=0.5\textwidth]{Figures/scatter_plot_pred_valence.png}\label{fig:ScatterPlotValence}}
+  \hfill
+  \subfloat[Scatter plot for the prediction of arousal on the test set]{\includegraphics[width=0.5\textwidth]{Figures/scatter_plot_pred_arousal.png}\label{fig:ScatterPlotArousal}}
+  \caption{While the prediction for valence follows an almost linear trend, the prediction of arousal reveals a lack of the model to accurately recognize high arousal values}
+  \label{fig:ScatterPlots}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Comparison to state-of-the-art}
-In this section, three methods achieving state-of-the-art results on the AFEW-VA dataset are presented. The first method, proposed by \citet{Theagarajan:2018:DeepDriver}, utilized a CNN + LSTM architecture which they fed with sequences of multiple frames. Furthermore, they used a 3-fold cross-validation approach to evaluate their performance which heavily outperforms the baseline results.
+In this section, three methods achieving state-of-the-art results on the AFEW-VA dataset are presented. The first method, proposed by \citet{Theagarajan:2018:DeepDriver}, utilized a CNN, pre-trained on the ImageNet dataset together with a LSTM network in order to take into account dynamic variations. Similar to the proposed approach in this thesis, their input data for the model consists of sequences of multiple frames. Furthermore, they used a 3-fold cross-validation approach to evaluate their performance which heavily outperforms the baseline results.
 \newline\newline
 The other two state-of-the-art methods were proposed by \citet{Handrich:2020:SimultaneousPredVA}. In the first method, called 'AFEW-VA DB only', they only used the AFEW-VA database to train and evaluate their Convolution Neural Network (CNN). In their second method, called 'Cross-DB validation', they trained their CNN model on the complete AffectNet training set and tested on the AFEW-VA database. In both methods they used a 5-fold cross-validation where they split data into 70\% training and 30\% testing.
 \newline\newline
-In table \ref{tab:StateOfTheArtResults} these state-of-the-art results are compared to the proposed approach. 
+In table \ref{tab:StateOfTheArtResults} these state-of-the-art results are compared to the proposed approach, called 'VGGFace + RNN'. It needs to be pointed out that the three authors of the presented results were utilizing different methods for their results evaluation.
 
 \begin{table}[H]
 \begin{center}
@@ -80,48 +100,29 @@ In table \ref{tab:StateOfTheArtResults} these state-of-the-art results are compa
 CNN + LSTM \citep{Theagarajan:2018:DeepDriver} & \textbf{0.09} & \textbf{0.09} & \textbf{0.64} & \textbf{0.63} \\
 AFEW-VA DB only \citep{Handrich:2020:SimultaneousPredVA} & 0.26 & 0.25 & 0.39 & 0.29 \\
 Cross-DB validation \citep{Handrich:2020:SimultaneousPredVA} & 0.28 & 0.26 & 0.58 & 0.46 \\
-Proposed approach & 0.27 & 0.25 & 0.22 & 0.27 \\ \bottomrule
+VGGFace + RNN\\(this work) & \multicolumn{2}{c}{avg. 0.25} & \multicolumn{2}{c}{avg. 0.50} \\ \bottomrule
 \end{tabular}
-\caption{The CNN+LSTM approach \citep{Theagarajan:2018:DeepDriver} provides the best state-of-the-art results on the AFEW-VA database.}
+\caption{The CNN+LSTM approach \citep{Theagarajan:2018:DeepDriver} performs the best among state-of-the-art emotion recognition architectures on the AFEW-VA dataset}
 \label{tab:StateOfTheArtResults}
 \end{center}
 \end{table}
 
-
-All three methods demonstrate that they are able to outperform the baseline methods. Comparing the results in table \ref{tab:StateOfTheArtResults} it is visible that the CNN + LSTM method achieves the best results among the state-of-the-art methods.
+All four methods demonstrate that they are able to outperform the baseline methods. Comparing the outcomes in table \ref{tab:StateOfTheArtResults} it is visible that the 'CNN + LSTM' method achieves the best results among state-of-the-art methods. 
 \newline\newline
-The approach proposed in this work is inferior to the CNN + LSTM method, but can keep up with both methods proposed by \citet{Handrich:2020:SimultaneousPredVA} in terms of RMSE. However,in terms of CORR, the proposed approach is lacking behind with 0.17 lower for valence and 0.02 lower for arousal in comparison to the AFEW-VA DB only method.
+However, it needs to be pointed out that the 'CNN + LSTM' approach proposed by \citet{Theagarajan:2018:DeepDriver} and the 'Cross-DB validation' approach proposed by \citet{Handrich:2020:SimultaneousPredVA} were using two different datasets to train their model with. While the proposed 'VGGFace + RNN' and the 'AFEW-VA DB only' approaches were only using a single database. Due to this difference and the fact that the proposed approach is outperforming the 'AFEW-VA DB only' approach, this work's 'VGGFace + RNN' approach can be classified as a state-of-the-art result in emotion recognition in the wild.
 \newline\newline
-In conclusion, it can be said that the results of this thesis can be classified as state-of-the-art for emotion recognition in the wild, but still leave room for improvement, especially when looking at the CORR metric. The authors of the state-of-the-art results, \citet{Theagarajan:2018:DeepDriver} and \citet{Handrich:2020:SimultaneousPredVA}, confirm that fine-tuning a pre-trained neural network achieves very good results that might even beat the current state-of-the-art.
+For a future extension of this thesis, it might prove valuable to utilize a second dataset during the training process in order to improve results and beat the results obtained by \citet{Theagarajan:2018:DeepDriver} with their 'CNN + LSTM' approach.
 
-% \begin{table}[H]
-% \begin{center}
-% \begin{tabular}{@{}lcccccc@{}}
-% \toprule
-% \rowcolor[HTML]{FCFF2F} 
-% \multicolumn{1}{l}{\cellcolor[HTML]{FCFF2F}} & \textbf{Method} & \textbf{Evaluation} & \textbf{\begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular}} & \cellcolor[HTML]{FCFF2F}\textbf{\begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular}} \\ \midrule
-% AFEW-VA & FT-DCNN & \begin{tabular}[c]{@{}c@{}}5-fold CV\\ subject indep.\end{tabular} & 0.37 & 0.39 & 0.26 & 0.31 \\
-% \begin{tabular}[c]{@{}l@{}}Simultaneous\\ VA prediction\end{tabular} & CNN & \begin{tabular}[c]{@{}c@{}}5-fold CV\\  subject indep.\end{tabular} & 0.26 & 0.25 & \textbf{0.39} & 0.29 \\
-% \textbf{\begin{tabular}[c]{@{}l@{}}RESULTS\\ THESIS\end{tabular}} & \begin{tabular}[c]{@{}c@{}}FT-DCNN\\ (VGGFace)\end{tabular} & \begin{tabular}[c]{@{}c@{}}5-fold CV\\ subject indep.\end{tabular} & 0.27 & 0.25 & 0.22 & 0.27 \\
-% \textbf{\begin{tabular}[c]{@{}l@{}}RESULTS\\ THESIS\end{tabular}} & \begin{tabular}[c]{@{}c@{}}FT-DCNN\\ (VGGFace)\end{tabular} & \begin{tabular}[c]{@{}c@{}}\textbf{no} 5-fold-CV\\ subject indep.\end{tabular} & \textbf{0.24} & \textbf{0.22} & 0.38 & \textbf{0.46} \\ \bottomrule
-% \end{tabular}
-% \caption{The results of this thesis outperform the benchmark in terms of RMSE, however, in terms of CORR it could not perform as well when considering the 5-fold-CV.}
-% \label{tab:ResultsComparison}
-% \end{center}
-% \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Ablation Study}
 Ablation Study, in the context of machine learning, involves purposefully removing features or components in order to observe its effects on the system's performance wherein every design choice or module can be included. Ablation study, according to \citet{Fadelli:2018:AblationInANN}, allows to measure the performance change due to the caused damage.
 \newline\newline
-Furthermore, it needs to be pointed out that the below studied design choices/modules are not in any chronological order, but are independent studies at different points
-in time during the writing of this Master’s thesis.
+Furthermore, it needs to be pointed out that the below studied design choices/modules are not in any chronological order, but are independent studies carried out at different points in time during the search for optimal hyper-parameters. This means that the results highlighted in this chapter cannot be directly compared to the proposed approach, but give valuable insights that allow to understand the impact of various design decisions during the search for optimal hyper-parameters.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Network architecture}
-The VGGFace dataset was pre-trained on both, the ResNet50 and VGG16 architecture and are available through the keras-vggface package. Both model architectures are very appreciated in the community and have shown their qualities in the famous ImageNet competition with ResNet50 ending up winning the first price in 2015. ResNet50 is a deep neural network with 50 layers stacked upon each resulting in about 25 million parameters. VGG16 in comparison does not have as many layers, but is comprised of around 40 million parameters to be trained.
-\newline\newline
-ResNet50 was initially chosen due to it's deep layered approach and was compared to VGG16 in order to confirm its superiority in the challenge at hand. A comparison between both can be seen in the following table:
+The VGGFace dataset is available pre-trained on one of two different architectures, the ResNet50 and VGG16 architecture. Both models have achieved outstanding performance in machine learning competitions. The difference being that ResNet50 is a more deep-layered neural network, while VGG16 contains more parameters to be trained. A comparison of both can be seen in the following table:
 
 \begin{table}[H]
 \begin{center}
@@ -136,17 +137,54 @@ with VGG16 & 0.20 & 0.19 & 0.15 & 0.22 \\ \bottomrule
 \end{center}
 \end{table}
 
-The comparison above shows that with the chosen settings, e.g. with Data Augmentation, the VGG16 architecture performs slightly better than the ResNet50 architecture. However, it needs to be pointed out, that a different number of layers were unfrozen with the Multi-Phased Fine-Tuning approach. For training the VGG16 model one convolutional layer was unfrozen at a time, while for the training of ResNet50 two convolutional layers were unfrozen. Even though the number of unfrozen layers was bigger for ResNet50, the number of trainable parameters turned out to be way smaller. Therefore, the results achieved can be seen as equally good, as probably both models could still be further optimized. This leads to the conclusion that the ResNet50 model is equally suitable for the problem as is VGG16. ResNet50 was chosen for the further studies due to its performance reputation as the winner of the ImageNet challenge.
+The comparison above shows that the VGG16 model architecture is slightly performing better than ResNet50. However, due to multi-phase fine-tuning approach utilized during this experiment, there are differences in the amount of parameters added during the process of unfreezing additional layers in each phase. Due to this inherent difference a slight change in the outcomes should not allow to draw conclusions about having a better architecture. As a result, this work regards both architecture as an equally valid choice. 
+\newline\newline
+The final decision fell on the ResNet50 architecture to be utilized for further studies, due to its reputation as the winner of the ImageNet challenge and it's novel skip connection approach that aims to better mitigate the vanishing gradient problem.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Multi- Phase Fine-Tuning}
+Multi-Phase Fine-Tuning is an approach aiming to increase the performance of a pre-trained neural network for a specific challenge at hand. While a conventional fine-tuning approach consists of unfreezing all the needed layers at once at the beginning of the training, the Multi-Phase Fine-Tuning involves the successive unfreezing of groups of layers. The neural network's to be updated weights were increased over several phases. As shown by \citet{Sarhan:2020:MultiPhaseFineTuning}, Multi-Phase Fine-Tuning resulted in higher classification accuracy while at the same time requiring less training time in comparison to earlier fine-tuning approaches.
+\newline\newline
+The results achieved in this Master thesis were achieved with the Multi-Phase Fine-Tuning approach and can be seen in the 'Results' section. In the following experiment, conducted during the search for optimal hyper-parameters, the two strategies Single-Phased FT and Multi-Phased FT are contrasted.
+
+\begin{figure}[H]
+  \centering
+  \subfloat[Single-Phase FT]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_all.png}\label{fig:SinglePhaseFTall}}
+  \hfill
+  \subfloat[Multi-Phase FT]{\includegraphics[width=0.5\textwidth]{Figures/multi_phase_step2.png}\label{fig:MultiPhaseStep2}}
+  \caption{The RMSE loss curve for Multi-Phase FT shows a better convergence over epochs than Single-Phase FT's loss curve}
+  \label{fig:SPFTvsMPFT}
+\end{figure}
+
+It can clearly be seen in the RMSE loss curve for Single-Phase FT that the 'test' curve representing the validation loss is not following the 'train' curve in its downward trend. This is a strong indication for a overfitting behavior as the model is not able to generalize from the training data. Unlike the RMSE loss curve for Multi-Phase FT where the training and validation losses are continuously decreasing and converging with each other. This observation is also reflected in the achieved validation results presented in table \ref{tab:SPFTvsMPFT}, where the Multi-Phase FT clearly outperforms the Single-Phase FT approach in terms of RMSE and CORR.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
+\begin{tabular}[c]{@{}l@{}}Single-Phase FT \end{tabular} & 0.24 & 0.24 & 0.13 & 0.15 \\
+\begin{tabular}[c]{@{}l@{}}Multi-Phase FT \end{tabular} & 0.24 & \textbf{0.22} & \textbf{0.38} & \textbf{0.46} \\ \bottomrule
+\end{tabular}
+\caption{Validation results confirm the convergence behavior of the loss curve: Multi-Phase FT outperforms Single-Phase FT}
+\label{tab:SPFTvsMPFT}
+\end{center}
+\end{table}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{MTCNN (Multi-task Cascaded Convolutional Neural Network)}
-The MTCNN module is a pre-trained neural network that is used for detecting faces and determining its bounding box in an image/frame. Before talking about what difference the use of the MTCNN module makes towards the proposed solution, it is interesting to point out how often the module succeeds or fails to detect faces.
+As already outlined in section \ref{sec:FaceDetection}, the pre-trained MTCNN module was utilized to detect faces in an image and to determine the face's bounding box. 
 \newline\newline
-A sample taken during training with the AFEW-VA dataset, the MTCNN module failed to detect the person's face in 961 cases. The dataset consisted of 30.051 frames which represents 3.2 percent of all images, or a success rate of 96.8 percent. To put this into perspective, these detection results were compared to FaceReader \citep{Noldus:2020:Facereader}, a software tool for scientific research in automatic recognition and analysis of facial expressions.
+Next to the actual performance increase due to the detection of a person's face, it is important to highlight the failure rate of such a module. Based on the AFEW-VA dataset, consisting of 30.051 frames, the MTCNN module failed to detect a person's face in 961 cases. This equals a failure rate of 3.2 percent. 
 \newline\newline
-In a short experiment, images were sampled from the AFEW-VA database and run through the FaceReader application. Despite their production-ready product the application failed to detect faces in every third frame. This is likely due to the face that their product is designed for laboratory conditions (e.g. they recommend the camera be placed slightly below eye-level and the face be fully illuminated, without any shadow). In summary, it can be said that a face detection rate of 96.8 percent on in-the-wild data is excellent, especially in comparison to a production-ready solution with a detection rate of 66.6 percent.
+To put this into perspective, results were compared to the failure rate of the FaceReader \citep{Noldus:2020:Facereader} application, a production-ready software tool that assists researcher in the automatic recognition of facial expressions. Based on a sample taken from the AFEW-VA database, FaceReader had a failure rate of 33 percent. This is likely due to the fact that their product is designed for laboratory conditions (e.g. they recommend the camera be placed slightly below eye-level and the face be fully illuminated, without any shadow). In summary, it can be said that the MTCNN's face detection rate of 96.8 percent on in-the-wild data is excellent.
 \newline\newline
-The pipeline for the usage of the MTCNN module includes the following steps: First, faces inside an image were detected. Second, the primary face was selected. Third, the face was cropped along its bounding box and fed into the neural network. For frames where the detection of a face was not possible, the original image was resized, and then fed into the neural network instead. The following table compares training results with and without the utilization of the MTCNN module. 
+The pipeline for the usage of the MTCNN module includes the following steps: First, faces inside an image were detected. Second, the primary face was selected. Third, the face was cropped along its bounding box and fed into the neural network. For frames where the detection of a face was not possible, the image was discarded as it wouldn't have been possible to determine landmark positions without a bounding box. 
+\newline\newline
+The following table compares training results achieved with the MTCNN model during the search for optimal hyper-parameters.
 
 \begin{table}[H]
 \begin{center}
@@ -161,142 +199,129 @@ without MTCNN & 0.24 & 0.26 & -0.02 & 0.08 \\ \bottomrule
 \end{center}
 \end{table}
 
-The results above can be clearly summarized as follows: The use of the MTCNN module for face detection + bounding boxing clearly contributed to the overall improvement of the model's performance. As the learning curves looked very similar for both options, they are not further illustrated.
+In summary, the MTCNN module used for face detection + bounding boxing clearly contributed to the overall improvement of the model's performance. Furthermore, the detection of the bounding box provides a necessary input for the detection of landmark points.
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Data Augmentation}
+% Data Augmentation was chosen as a part of the proposed pipeline due to its merits in increasing the variety of images.
+
+
 % \begin{figure}[H]
 %   \centering
-%   \subfloat[with MTCNN]{\includegraphics[width=0.5\textwidth]{Figures/mtcnn_val_rmse.png}\label{fig:MTCNNValRMSE}}
+%   \subfloat[Without Data Augmentation]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_noDataAug.png}\label{fig:NoDataAug}}
 %   \hfill
-%   \subfloat[without MTCNN]{\includegraphics[width=0.5\textwidth]{Figures/nomtcnn_val_rmse.png}\label{fig:NoMTCNNValRMSE}}
-%   \caption{Comparison of learning curve for valence using the RMSE metric}
+%   \subfloat[With Data Augmenation]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_wDataAug.png}\label{fig:WithDataAug}}
+%   \caption{Applying Data Augmentation made the learning process initially harder, but more stable over time.}
 % \end{figure}
+
+
+% \begin{table}[H]
+% \begin{center}
+% \begin{tabular}{@{}lcccc@{}}
+% \toprule
+%  & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
+% \begin{tabular}[c]{@{}l@{}}Multi-Phase FT\\ (with Data Aug.)\end{tabular} & \textbf{0.26} & 0.26 & \textbf{0.15} & -0.05 \\
+% \begin{tabular}[c]{@{}l@{}}Multi-Phase FT\\ (no Data Aug.)\end{tabular} & 0.29 & \textbf{0.25} & -0.10 & \textbf{0.12} \\ \bottomrule
+% \end{tabular}
+% \caption{Data Augmentation managed to slightly increase the performance of the neural network.}
+% \label{tab:MPFTDataAug}
+% \end{center}
+% \end{table}
+
+% From the outcomes can be deducted that Data Augmentation is not differentiating itself as an important model. However, this experiment, as well as others during the course of this Master's thesis confirmed that Data Augmentation, when applied, did always have a positive or at least neutral impact on the base model.
+% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Facial Landmarks}
+Detecting a person's facial landmarks and utilizing them to improve emotion recognition is a current research trend. One of the most widely used and accurate approaches for the detection is called an Active Appearance Model. Even though it is described by \citet{Gao:2010:ActiveAppearanceModels} as a very suitable approach for the extraction of compact features, it doesn't satisfy real-time requirements due to its time consuming fitting process.
 \newline\newline
-As mentioned above, the MTCNN module failed to detect faces in about 3.2 percent of all images within this dataset. Whenever this happened, the original image was used as an input instead of feeding the cropped image containing the persons's face, into the neural network. This begs the question of whether this was truly the best approach, or whether it would have been better to discard those frames, so that the model can better focus on learning the specific facial features.
+Such an approach couldn't have satisfied the real-time requirements for in the wild use cases set by PPI AG. Instead an algorithm based on an ensamble of regression trees, introduced by \citet{Kazemi:2014:ShapePredictor}, able to predict 68 facial landmarks in milliseconds was utilized.
 \newline\newline
-Exactly this was done in an experiment and the results are summarized in the following table:
+Landmarks obtained from the algorithm were fed into the neural network in one of the following four ways: 
+\newline\newline
+1. Direct Overlay\newline
+Each landmark point was drawn as an overlay onto the face's image with full opacity.
+\newline\newline
+2. Soft Overlay\newline
+Each landmark point was drawn as an overlay onto the face's image with an opacity of 0.2.
+\newline\newline
+3. Heatmap Overlay\newline
+Landmark points were converted into a heatmap and applied as an overlay onto the face's image.
+\newline\newline
+4. Separate 2D Mask\newline
+Each landmark point is represented on a gray-scale image by a pixel value between 0 and +1. A gaussian filter was applied to blur the image.
+\newline\newline
+Through the application of an overlay on top of the actual image, actual pixels of the face's input image were modified. This wasn't necessary with the 'Separate 2D Mask' approach, as the landmarks are captured in a separate gray-scale image that was fed into a second input stream of the neural network.
+\newline\newline
+All four possibilities are illustrated in figure \ref{fig:LandmarksImages}.
+
+\begin{figure}[H]
+  \begin{center}
+  \subfloat[Landmarks as dots]{\includegraphics[width=0.4\textwidth]{Figures/landmarks_as_dots.png}}
+  \hfill
+  \subfloat[Landmarks as soft overlay]{\includegraphics[width=0.4\textwidth]{Figures/landmarks_as_softOverlay.png}}
+  \hfill
+  \subfloat[Landmarks as heatmap overlay]{\includegraphics[width=0.4\textwidth]{Figures/landmarks_as_heatmap.png}}
+  \hfill
+  \subfloat[Separate 2D Mask]{\includegraphics[width=0.4\textwidth]{Figures/landmarks_as_heatmap_in_mask.png}}
+  \caption{Visual illustration of the possible ways how landmarks could be applied}
+  \label{fig:LandmarksImages}
+  \end{center}
+\end{figure}
+
+An intuitive way of applying facial landmarks to an image is to use the dots as an overlay. However, it became clear that such doing would make important information in the underlying image invisible to the neural network. Instead different approaches were tried to remedy this implication, like a soft overlay or a heatmap overlay. Eventually, it turned out that keeping the face's image completely pristine while using a separate 2D mask for facial landmarks delivered the best results. These results are compared visually in figure \ref{fig:LandmarksVisualComparison} and through the RMSE and CORR metrics in table \ref{tab:LandmarksComparison}.
+
+\begin{figure}[H]
+  \begin{center}
+  \subfloat[Landmarks as dots]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_landmarks.png}}
+  \hfill
+  \subfloat[Landmarks as heatmap overlay]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_heatmap.png}}
+  \hfill
+  \subfloat[Landmarks as soft overlay]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_softAttention.png}}
+  \hfill
+  \caption{The validation loss curves for the RMSE metric indicate that the more of a face covered by landmarks the worse it performs}
+  \label{fig:LandmarksVisualComparison}
+  \end{center}
+\end{figure}
 
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{lcccc}
 \hline
-\multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \hline
-keeping original frame & \textbf{0.26} & 0.25 & \textbf{0.15} & -0.05 \\
-discarding frame & 0.27 & 0.25 & -0.11 & \textbf{0.14} \\ \hline
+\multicolumn{1}{c}{Ablation study} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \hline
+\begin{tabular}[c]{@{}l@{}}Landmarks as dots\end{tabular} & 0.21 & 0.22 & 0.02 & 0.00 \\
+\begin{tabular}[c]{@{}l@{}}Landmarks as heatmap \end{tabular} & 0.22 & 0.22 & 0.00 & 0.00 \\
+\begin{tabular}[c]{@{}l@{}}Landmarks as soft overlay\end{tabular} & \textbf{0.19} & \textbf{0.20} & 0.08 & 0.07 \\
+\begin{tabular}[c]{@{}l@{}}Landmarks as separate 2D Mask\end{tabular} & 0.24 & 0.24 & \textbf{0.10} & \textbf{0.20} \\ \bottomrule
 \end{tabular}
-\caption{When a face could not be detected, the model performed slightly better when keeping the original image instead of discarding it.}
-\label{tab:UndetectedFaces}
+\caption{Feeding a separate 2D mask into the neural network outperformed all other possibilities}
+\label{tab:LandmarksComparison}
 \end{center}
 \end{table}
 
-In summary, it can be said that there was a slight inclination towards keeping the original frame in terms of lower RMSE and higher CORR. However, the difference between those two approaches turned out to be so minor that it can be regarded as negligible.
+All in all, it can be summarized that leaving the face's image untouched, while feeding facial landmarks separately into the neural network has the highest potential of increasing the model performance.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Multi- Phase Fine-Tuning}
-Multi-Phase Fine-Tuning is an approach aiming to increase the performance of a pre-trained neural network for a specific challenge at hand. While a conventional fine-tuning approach consists of unfreezing all the needed layers at once at the beginning of the training, the Multi-Phase Fine-Tuning involves the successive unfreezing of groups of layers. The neural network's to be updated weights were increased over several phases. As shown by \citet{Sarhan:2020:MultiPhaseFineTuning}, Multi-Phase Fine-Tuning resulted in higher classification accuracy while at the same time requiring less training time in comparison to earlier fine-tuning approaches.
-% \begin{quote}
-% In this paper, we propose multi-phase fine-tuning for tuning deep networks from typical object recognition to Sign Language Recognition (SLR). It extends the successful idea of transfer learning by fine-tuning the network’s weights over several phases. Starting from the top of the network, layers are trained in phases by successively unfreezing layers for training. We apply this novel training approach to SLR, since in this application, training data is scarce and differs considerably from the datasets which are usually used for pre-training. Our experiments show that multi-phase fine-tuning can reach significantly better accuracy in fewer training epochs compared to previous finetuning techniques
-% Results show that compared to earlier fine-tuning approaches, multi-phase fine-tuning has a higher classification accuracy and requires less training time for this pair of domains.
-% \citep[~p. 1]{Sarhan:2020:MultiPhaseFineTuning}
-\newline\newline
-The results achieved in this Master thesis were achieved with the Multi-Phase Fine-Tuning approach and can be seen in the 'Results' section. In comparison to these results, in the following experiments, Single-Phase Fine-Tuning strategies will be explored. For example, in figure \ref{fig:SinglePhaseFTall} all layers were unfrozen, while in figure \ref{fig:SinglePhaseFT70} only the last 70 out of 175 layers of the model's architecture were unfrozen. The results for these Single-Phase Fine-Tuning strategies are illustrated in the following figures:
-
-\begin{figure}[H]
-  \centering
-  \subfloat[Single-Phase FT with all layers trainable]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_all.png}\label{fig:SinglePhaseFTall}}
-  \hfill
-  \subfloat[Single-Phase FT with 70 layers trainable]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_70layers.png}\label{fig:SinglePhaseFT70}}
-  \caption{Using Single-Phase FT results in rough learning curves and does not exhibit any improvements for the 'test' curve (=validation) over time.}
-
-\end{figure}
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-\multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}Single-Phase FT\\ (all layers trainable)\end{tabular} & 0.24 & \textbf{0.24} & \textbf{0.13} & \textbf{0.15} \\
-\begin{tabular}[c]{@{}l@{}}Single-Phase FT\\ (70 layers trainable)\end{tabular} & \textbf{0.21} & 0.26 & 0.05 & -0.08 \\ \bottomrule
-\end{tabular}
-\caption{Restricting the amount of layers trainable, to for example 70 layers, resulted in worse validation/testing outcomes.}
-\label{tab:SPFTLayersTrainable}
-\end{center}
-\end{table}
-
-It can clearly be seen in both figures above that the progress of the 'test' curve isn't showing a downward trend, as one might have expected (similar to  \ref{fig:ValenceRMSE}). This behavior is a strong indication that the neural network is not able to generalize well from its training, and is thus overfitting.
-\newline\newline
-Comparing the figures \ref{fig:SinglePhaseFTall} and \ref{fig:SinglePhaseFT70} with their respective results in table \ref{tab:SPFTLayersTrainable}, it can be observe that fine-tuning with less layers trainable yields better results in terms of reducing the RMSE error. However, for both approaches, the 'test' curve displays a rather erratic behavior in comparison to the smooth 'test' curve in figure \ref{fig:ValenceRMSE}. 
-\newline\newline
-The above presented observation on overfitting raises the question: How many layers should be unfrozen to achieve the best possible result? \newline
-Here, the Multi-Phase Fine-Tuning approach came in handy. Experiments performed with the Multi-Phase FT approach showed that a higher step size generally resulted in a higher loss. Even while all the other parameters stayed the same, the step size can have an enormous impact on the model performance. The following table details the results of a model with a step size of 1, compared to a model with a step size of 2:
-
-\begin{figure}[H]
-  \centering
-  \subfloat[Multi-Phase FT with step size 1]{\includegraphics[width=0.5\textwidth]{Figures/multi_phase_step1.png}\label{fig:MultiPhaseStep1}}
-  \hfill
-  \subfloat[Multi-Phase FT with step size 2]{\includegraphics[width=0.5\textwidth]{Figures/multi_phase_step2.png}\label{fig:MultiPhaseStep2}}
-  \caption{Utilizing Multi-Phase Fine-Tuning results in learning curves that approach each other over time.}
-\end{figure}
-
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-\multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}base model\\ (step\_size=2)\end{tabular} & 0.24 & 0.22 & \textbf{0.38} & \textbf{0.46} \\
-\begin{tabular}[c]{@{}l@{}}MP-FT alt\\ (step\_size=1)\end{tabular} & \textbf{0.20} & \textbf{0.19} & 0.07 & 0.13 \\ \bottomrule
-\end{tabular}
-\caption{When using Multi-Phase Fine-Tuning (FT) the number of layers unfrozen in each phase strongly influences the performance of the neural network.}
-\label{tab:FTStepSize}
-\end{center}
-\end{table}
-
-The results show that step size 2 prevails over the results for step size 1 in this model architecture. Furthermore, when observing the respective figures, it can be seen that the 'test' curve for figure \ref{fig:MultiPhaseStep1} initially increased in loss, and only decreased more sharply after about 20 epochs. At the same time, figure \ref{fig:MultiPhaseStep2} decreased sharply in the beginning and flattened out, which indicates a higher potential for better performance after some optimization/tweaking.
-\newline\newline
-In terms of numerical results, step size 1 performed better in terms of RMSE loss. However, for the Pearson correlation (CORR), using step size 2 clearly exhibited better results.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Data Augmentation}
-Data Augmentation is a central part of the presented design choices of the proposed neural network. In the ablation study conducted with a specific hyper parameter setting, the directly comparable outcome is presented in figure \ref{fig:NoDataAug} and figure \ref{fig:WithDataAug}, as well as in the table \ref{tab:MPFTDataAug}.
-
-\begin{figure}[H]
-  \centering
-  \subfloat[Without Data Augmentation]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_noDataAug.png}\label{fig:NoDataAug}}
-  \hfill
-  \subfloat[With Data Augmenation]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_wDataAug.png}\label{fig:WithDataAug}}
-  \caption{Applying Data Augmentation made the learning process initially harder, but more stable over time.}
-\end{figure}
-
-
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
- & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}Multi-Phase FT\\ (with Data Aug.)\end{tabular} & \textbf{0.26} & 0.26 & \textbf{0.15} & -0.05 \\
-\begin{tabular}[c]{@{}l@{}}Multi-Phase FT\\ (no Data Aug.)\end{tabular} & 0.29 & \textbf{0.25} & -0.10 & \textbf{0.12} \\ \bottomrule
-\end{tabular}
-\caption{Data Augmentation managed to slightly increase the performance of the neural network.}
-\label{tab:MPFTDataAug}
-\end{center}
-\end{table}
-
-From the outcomes can be deducted that Data Augmentation is not differentiating itself as an important model. However, this experiment, as well as others during the course of this Master's thesis confirmed that Data Augmentation, when applied, did always have a positive or at least neutral impact on the base model.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Regularization}
-Regularization techniques are generally used to introduce error and/or randomness during the training process which makes training for the model harder, in the hope of a better generalization which in turn results in a better performance during validation/testing of the model. The experiments presented in this section are being compared with the presented model above (i.e., Multi-Phased FT without Data Augmentation).
-\newline\newline
-\textbf{Dropout}\newline
-Based on the illustrated outcomes above, an ablation study was conducted by eliminating the Dropout layers from the model architecture. The achieved results for the RMSE metric of 'Valence' can be seen below:
+Regularization techniques are generally used to introduce error and/or randomness during the training process which makes training for the model harder, in the hope of a better generalization which in turn results in a better performance during validation/testing of the model. The experiments presented in this section were conducted during the search for optimal hyper-parameters.
+
+\subsubsection{Dropout}
+The following figure \ref{fig:AblationNoDropout} highlights the effects of a removal of the dropout in the custom added classifier on the RMSE metric.
 
 \begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out1_noDropout.png}
-  \caption{Removing the Dropout layers from the classifier resulted in a strong increase in validation loss (= 'test'curve)}
+  \centering
+  \subfloat[With Dropout]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_noDataAug.png}\label{fig:WithDropout}}
+  \hfill
+  \subfloat[No Dropout]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_noDropout.png}\label{fig:NoDropout}}
+  \caption{Removing the Dropout layers from the classifier resulted in a spike of validation loss (='test' curve)}
   \label{fig:AblationNoDropout}
-  \end{center}
 \end{figure}
 
-As expected, due to the missing regularization effect of the Dropout layers, the results achieved during training revealed a validation/testing loss significantly higher than the training loss. This becomes visible in the following table where the results for the model without Dropout perform significantly worse than the base model:
+As expected, due to the missing regularization effect of the Dropout layers, the validation loss curve unveiled a significantly higher validation loss. This is also confirmed by the results presented in table \ref{tab:MPFTDropout}, where the removal of Dropout layers perform significantly worse in all four measured metrics.
+
 
 \begin{table}[H]
 \begin{center}
@@ -306,290 +331,124 @@ As expected, due to the missing regularization effect of the Dropout layers, the
 \begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ (no Data Aug.)\end{tabular} & \textbf{0.29} & \textbf{0.25} & \textbf{-0.10} & \textbf{0.12} \\
 \begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ without Dropout\end{tabular} & 0.47 & 0.49 & -0.11 & 0.03 \\ \bottomrule
 \end{tabular}
-\caption{Evaluation results confirm that the removal of Dropout has a detrimental effect on the overall performance.}
+\caption{Evaluation results confirm that the removal of dropout leads to a performance decrease in all four metrics.}
 \label{tab:MPFTDropout}
 \end{center}
 \end{table}
 
-\textbf{Batch Normalization}\newline
-The same Ablation study was applied to Batch Normalization. Based upon the Multi-Phase Fine-Tuning approach, but leaving out Batch Normalization, the result in terms of RMSE metric for 'Valence' looks like this:
+\subsubsection{Batch Normalization}
+Figure \ref{fig:AblationNoBatchNorm} illustrates the effects of a removal of the classifier's BatchNormalization layer on the RMSE metric for valence.
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out1_noBatchNorm.png}
-  \caption{The removal Batch Normalization illustrates clearly how erratic the validation results (= 'test' curve) become.}
+  \caption{Removing Batch Normalization leads to a very erratic behavior of the validation loss curve.}
   \label{fig:AblationNoBatchNorm}
   \end{center}
 \end{figure}         
 
-After removing the Batch Normalization layer, it became obvious that the curve for the test loss was very volatile/erratic and even increased. This results in the following degradation of the performance outcome:
+Due to the erratic behavior of the validation loss in terms of RMSE and the general upward trend of the validation loss already indicate a bad performance. The expected performance degradation is presented in table \ref{tab:MPFTNoBatchNorm}
 
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 \multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ (no Data Aug.)\end{tabular} & \textbf{0.29} & \textbf{0.25} & -0.10 & \textbf{0.12} \\
-\begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ without BatchNorm\end{tabular} & 0.50 & 0.69 & \textbf{-0.08} & 0.00 \\ \bottomrule
+\begin{tabular}[c]{@{}l@{}}With BatchNormalization\end{tabular} & \textbf{0.29} & \textbf{0.25} & -0.10 & \textbf{0.12} \\
+\begin{tabular}[c]{@{}l@{}}Without BatchNormalization\end{tabular} & 0.50 & 0.69 & \textbf{-0.08} & 0.00 \\ \bottomrule
 \end{tabular}
-\caption{Removing Batch Normalization clearly harms the overall model performance.}
+\caption{Removing Batch Normalization clearly reduces the overall performance of the neural network.}
 \label{tab:MPFTNoBatchNorm}
 \end{center}
 \end{table}
 
-\textbf{L2 regularization}\newline
-Even though L2 regularization was not included in the proposed model architecture, there were multiple experiments to explore the benefit of L1/L2 regularization during the fine-tuning process. However, all these efforts turned out to lower the performance of the model overall. In order to explain why this regularization technique was not helpful, an illustration and discussion of two approaches will be discussed through the two figures below. The first figure illustrates the results of applying L2 regularization to the single Dense layer at the top of the model.
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out1_L2Dense.png}
-  \caption{Applying L2 regularization to the classifier ends up in increasing the validation loss over time.}
-  \label{fig:AblationL2Dense}
-  \end{center}
-\end{figure}
-
-As it can be seen from the graph above, the application of L2 regularization to the Dense layer performed initially well on the validation/test data, like in the base model. However, toward later epochs, the validation/test loss started to increase which likely indicates overfitting of the model. The results for this approach can be summarized as follows:
-
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-\multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ (no Data Aug.)\end{tabular} & 0.29 & 0.25 & -0.10 & 0.12 \\
-\begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ L2-Reg. Dense Layer\end{tabular} & \textbf{0.28} & 0.25 & -0.10 & \textbf{0.13} \\ \bottomrule
-\end{tabular}
-\caption{The slight performance gain through the application of L2 regularization to the classifier can be classified as negligible.}
-\label{tab:MPFTL2RegDense}
-\end{center}
-\end{table}
-
-Surprisingly, the model performed slightly better with L2 regularization in the classifier. However, due to the almost negligible improvement, it cannot be ascertained weather the improvement did occur just by chance.
-\newline\newline
-Another promising approach was the application of L2 regularization to all trainable (=unfrozen) layers from the pretrained VGGFace network, without applying it to the model's Dense layer. The results achieved for a 0.01 regularizer for the RMSE metric for 'Valence' look like this:
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out1_L2VGGFace.png}
-  \caption{The application of L2 regularization to the pre-trained VGGFace model shows some promosing low test loss.}
-  \label{fig:AblationL2VGGFace}
-  \end{center}
-\end{figure}
-
-The curve, especially from the 90th epoch on, looks quite promising in terms of validation/test loss. However, the actual results obtained during the evaluation of the model on a separate test set showed substantially lower numbers for RMSE. The results are summarized and compared in the table below.
-
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-\multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ (no Data Aug.)\end{tabular} & \textbf{0.29} & \textbf{0.25} & -0.10 & \textbf{0.12} \\
-\begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ L2-Reg. VGG Layer\end{tabular} & 0.40 & 0.28 & \textbf{-0.07} & 0.03 \\ \bottomrule
-\end{tabular}
-\caption{Evaluation results disprove the initial assumption that the performance might increase when applying L2 regularization to the pre-trained VGGFace network.}
-\label{tab:MPFTL2RegVGG}
-\end{center}
-\end{table}
-
-In summary, it could be proven that various regularization techniques, such as Dropout and Batch Normalization improved the proposed model's generalization capabilities. However, in the case of applying L2 weight regularization to either Dense or pre-trained Convolutional layers, was no substantial performance to be gained. On the contrary, it increased the validation, as well as the testing loss for both Valence and Arousal.
-% Validation loss during training is lower than the training loss, which is very likely because of the reason that regularization was applied. This L2 regularization is only applied during training, but not validation/testing, which explains the significant difference between those values.
-% https://www.pyimagesearch.com/2019/10/14/why-is-my-validation-loss-lower-than-my-training-loss/
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Recurrent Neural Network}
-% \textbf{- Can an LSTM capture the time-spatio changes between frames and thus enhance the performance of \gls{ER}}
-% Data needs to be non-shuffled in order to do that
-% -> Performance didn't increase
-
-The idea behind applying a Recurrent Neural Network (RNNs) is to capture the time-spatial changes in between frames with the goal of further enhancing the performance of emotion recognition. The specific type of RNN applied is callled LSTM. Additionally, the model's architecture needed to be changed in order to allow for an input of sequences with 5 frames each. These are fed into the model and processed simultaneously, going through the CNN, then the LSTM layer and finally the classifier. Moreover, frames inside the dataset mustn't be shuffled in order to be able to capture time-spatial changes.
-\newline\newline
-Results achieved in terms of RMSE metric of 'Valence' with an LSTM layer look like this:
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out_LSTM.png}
-  \caption{Using a LSTM layer shows a smooth curve, however, with a slow validation loss decrease.}
-  \label{fig:AblationLSTM}
-  \end{center}
-\end{figure}
-
-The following table compares the base model, with a CNN only architecture, to the proposed CNN + LSTM architecture. It shows that the LSTM performs better in terms of RMSE, but lacks in CORR, which makes it hard to judge whether it is really a better choice as CORR usually indicates the models' generalization ability. 
-
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{lcc}
-\hline
-\multicolumn{1}{c}{Ablation study} & RMSE $\downarrow$ & CORR $\uparrow$ \\ \hline
-\begin{tabular}[c]{@{}l@{}}base model\\ (CNN only)\end{tabular} & 0.46 & \textbf{0.42} \\
-\begin{tabular}[c]{@{}l@{}}CNN + LSTM\\ (step size 3)\end{tabular} & \textbf{0.21} & 0.14 \\ \hline
-\end{tabular}
-\caption{Utilizing a LSTM layer in this experiment resulted in lower RMSE, but at the same time worse CORR.}
-\label{tab:LSTM}
-\end{center}
-\end{table}
+% \subsubsection{L2 regularization}
+% L2 regularization is another popular approach to increase randomness in the training process. Despite its promising outlook, all experiments turned out to have a negative effect on the overall performance. This is why L2 regularization was not included as a hyper-parameter in the propose approach.
 
 
+% In order to explain why this regularization technique was not helpful, an illustration and discussion of two approaches will be discussed through the two figures below. The first figure illustrates the results of applying L2 regularization to the single Dense layer at the top of the model.
 
+% \begin{figure}[H]
+%   \begin{center}
+%   \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out1_L2Dense.png}
+%   \caption{Applying L2 regularization to the classifier ends up in increasing the validation loss over time.}
+%   \label{fig:AblationL2Dense}
+%   \end{center}
+% \end{figure}
 
+% As it can be seen from the graph above, the application of L2 regularization to the Dense layer performed initially well on the validation/test data, like in the base model. However, toward later epochs, the validation/test loss started to increase which likely indicates overfitting of the model. The results for this approach can be summarized as follows:
 
+% \begin{table}[H]
+% \begin{center}
+% \begin{tabular}{@{}lcccc@{}}
+% \toprule
+% \multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
+% \begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ (no Data Aug.)\end{tabular} & 0.29 & 0.25 & -0.10 & 0.12 \\
+% \begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ L2-Reg. Dense Layer\end{tabular} & \textbf{0.28} & 0.25 & -0.10 & \textbf{0.13} \\ \bottomrule
+% \end{tabular}
+% \caption{The slight performance gain through the application of L2 regularization to the classifier can be classified as negligible.}
+% \label{tab:MPFTL2RegDense}
+% \end{center}
+% \end{table}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Facial Landmarks}
-The recognition of landmarks and its usage as a feature for increasing the performance of emotion recognition is well accepted in the scientific community. These landmarks can for example be applied as an overlay to the original image, and are subsequently processed by the neural network.
-\newline\newline
-Active Appearance Model is an approach that is considered as one of the most accurate approaches to detect landmarks of a person's face. It is described by \citet{Gao:2010:ActiveAppearanceModels} as very suitable for the extraction of compact features in various applications. However, they admit that this approach can't satisfy real-time requirements sufficiently, due to its time consuming fitting process.
-\newline\newline
-This consideration led to the decision of implementing a fast performing algorithm for the task of landmark prediction, instead of an Active Appearance Model which needs for each face a few seconds to be fitted. The decision fell on the algorithm of 'Ensemble of Regression Trees (ERT)' \citep{Kazemi:2014:ShapePredictor} implemented as a pre-trained shape predictor by the dlib library. The outcome looks like this:
+% Surprisingly, the model performed slightly better with L2 regularization in the classifier. However, due to the almost negligible improvement, it cannot be ascertained weather the improvement did occur just by chance.
+% \newline\newline
+% Another promising approach was the application of L2 regularization to all trainable (=unfrozen) layers from the pretrained VGGFace network, without applying it to the model's Dense layer. The results achieved for a 0.01 regularizer for the RMSE metric for 'Valence' look like this:
 
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.4\textwidth]{Figures/landmarks_as_dots.png}
-  \caption{Predicted landmarks with the dlib shape predictor consist of 68 points in a human face.}
-  \label{fig:LandmarkdsDots}
-  \end{center}
-\end{figure}
+% \begin{figure}[H]
+%   \begin{center}
+%   \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out1_L2VGGFace.png}
+%   \caption{The application of L2 regularization to the pre-trained VGGFace model shows some promosing low test loss.}
+%   \label{fig:AblationL2VGGFace}
+%   \end{center}
+% \end{figure}
 
-According to the authors paper with the title 'One Millisecond Face Alignment with an Ensemble of Regression Trees' \citep{Kazemi:2014:ShapePredictor} the approach is able to predict for each face 68 facial landmarks in real-time. The results of this approach are illustrated through the following figure and table:
+% The curve, especially from the 90th epoch on, looks quite promising in terms of validation/test loss. However, the actual results obtained during the evaluation of the model on a separate test set showed substantially lower numbers for RMSE. The results are summarized and compared in the table below.
 
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out1_landmarks.png}
-  \caption{Landmarks applied as an overlay to the image show an unpredictable behavior during the validation.}
-  \label{fig:ASM}
-  \end{center}
-\end{figure}
+% \begin{table}[H]
+% \begin{center}
+% \begin{tabular}{@{}lcccc@{}}
+% \toprule
+% \multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
+% \begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ (no Data Aug.)\end{tabular} & \textbf{0.29} & \textbf{0.25} & -0.10 & \textbf{0.12} \\
+% \begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ L2-Reg. VGG Layer\end{tabular} & 0.40 & 0.28 & \textbf{-0.07} & 0.03 \\ \bottomrule
+% \end{tabular}
+% \caption{Evaluation results disprove the initial assumption that the performance might increase when applying L2 regularization to the pre-trained VGGFace network.}
+% \label{tab:MPFTL2RegVGG}
+% \end{center}
+% \end{table}
 
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{lcccc}
-\hline
-\multicolumn{1}{c}{Ablation study} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \hline
-\begin{tabular}[c]{@{}l@{}}base model\\ (without landmarks)\end{tabular} & 0.24 & 0.22 & \textbf{0.38} & \textbf{0.46} \\
-\begin{tabular}[c]{@{}l@{}}Landmarks\\ (with 68 data points)\end{tabular} & \textbf{0.21} & 0.22 & 0.02 & 0.00 \\ \hline
-\end{tabular}
-\caption{Applying landmarks as an overlay might result in the model not being able to generalize anymore based on facial features.}
-\label{tab:Landmarks}
-\end{center}
-\end{table}
+% In summary, it could be proven that various regularization techniques, such as Dropout and Batch Normalization improved the proposed model's generalization capabilities. However, in the case of applying L2 weight regularization to either Dense or pre-trained Convolutional layers, was no substantial performance to be gained. On the contrary, it increased the validation, as well as the testing loss for both Valence and Arousal.
 
-The results show that the RMSE value slightly improves (decreases), while the CORR metric massively forfeits its positive correlation. This might indicate, that using landmarks for the recognition of emotions with the pre-trained VGGFace network is a bad fit.
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Recurrent Neural Network}
+% % \textbf{- Can an LSTM capture the time-spatio changes between frames and thus enhance the performance of \gls{ER}}
+% % Data needs to be non-shuffled in order to do that
+% % -> Performance didn't increase
 
-% \textbf{- How much longer does the program need to run through for one image with an AAM?}
+% The idea behind applying a Recurrent Neural Network (RNNs) is to capture the time-spatial changes in between frames with the goal of further enhancing the performance of emotion recognition. The specific type of RNN applied is callled LSTM. Additionally, the model's architecture needed to be changed in order to allow for an input of sequences with 5 frames each. These are fed into the model and processed simultaneously, going through the CNN, then the LSTM layer and finally the classifier. Moreover, frames inside the dataset mustn't be shuffled in order to be able to capture time-spatial changes.
+% \newline\newline
+% Results achieved in terms of RMSE metric of 'Valence' with an LSTM layer look like this:
 
-% Construction of landmarks for the whole dataset of 30051 images. From 7402 images it could not detect the face (with dlib face detector)
+% \begin{figure}[H]
+%   \begin{center}
+%   \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out_LSTM.png}
+%   \caption{Using a LSTM layer shows a smooth curve, however, with a slow validation loss decrease.}
+%   \label{fig:AblationLSTM}
+%   \end{center}
+% \end{figure}
 
-% The 'default' face detector from dlib fails to detect 7402 out of 30051 images, while the MTCNN only fails in 961 images to detect a face. => A logical conclusion would be to use MTCNN to detect the face and the respective bounding box while using the dlib shape predictor, based upon the ERT approach, to time-efficiently detect  facial landmarks.
+% The following table compares the base model, with a CNN only architecture, to the proposed CNN + LSTM architecture. It shows that the LSTM performs better in terms of RMSE, but lacks in CORR, which makes it hard to judge whether it is really a better choice as CORR usually indicates the models' generalization ability. 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Facial Landmarks as Heatmap}
-Even though it could not be proven that facial landmarks improve the model performance, a consideration was to transform the detected landmarks into a heatmap. The observed learning curves and results obtained might exhibit further indications for the performance of utilizing facial landmarks. The outcome of applying a heatmap looks like this:
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.4\textwidth]{Figures/landmarks_as_heatmap.png}
-  \caption{Facial landmarks applied as an heatmap overlay and cropped to the bounding box.}
-  \label{fig:LandmarksHeatmap}
-  \end{center}
-\end{figure}
-
-The learning curve and results obtained can be observed in the following figure and table:
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out1_heatmap.png}
-  \caption{Applying a heatmap to the image did not impact the training curve for the RMSE metric for Valence, but made the validation curve behave erratic.}
-  \label{fig:ASMHeatmap}
-  \end{center}
-\end{figure}
-
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{lcccc}
-\hline
-\multicolumn{1}{c}{Ablation study} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \hline
-\begin{tabular}[c]{@{}l@{}}base model\\ (without landmarks)\end{tabular} & 0.24 & 0.22 & \textbf{0.38} & \textbf{0.46} \\
-\begin{tabular}[c]{@{}l@{}}Heatmap\\ (from ASM)\end{tabular} & \textbf{0.22} & 0.22 & 0.00 & 0.00 \\ \hline
-\end{tabular}
-\caption{Through an evaluation it is clear that the heatmap could lower the RMSE metric slightly, but had to suffer a severe loss in CORR.}
-\label{tab:ASMHeatmap}
-\end{center}
-\end{table}
-
-Contrary, to the expectation of improving the model's performance, using a heatmap overlay slightly increased the RMSE and decreased CORR even more. A possible explanation might be that the model has more difficulty extracting facial features because of the heatmap overlay. This overlay is drawing stepwise colored dots for the facial landmarks while putting a shadow over the residual parts of the image. This shadow might actually end up worsening the model performance.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Facial Landmarks as a Soft Attention overlay}
-Due to the poor results from the before mentioned approaches, it was suspected, that the heatmap overlay is covering parts of the face that contain very important information for the detection of facial expressions. In order to prove/disprove this assumption, the facial landmarks overlay containing the dots was given a low opacity of 0.2. 
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.4\textwidth]{Figures/landmarks_as_softOverlay.png}
-  \caption{Detected landmarks were applied as a soft overlay in order to preserve underlying information about facial features.}
-  \label{fig:LandmarksSoftOverlay}
-  \end{center}
-\end{figure}
-
-This approach was expected to preserve information about facial expressions in the image, while landmarks are illustrated with a coloured shadow at the respective landmark locations. Achieved results did indeed prove this suspicion that information got covered in previous methods. Thus, this approach performed significantly better than the heatmap approach. This can be seen in the following table:
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out1_softAttention.png}
-  \caption{Due to the smoothness of the curve and their L-shape course, the Soft Attention looks more promising than the Heatmap approach.}
-  \label{fig:LandmarksSoftAttention}
-  \end{center}
-\end{figure}
-
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-\multicolumn{1}{c}{Ablation study} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}Base model\\ (without landmarks)\end{tabular} & 0.24 & 0.22 & \textbf{0.38} & \textbf{0.46} \\
-\begin{tabular}[c]{@{}l@{}}Heatmap\\ (from ASM)\end{tabular} & 0.22 & 0.22 & 0.00 & 0.00 \\
-\begin{tabular}[c]{@{}l@{}}Soft Attention Overlay\\ (from ASM)\end{tabular} & \textbf{0.19} & \textbf{0.20} & 0.08 & 0.07 \\ \bottomrule
-\end{tabular}
-\caption{Comparing the three approaches illuminates that the Soft Attention Overlay performs better than a Heatmap, but still worse than the base model without any landmarks.}
-\label{tab:ASMSoftAttention}
-\end{center}
-\end{table}
-
-Despite some minor improvement in terms of RMSE, the approach still performs bad in comparison the base model. Therefore, it can be concluded from the presented results, that a direct overlay of landmarks on top of the image would be detrimental to the generalization ability of the model. It is suspected, that the application of landmarks on top of the image covers important information in the image and hinders the model to learn these features. In order to utilize facial landmarks without hindering the learning ability of the model, the idea was to keep landmarks in a mask that is fed separately into the neural network.
-
-\subsubsection{Facial Landmarks as separate mask}
-Based on the aforementioned insight from the experiments with utilizing landmarks as an image overlay, it was concluded that landmarks cover important information in the image. Therefore, in this part landmarks were kept in a separate mask with pixel values ranging from 0 to +1. The mask was constructed in the style of a heatmap which can be seen in the following figure:
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.4\textwidth]{Figures/landmarks_as_heatmap_in_mask.png}
-  \caption{Detected landmarks are constructed in a separate mask in a heatmap style.}
-  \label{fig:LandmarksMask}
-  \end{center}
-\end{figure}
-
-This mask with its dimension of 224x224 is then fed as an additional fourth channel to the respective RGB image. The output shape of this concatenation will be 224x224x4 and is repeated for each image in the training, validation and test dataset.
-\newline\newline
-As this image, due to its fourth channel doesn't fit anymore the input shape requirements for the pre-trained VGGFace network, a custom neural network had to be constructed and trained. In order to keep the outcomes comparable it was chosen to implement a ResNet50 architecture from scratch that takes a four channel image as input and consists of the same layers as the proposed architecture. The training results achieved with a Cyclic Learning Rate can be seen in the following table:
-
-\begin{table}[H]
-\begin{center}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-\multicolumn{1}{c}{Ablation study} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}base model\\ (without landmarks)\end{tabular} & 0.24 & 0.22 & \textbf{0.38} & \textbf{0.46} \\
-\begin{tabular}[c]{@{}l@{}}Soft Attention Overlay\\ (from ASM)\end{tabular} & \textbf{0.19} & \textbf{0.20} & 0.08 & 0.07 \\
-\begin{tabular}[c]{@{}l@{}}Landmarks Mask\\ (from ASM)\end{tabular} & 0.24 & 0.24 & 0.10 & 0.20 \\ \bottomrule
-\end{tabular}
-\caption{Keeping landmarks in a separate mask clearly outperforms all the other landmark approaches, but is still worse than the base model.}
-\label{tab:ASMLandmarksMask}
-\end{center}
-\end{table}
-
-The results visibly show that this approach outperforms the previous landmark approaches, with the best being the 'Soft Attention' approach. Nevertheless, it still can not beat the results of the 'base model' based on not utilizing any landmarks at all. As a result, it can be said that the conducted experiments could not prove that utilizing facial landmarks improves emotion recognition outcomes.  
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \subsection{Landmarks with AAM (Active Appearance Model)}
-% \textbf{Comparison ASM vs. AAM}
-% - considerations run-time per image/batch
-% - validation/testing loss improvement
-
+% \begin{table}[H]
+% \begin{center}
+% \begin{tabular}{lcc}
+% \hline
+% \multicolumn{1}{c}{Ablation study} & RMSE $\downarrow$ & CORR $\uparrow$ \\ \hline
+% \begin{tabular}[c]{@{}l@{}}base model\\ (CNN only)\end{tabular} & 0.46 & \textbf{0.42} \\
+% \begin{tabular}[c]{@{}l@{}}CNN + LSTM\\ (step size 3)\end{tabular} & \textbf{0.21} & 0.14 \\ \hline
+% \end{tabular}
+% \caption{Utilizing a LSTM layer in this experiment resulted in lower RMSE, but at the same time worse CORR.}
+% \label{tab:LSTM}
+% \end{center}
+% \end{table}

@@ -109,14 +109,15 @@ The chosen ResNet50 model \citep{Dwivedi:2019:ResNetInKeras} consists of 50 laye
 
 \subsection{Training} \label{sec:Training&Regularization}
 \subsubsection{Pre-trained network}
-A pre-trained network is a saved neural network that was previously learned spatial hierarchy of features on a large and general dataset. As recommended by \citet{Chollet:2017:DeepLearningPython} using a pre-trained neural network is a highly effective approach when dealing with a small image dataset. With around 30.000 frames (= 600 video clips), the AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} can be considers as such. This is why the VGGFace network, based on ResNet50 and pre-trained on the large-scale face recognition dataset VGGFace2 \citep{Cao:2018:VGGFace2}, was chosen as a basis for this work.
+A pre-trained network is a saved neural network that was previously learned spatial hierarchy of features on a large and general dataset. As recommended by \citet{Chollet:2017:DeepLearningPython} using a pre-trained neural network is a highly effective approach when dealing with a small image dataset. With around 30.000 frames (= 600 video clips), the AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} can be considered as such. This is why the VGGFace network, based on ResNet50 and pre-trained on the large-scale face recognition dataset VGGFace2 \citep{Cao:2018:VGGFace2}, was chosen as a basis for this work.
 
 \subsubsection{Fine-tuning}
-In order to be able to fine-tune a pre-trained network, it first had to be adapted to the current challenge. Therefore, in this work the classifier got replaced with a single Dense layer. This decision was based on a comparison of fine-tuning strategies conducted by \citet{Pittaras:2017:FineTuningStrategiesComparison} who found out that they achieved the best results fine-tuning results when only adding a single Dense layer with a high number of neurons.
+In order to be able to fine-tune a pre-trained network, it first had to be adapted to the current challenge. Therefore, in this work the classifier got replaced with a Dense plus two RNN layers. These RNN layers help to capture the tempo-spatial information between frames of a video-clip. The design decision for the classifier was based on previous experiments conducted by \citet{Kollias:2019:AffWild}.
+% This decision was based on a comparison of fine-tuning strategies conducted by \citet{Pittaras:2017:FineTuningStrategiesComparison} who found out that they achieved the best results fine-tuning results when only adding a single Dense layer with a high number of neurons.
 \newline\newline
 In the first fine-tuning step, only the classifier was trained on the dataset for a few epochs. According to \citet{Chollet:2017:DeepLearningPython}, this prevents the error being propagated through the network from getting to big, which would have happened when training the whole network from the start. 
 \newline\newline
-In the second fine-tuning step, the pre-trained neural network was trained in accordance with the selected Multi-Phase Fine-Tuning (FT) \citep{Sarhan:2020:MultiPhaseFineTuning} strategy. In contrast to Single-Phase FT where network is trained by unfreezing a set amount of layers at once, in Multi-Phase FT the network is trained by successively unfreezing layers in phases. This is illustrated in figure \ref{fig:MultiPhaseFT}. According to \citet{Sarhan:2020:MultiPhaseFineTuning} this approach not only reached better accuracy, but also converged in a fewer epochs. 
+In the second fine-tuning step, the pre-trained neural network was trained in accordance with the selected Multi-Phase Fine-Tuning (FT) \citep{Sarhan:2020:MultiPhaseFineTuning} strategy. In contrast to Single-Phase FT where network is trained by unfreezing a set amount of layers at once, in Multi-Phase FT the network is trained by successively unfreezing layers in phases. This is illustrated in figure \ref{fig:MultiPhaseFT}. According to \citet{Sarhan:2020:MultiPhaseFineTuning} this approach not only reached better accuracy, but also converged in fewer epochs. 
 
 \begin{figure}[H]
   \begin{center}
@@ -133,10 +134,11 @@ A central role in developing a successful solution with machine learning is maki
 In order to prevent overfitting and generalize a model better, \citet{Chollet:2017:DeepLearningPython} highlighted that the best solution is to get more training data, because more data means the model needs to learn to represent all data points, thus the lower the chance that it would overfit. However, when it is not possible to expose the model to more data, \citet{Chollet:2017:DeepLearningPython} recommended utilizing regularization techniques, which will force the model to focus on the most prominent patterns. These techniques constrain a model in a way that it can only store a certain amount or a certain type of information. According to \citet{Chollet:2017:DeepLearningPython}, the easiest way to prevent overfitting is to reduce the network's size, or in other words, to remove features. As a result, the number of trainable parameters in the model is reduced and thus, the model's capacity shrinks.
 
 \subsubsection{Feature removal}
-For the here proposed machine learning model it was not possible to increase the amount of training data, as this would make an objective comparison with benchmark paper impossible. Thus, further regularization techniques were applied. The first choice was also to reduce the network's size. The pre-trained VGGFace network already provides a big stack of layers that cannot be removed without losing valuable information. Therefore, the custom layers were reduced to a single Dense layer, which was proposed in a similar way by \citet{Pittaras:2017:FineTuningStrategiesComparison}, and Dropout was chosen to make the network purposefully forget some information.
+For the here proposed machine learning model it was not possible to increase the amount of training data, as this would make an objective comparison with benchmark paper impossible. Thus, further regularization techniques were applied. The first choice was also to reduce the network's size. The pre-trained VGGFace network already provides a big stack of layers that cannot be removed without losing valuable information. Therefore, the convolution network for the mask, as well as the shared layers at the end of the network were kept at a minimal size.
+% Therefore, the custom layers were reduced to a single Dense layer, which was proposed in a similar way by \citet{Pittaras:2017:FineTuningStrategiesComparison}, 
 
 \subsubsection{Dropout}
-According to \citet{Chollet:2017:DeepLearningPython}, Dropout is one of the most effective and commonly used regularization techniques. When applied, noise is introduced during training by randomly setting a certain percentage of the layer's output values to zero. The Dropout applied in the proposed architecture was determined through extensive experimentation and was applied before and after the single Dense layer with a rate of 0.7 and 0.6 respectively. The following figure shows an example with a dropout rate of 0.5.
+According to \citet{Chollet:2017:DeepLearningPython}, Dropout is one of the most effective and commonly used regularization techniques. When applied, noise is introduced during training by randomly setting a certain percentage of the layer's output values to zero. The Dropout applied in the proposed architecture was determined through extensive experimentation and was applied before and after the single Dense layer with a rate of 0.5 and 0.5 respectively. The following figure shows an example with a dropout rate of 0.5.
 
 \begin{figure}[H]
   \begin{center}
@@ -146,56 +148,64 @@ According to \citet{Chollet:2017:DeepLearningPython}, Dropout is one of the most
   \end{center}
 \end{figure}
 
+Applying such a dropout rate allows a network to purposefully forget some information, which makes the learning process harder, but merits a better generalization.
+
 \subsubsection{Data Augmentation}
 Data Augmentation is another technique that is used to increase noise during training by randomly transforming existing training samples into slightly different looking images. As \citet{Chollet:2017:DeepLearningPython} argued that Data Augmentation exposes the model to more aspects of the data, as it will never see the exact same picture twice. As a result, the model will generalize better.
 The Data Augmentation applied in the here proposed solution augmented the images randomly with the following parameters:
 
 \begin{itemize}
-    \item rotation range from 0 to 30 degrees
-    \item width shift range from 0 to 25 percent of the total width
-    \item height shift range from 0 to 25 percent of the total height
+    \item rotation range from 0 to 15 degrees
+    \item width shift range from 0 to 15 percent of the total width
+    \item height shift range from 0 to 15 percent of the total height
     \item horizontal flip
-    \item brightness shift range from 50 to 150 percent
-    \item zoom range from 0 to 30 percent
+    \item brightness shift range from 80 to 120 percent
 \end{itemize}
-
 
 \subsubsection{Hyper-parameter optimization}
 Optimization of important hyper-parameters also greatly reduces the effects of overfitting. Two of the most impactful parameters are the learning rate and the batch size.
 \newline\newline
-An analysis conducted by \citet{Yuanzhi:2019:RegularizationInitialLargeLearningRate} on Initial Learning Rates confirmed that an initially large learning rate can have a regularization effect on the training process. Even though a small initial learning rate might allow for better performance initially, it will not be able to generalize as well as initially large learning rates. The training performed in this Master's thesis made use of an initial learning rate of 0.0001 for the first 3 epochs. Afterwards it was lowered to 0.00001.
+An analysis conducted by \citet{Yuanzhi:2019:RegularizationInitialLargeLearningRate} on Initial Learning Rates confirmed that an initially large learning rate can have a regularization effect on the training process. Even though a small initial learning rate might allow for better performance initially, it will not be able to generalize as well as initially large learning rates. The training performed in this Master's thesis made use of an initial learning rate of 0.0001 for the first 3 epochs. Afterwards the training was startet also with a rate of 0.0001, but was each epoch continuously decreased by a factor of 0.95 through a learning rate scheduler.
 \newline\newline
-Along with the effects of the initial learning rate on improving generalization and reducing the effects of overfitting, \citet{Keskar:2016:LargeBatchTrainingGeneralization} posited that choosing small-batch methods consistently generalizes better than large batch methods. For the here proposed approach, utilized during 5-fold-cross-validation, made use of a batch size of 16.
-
+Along with the effects of the initial learning rate on improving generalization and reducing the effects of overfitting, \citet{Keskar:2016:LargeBatchTrainingGeneralization} posited that choosing small-batch methods consistently generalizes better than large batch methods. For the here proposed approach, smaller batch sizes seemed to perform better, which is why a batch size of 2 was chosen. This would mean that each batch consists of two times the sequence length of 45.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Evaluation \& Metrics}
 \subsection{Evaluation} \label{sec:TrainValTestSplit}
-Both benchmark papers, the AFEW-VA paper proposed by \citet{Kossaifi:2017:AFEW-VADatabase} and the simultaneous VA prediction paper proposed by \citet{Handrich:2020:SimultaneousPredVA}, compare their results through an evaluation on the AFEW-VA dataset that was split into five disjoint and subject-independent folds. Subsequently, they performed a 5-fold-cross-validation for the prediction of valence and arousal values. 
+Since the AFEW-VA dataset has no official validation and testing set, the AFEW-VA paper proposed by \citet{Kossaifi:2017:AFEW-VADatabase} and the simultaneous VA prediction paper proposed by \citet{Handrich:2020:SimultaneousPredVA} evaluate their models through splitting the AFEW-VA dataset into five disjoint, subject-independent folds. Subsequently, they performed a 5-fold-cross-validation for the prediction of valence and arousal values. 
 \newline\newline
-Before conducting cross-validation the optimal hyper-parameter settings had to be determined. Various experiments were conducted that used the setup as illustrated in figure \ref{fig:TrainTestSplit}. This figure shows that the dataset was split into five folds and subsequently assigned to one of three subsets as follows: three folds were combined in the training subset, while validation and testing subsets contained exactly one fold.
-%\citet{Roehrich:2020:TrainValidateTest} argued that when comparing different models it is not enough to only use a training and a testing subset, as it might still be possible that one model performs better than the other due to randomness during the training process. 
+Due to time, complexity and resource constraints, it was chosen that this Master's thesis would not use the 5-fold-cross-validation evaluation approach. Instead, it makes use of the more prevalent method for machine learning model evaluation, namely the split of the dataset into a training, validation and testing subset. The training and validation subset were used during training to determine the optimal hyper-parameter settings. As these settings influence the performance on the validation subset, a third, independent subset was needed: the testing subset. This subset was used for a final performance evaluation after the optimal hyper-parameter were found.
+\newline\newline
+The following figure \ref{fig:TrainValTestSplit} illustrates the chosen evaluation approach:
 
 \begin{figure}[H]
   \begin{center}
-  \includegraphics[angle=0, width=0.7\textwidth]{Figures/TrainTestSplit.png}
-  \caption{For the determination of optimal hyper-parameter settings, the dataset was split into a training, validation and testing subset.}
-  \label{fig:TrainTestSplit}
+  \includegraphics[angle=0, width=0.7\textwidth]{Figures/TrainValTestSplit.png}
+  \caption{The dataset was split into a training, validation and testing subset. While training and validation were used for the determination of optimal hyper-parameter settings, the testing subset was set aside for a final evaluation of the best performing model.}
+  \label{fig:TrainValTestSplit}
   \end{center}
 \end{figure}
 
-As soon as optimal hyper-parameter settings were found during the training of the model, a 5-fold-cross-validation was conducted in order to make results comparable with the benchmark. For this 5-fold-cross-validation, previously determined optimal hyper-parameter settings were utilized for training and testing the model five times. As illustrated in figure \ref{fig:CrossValidationSplit}, each time the model is trained during cross-validation, a different combination of folds was selected as training and testing subset.\newline
+% \begin{figure}[H]
+%   \begin{center}
+%   \includegraphics[angle=0, width=0.7\textwidth]{Figures/TrainTestSplit.png}
+%   \caption{For the determination of optimal hyper-parameter settings, the dataset was split into a training, validation and testing subset.}
+%   \label{fig:TrainTestSplit}
+%   \end{center}
+% \end{figure}
 
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[angle=0, width=0.7\textwidth]{Figures/CrossValSplit.png}
-  \caption{The dataset is split into five equal and subject-independent folds. Cross-Validation is performed by alternating the folds for training, validation and testing.}
-  \label{fig:CrossValidationSplit}
-  \end{center}
-\end{figure}
+% As soon as optimal hyper-parameter settings were found during the training of the model, a 5-fold-cross-validation was conducted in order to make results comparable with the benchmark. For this 5-fold-cross-validation, previously determined optimal hyper-parameter settings were utilized for training and testing the model five times. As illustrated in figure \ref{fig:CrossValidationSplit}, each time the model is trained during cross-validation, a different combination of folds was selected as training and testing subset.\newline
 
-\subsection{Metrics}
+% \begin{figure}[H]
+%   \begin{center}
+%   \includegraphics[angle=0, width=0.7\textwidth]{Figures/CrossValSplit.png}
+%   \caption{The dataset is split into five equal and subject-independent folds. Cross-Validation is performed by alternating the folds for training, validation and testing.}
+%   \label{fig:CrossValidationSplit}
+%   \end{center}
+% \end{figure}
+
+\subsection{Metrics} \label{sec:Metrics}
 Considering the nature of the problem at hand, predicting the values for valence and arousal is better solved through regression, hence a metric such as accuracy, albeit common, will not provide useful information to reflect the performance of the system. Therefore, we stick to the measures used by \citet{Kossaifi:2017:AFEW-VADatabase}, namely root-mean-square error (RMSE) and Pearson product-moment correlation coefficient (CORR). 
 \newline\newline
 RMSE (eq. \ref{eq:RMSE}) is useful in giving the observer a notion of how close the predicted values are to the actual values, while CORR (eq. \ref{eq:CORR}) tells how strong the relationship between the prediction and the actual label is. \citep{2020:RMSE} \citep{2020:PearsonCorrelation}
@@ -217,8 +227,7 @@ where
  \overline{y}  &  the mean of all predicted output values
 \end{conditions*}
 
-The RMSE is additionally used as the loss function to be for optimization during training.
-
+The RMSE is additionally used as the loss function for the optimization during training.
 
 \subsection{Observation}
 % Early Stopping & Model Checkpoint?
@@ -235,9 +244,9 @@ In order to find optimal hyper-parameter settings during training, the aforement
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.8\textwidth]{Figures/ModelCheckpoint.PNG}
-  \caption{The Model Checkpoint Callback tracks the best performing epoch according to a defined metric and automatically saves the weights of the best model.}
+  \caption{The model checkpoint callback tracks the best performing epoch according to a defined metric and automatically saves the weights of the best model.}
   \label{fig:ModelCheckpoint}
   \end{center}
 \end{figure}
 
-In summary, the model checkpoint automatically saves the latest best model in terms of validation loss, while the early stopping callback automatically interrupted the training process after 20 consecutive epochs without showing any improvement.
+In summary, the model checkpoint automatically saves the latest best model in terms of validation loss, while the early stopping callback automatically interrupted the training process after 3 consecutive epochs without showing any improvement.
