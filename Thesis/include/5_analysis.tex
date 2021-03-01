@@ -25,10 +25,9 @@ The first method, DCNN, is a model trained from scratch using randomly sampled f
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results of the proposed approach}
-Since the AFEW-VA dataset has no official validation and test set, as explained in section \ref{sec:TrainValTestSplit}, the data was split subject-independently into a training, validation and test subset. The here presented results of the proposed approach are based on the final evaluation of the chosen model on the test set. Results of preliminary experiments on the training and validation that helped to find out the optimal hyper-parameters are shown in Appendix A.
+Since the AFEW-VA dataset has no official validation and test set, as explained in section \ref{sec:TrainValTestSplit}, the data was split subject-independently into a training, validation and test subset. The here presented results of the proposed approach are based on the final evaluation of the chosen model on the test set. The chosen model was based on preliminary experiments, conducted on the training and validation set, which helped to find out the optimal hyper-parameters.
 \newline\newline
 The optimal set of hyper-parameters as per the preliminary experiments are: a batch size of 2, a 3 epoch training of the classifier with a learning rate of 0.0001, and to fine-tune over 3 phases with a continuously decreasing learning rate, starting from 0.0001. These optimal hyper-parameters were used to train the final model in order to predict the outcome in terms of valence and arousal. The averaged training progress is illustrated in figure \ref{fig:LearningCurveResults} for the two metrics, RMSE and CORR.
-% For simplicity reasons, the learning curves for arousal are not illustrated throughout this work as they behave very similar to the results for valence.
 
 \begin{figure}[H]
   \centering
@@ -85,7 +84,7 @@ For a better illustration of the achieved results, figure \ref{fig:ScatterPlots}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Comparison to state-of-the-art}
+\section{Comparison to state-of-the-art} \label{sec:StateOfTheArtComparison}
 In this section, three methods achieving state-of-the-art results on the AFEW-VA dataset are presented. The first method, proposed by \citet{Theagarajan:2018:DeepDriver}, utilized a CNN, pre-trained on the ImageNet dataset together with a LSTM network in order to take into account dynamic variations. Similar to the proposed approach in this thesis, their input data for the model consists of sequences of multiple frames. Furthermore, they used a 3-fold cross-validation approach to evaluate their performance which heavily outperforms the baseline results.
 \newline\newline
 The other two state-of-the-art methods were proposed by \citet{Handrich:2020:SimultaneousPredVA}. In the first method, called 'AFEW-VA DB only', they only used the AFEW-VA database to train and evaluate their Convolution Neural Network (CNN). In their second method, called 'Cross-DB validation', they trained their CNN model on the complete AffectNet training set and tested on the AFEW-VA database. In both methods they used a 5-fold cross-validation where they split data into 70\% training and 30\% testing.
