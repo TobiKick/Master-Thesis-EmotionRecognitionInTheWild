@@ -6,12 +6,12 @@ Firstly, a prototype was developed to prove that emotion recognition is a viable
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Prototype}
-The first prototype was constructed as a local application that takes its video input from the PC's webcam. When the user presses the 'SPACE' key, the program extracts the current frame of the video stream, detects the human face, recognizes its emotion in terms of valence and arousal, and prints the results onto the screen. A snapshot of this is provided in figure \ref{fig:PrototypeRealTime}. 
+The first prototype was constructed as a local application that takes its video input from the PC's webcam. When the user presses the 'SPACE' key, the program extracts the current frame of the video stream, detects the human face, recognizes its emotion in terms of valence and arousal, and prints the results onto the screen. A snapshot of this is provided in Figure \ref{fig:PrototypeRealTime}. 
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.8\textwidth]{Figures/webcam_foto.PNG}
-  \caption{The prototype application allows to recognize emotions in terms of valence and arousal in real-time.}
+  \caption[Prototype application]{The prototype application allows to recognize emotions in terms of valence and arousal in real-time.}
   \label{fig:PrototypeRealTime}
   \end{center}
 \end{figure}
@@ -60,12 +60,12 @@ Inspired by these approaches, the prototype application imitates some of this be
 % \end{center}
 % \end{table}
 
-% In the table \ref{tab:InterestCalculation} an example calculation for Interest is presented. It starts with taking the last 20 frames/images taken (in this case only 5 are presented for illustration reasons). The Valence of these frames is predicted and subsequently classified as negative, neutral or positive depending on the threshold of -0.2 and +0.2. Afterwards, the number of frames classified are counted and the Interest is calculated with the following formula: (\#positive * 100)/(\#positive + \#negative). Thus, the result in the presented example is 33.33.
+% In the Table \ref{tab:InterestCalculation} an example calculation for Interest is presented. It starts with taking the last 20 frames/images taken (in this case only 5 are presented for illustration reasons). The Valence of these frames is predicted and subsequently classified as negative, neutral or positive depending on the threshold of -0.2 and +0.2. Afterwards, the number of frames classified are counted and the Interest is calculated with the following formula: (\#positive * 100)/(\#positive + \#negative). Thus, the result in the presented example is 33.33.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Experiment design}
+\subsection{Experiment Design}
 The goal of this experiment is to compare the test person's perceived subjective interest with the interest predicted by the before mentioned approach. In order to make this experiment objective and comparable between different participants, it was chosen that instead of direct interaction, participants get to watch commercial ads. Through these ads it was expected to get the objectivel comparable results which are still somewhat similar to real-life video calls, for example during a product presentation.
 \newline\newline
 For the analysis of the participants interest, the webcam video stream was needed to be recorded exactly at the same time when the video was played. Additionally, a mechanism had to be devised to calculate a level of interest from the recognized emotions. For this, an experiment had to be implemented that could be given to participants, and that allows them to indicate their own current level of interest.
@@ -83,12 +83,12 @@ For such an implementation there were multiple considerations about the setup ty
 \textbf{\begin{tabular}[c]{@{}c@{}}Web-based Server Appl.\\ (e.g. w/ PythonAnywhere)\end{tabular}} & high & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
 \textbf{\begin{tabular}[c]{@{}c@{}}Web-based Client Appl.\\ (e.g. w/ ReactJS)\end{tabular}} & high & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FFC702} \textbf{/}} \\ \hline
 \end{tabular}
-\caption{Implementing a web-based frontend application with ReactJS was the favorite choice for conducting a user experiment.}
+\caption[Application comparison for user experiment]{Implementing a web-based frontend application with ReactJS was the favorite choice for conducting a user experiment.}
 \label{tab:appExperiment}
 \end{center}
 \end{table}
 
-The setups mentioned in table \ref{tab:appExperiment} were verified from top to bottom. First, the questionnaire and survey tools were investigated, because they, on the one hand, allowed for a quick implementation, but also did not allow room for the required customization to conduct this experiment. A locally-run, stand-alone application would have accommodated all of this. However, due to its nature and size, it would be difficult to provide the participants with the program needed for the experiment and to retrieve its results. The best choice identified in this work was to develop a web-based application.
+The setups mentioned in Table \ref{tab:appExperiment} were verified from top to bottom. First, the questionnaire and survey tools were investigated, because they, on the one hand, allowed for a quick implementation, but also did not allow room for the required customization to conduct this experiment. A locally-run, stand-alone application would have accommodated all of this. However, due to its nature and size, it would be difficult to provide the participants with the program needed for the experiment and to retrieve its results. The best choice identified in this work was to develop a web-based application.
 \newline\newline
 A web-based server application hosted by PythonEverywhere would have fulfilled all the requirements, however, hooking onto participants’ webcams did not prove to be possible. As a result, it was decided to develop a browser-based standalone web-application with ReactJS. It allowed for the needed customization and only posed a constraint in terms of results retrieval (the participants had to download the results and send them manually back).
 \newline\newline
@@ -98,7 +98,7 @@ The user interface for the developed application is comprised of the presented v
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=1.0\textwidth]{Figures/UserExperiment.PNG}
-  \caption{The experiment's user interface allows to watch commercials, while it captures at the same time the webcam stream, and allows the user to continuously indicate the current level of interest.}
+  \caption[Implemented UI for the user experiment]{The experiment's user interface allows to watch commercials, while it captures at the same time the webcam stream, and allows the user to continuously indicate the current level of interest.}
   \label{fig:InterfaceUserExperiment}
   \end{center}
 \end{figure}
@@ -128,7 +128,7 @@ After the participant conducted all these tasks, a *.webm and *.csv file was rec
 In the next step, these frames were read into a Python program that predicted the values for valence and arousal for each frame and calculated a measure of interest based on the previously presented approach. The results were then compared to the stated interest in the *.csv file.
 
 
-\subsection{Experiment outcomes}
+\subsection{Experiment Outcomes}
 The goal of the experiment was to compare the indicated level of interest of all participants with a calculated value of interest which was based on predictions from the proposed model architecture in this thesis.
 \newline\newline
 Due to different video conditions between participant's web camera, as well as the discrepancy between discretely stated interest by participants and continuously predicted interest, the model is not expected to be able to match the subjectively stated level of interest exactly. However, the underlying hypothesis is that there exists a trend between subjectively stated interest and continuously predicted interest, even though the magnitude might be different.

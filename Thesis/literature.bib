@@ -301,21 +301,6 @@ keywords = "Speech emotion recognition, Survey, Speech features, Classification,
     number={2},  
     pages={145-158},}
 
-@misc{Datahacker:2020:DlibFacialLandmarks,
-  author = {Datahacker},
-  title = {How to detect facial landmarks using DLIB and OpenCV},
-  year = {2020},
-  url = {http://datahacker.rs/009-how-to-detect-facial-landmarks-using-dlib-and-opencv/},
-  urldate = {2020-09-29}
-}
-
-@misc{Anzalone:2018:DlibShapePredictor,
-  author = {Anzalone, Luca},
-  title = {Training alternative Dlib Shape Predictor models using Python},
-  year = {2018},
-  url = {https://medium.com/datadriveninvestor/training-alternative-dlib-shape-predictor-models-using-python-d1d8f8bd9f5c},
-  urldate = {2020-09-29}
-}
 
 @misc{Jung:2020:Imgaug,
   author = {Jung, Alexander},
@@ -323,14 +308,6 @@ keywords = "Speech emotion recognition, Survey, Speech features, Classification,
   year = {2020},
   url = {https://imgaug.readthedocs.io/en/latest/},
   urldate = {2020-09-29}
-}
-
-@misc{Roehrich:2020:TrainValidateTest,
-  author = {Röhrich, Günter},
-  title = {Train, Validate, Test — Why Splitting Datasets is Essential for Every Machine Learning Algorithm},
-  year = {n.d.},
-  url = {https://towardsdatascience.com/train-test-split-c3eed34f763b},
-  urldate = {2020-10-01}
 }
 
 @book{Chollet:2017:DeepLearningPython,
@@ -364,6 +341,23 @@ keywords = "Speech emotion recognition, Survey, Speech features, Classification,
   urldate = {2020-10-08}
 }
 
+@article{He:2015:DeepResidualLearningForImageRecognition,
+  author    = {Kaiming He and
+               Xiangyu Zhang and
+               Shaoqing Ren and
+               Jian Sun},
+  title     = {Deep Residual Learning for Image Recognition},
+  journal   = {CoRR},
+  volume    = {abs/1512.03385},
+  year      = {2015},
+  url       = {http://arxiv.org/abs/1512.03385},
+  archivePrefix = {arXiv},
+  eprint    = {1512.03385},
+  timestamp = {Wed, 17 Apr 2019 17:23:45 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/HeZRS15.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
 @mastersthesis{Sheikholeslami:2019:AblationProgrammingML,
   author       = {Sheikholeslami, Sina}, 
   title        = {Ablation Programming for
@@ -373,12 +367,20 @@ Machine Learning},
   address      = {Germany}}
 %http://www.diva-portal.org/smash/get/diva2:1349978/FULLTEXT01.pdf
   
-@misc{Fadelli:2018:AblationInANN,
-    author = {Fadelli, Ingrid},
-    title = {Using ablation to examine the structure of artificial neural networks},
-    year = {2018},
-    url = {https://techxplore.com/news/2018-12-ablation-artificial-neural-networks.html},
-    urldate = {2020-10-08}
+@article{Lillian:2018:AblationOfARobotsBrain,
+  author    = {Peter Lillian and
+               Richard Meyes and
+               Tobias Meisen},
+  title     = {Ablation of a Robot's Brain: Neural Networks Under a Knife},
+  journal   = {CoRR},
+  volume    = {abs/1812.05687},
+  year      = {2018},
+  url       = {http://arxiv.org/abs/1812.05687},
+  archivePrefix = {arXiv},
+  eprint    = {1812.05687},
+  timestamp = {Tue, 01 Jan 2019 15:01:25 +0100},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1812-05687.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
 @misc{Yuanzhi:2019:RegularizationInitialLargeLearningRate,
@@ -444,17 +446,6 @@ URL = {https://doi.org/10.1177/1529100619832930},
 eprint = {https://doi.org/10.1177/1529100619832930}
 }
 
-@inbook{Baenziger:2014:MeasuringERAbility,
-author="Baenziger, Tanja",
-title="Measuring Emotion Recognition Ability",
-bookTitle="Encyclopedia of Quality of Life and Well-Being Research",
-year="2014",
-publisher="Springer Netherlands",
-address="Dordrecht",
-pages="3934--3941",
-isbn="978-94-007-0753-5",
-}
-
 @article{Ekman:2002:FACS,
 author="EKMAN, P.",
 title="Facial Action Coding System (FACS)",
@@ -484,13 +475,15 @@ title = {Emotion AI researchers say overblown claims give their work a bad name}
 year = {2020}
 }
 
-@misc{Pedro:2018:TransferLearning,
-    author = {Marcelino, Pedro},
-    title = {Transfer learning from pre-trained models},
-    year = {2018},
-    url = {https://towardsdatascience.com/transfer-learning-from-pre-trained-models-f2393f124751},
-    urldate = {2020-01-17}
-}
+@ARTICLE{Pan:2010:SurveyOnTransferLearning,
+  author={S. J. {Pan} and Q. {Yang}},
+  journal={IEEE Transactions on Knowledge and Data Engineering}, 
+  title={A Survey on Transfer Learning}, 
+  year={2010},
+  volume={22},
+  number={10},
+  pages={1345-1359},
+  doi={10.1109/TKDE.2009.191}}
 
 @article{Kollias:2019:AffWild, 
     title={Deep affect prediction in-the-wild: Aff-wild database and challenge, deep architectures, and beyond}, 
@@ -499,3 +492,67 @@ year = {2020}
     pages={1--23}, 
     year={2019}, 
     publisher={Springer} }
+    
+@inproceedings{Krizhevsky:2012:AlexNet,
+author = {Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E.},
+title = {ImageNet Classification with Deep Convolutional Neural Networks},
+year = {2012},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {We trained a large, deep convolutional neural network to classify the 1.2 million high-resolution images in the ImageNet LSVRC-2010 contest into the 1000 different classes. On the test data, we achieved top-1 and top-5 error rates of 37.5\% and 17.0\% which is considerably better than the previous state-of-the-art. The neural network, which has 60 million parameters and 650,000 neurons, consists of five convolutional layers, some of which are followed by max-pooling layers, and three fully-connected layers with a final 1000-way softmax. To make training faster, we used non-saturating neurons and a very efficient GPU implementation of the convolution operation. To reduce overriding in the fully-connected layers we employed a recently-developed regularization method called "dropout" that proved to be very effective. We also entered a variant of this model in the ILSVRC-2012 competition and achieved a winning top-5 test error rate of 15.3\%, compared to 26.2\% achieved by the second-best entry.},
+booktitle = {Proceedings of the 25th International Conference on Neural Information Processing Systems - Volume 1},
+pages = {1097–1105},
+numpages = {9},
+location = {Lake Tahoe, Nevada},
+series = {NIPS'12}
+}
+
+
+@article{Mollahosseini:2019:AffectNet,
+   title={AffectNet: A Database for Facial Expression, Valence, and Arousal Computing in the Wild},
+   volume={10},
+   ISSN={2371-9850},
+   url={http://dx.doi.org/10.1109/TAFFC.2017.2740923},
+   DOI={10.1109/taffc.2017.2740923},
+   number={1},
+   journal={IEEE Transactions on Affective Computing},
+   publisher={Institute of Electrical and Electronics Engineers (IEEE)},
+   author={Mollahosseini, Ali and Hasani, Behzad and Mahoor, Mohammad H.},
+   year={2019},
+   month={Jan},
+   pages={18–31}
+}
+
+
+@ARTICLE{Cootes:2001:ActiveAppearanceModel,  author={T. F. {Cootes} and G. J. {Edwards} and C. J. {Taylor}},  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},   title={Active appearance models},   year={2001},  volume={23},  number={6},  pages={681-685},  doi={10.1109/34.927467}}
+
+
+@INPROCEEDINGS{Gupta:2018:FacialLandmarks-1,
+  author={S. {Gupta}},
+  booktitle={2018 2nd International Conference on Inventive Systems and Control (ICISC)}, 
+  title={Facial emotion recognition in real-time and static images}, 
+  year={2018},
+  volume={},
+  number={},
+  pages={553-560},
+  doi={10.1109/ICISC.2018.8398861}}
+  
+@InProceedings{Tautkute:2018:FacialLandmarks-2,
+author = {Tautkute, Ivona and Trzcinski, Tomasz and Bielski, Adam},
+title = {I Know How You Feel: Emotion Recognition With Facial Landmarks},
+booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+month = {June},
+year = {2018}
+}
+
+@inbook{Baenziger:2014:MeasuringERAbility,
+author="Baenziger, Tanja",
+title="Measuring Emotion Recognition Ability",
+bookTitle="Encyclopedia of Quality of Life and Well-Being Research",
+year="2014",
+publisher="Springer Netherlands",
+address="Dordrecht",
+pages="3934--3941",
+isbn="978-94-007-0753-5",
+}
+  
