@@ -7,6 +7,7 @@ The authors of the AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase} provide
 Table \ref{tab:BaselineMethods} summarizes the results of three baseline methods that take RGB-images as input: Deep Convolutional Neural Network (DCNN), Fine-Tuned DCNN (FT-DCNN) and a ResNet50 model trained from scratch in this work.
 
 \begin{table}[H]
+\caption[Baseline methods]{The table shows baseline results from \citet{Kossaifi:2017:AFEW-VADatabase} and this work. The FT-DCNN \citep{Kossaifi:2017:AFEW-VADatabase} approach performs best among the basline methods.}
 \begin{center}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -15,7 +16,6 @@ DCNN \citep{Kossaifi:2017:AFEW-VADatabase} & 4.1 & 4.6 & 0.17 & 0.25 \\
 FT-DCNN \citep{Kossaifi:2017:AFEW-VADatabase} & \textbf{3.7} & \textbf{3.9} & \textbf{0.26} & \textbf{0.31} \\
 \begin{tabular}[c]{@{}l@{}}Training from scratch\\ (this work)\end{tabular} & 0.21 & 0.22 & 0.04 & 0.08 \\ \bottomrule
 \end{tabular}
-\caption[Baseline methods]{The FT-DCNN baseline method provided by the authors of the AFEW-VA database \citep{Kossaifi:2017:AFEW-VADatabase} outperforms their DCNN approach, as well as the training from scratch in this work in terms of CORR metric.}
 \label{tab:BaselineMethods}
 \end{center}
 \end{table}
@@ -29,56 +29,48 @@ Since the AFEW-VA dataset has no official validation and test set, as explained 
 \newline\newline
 The optimal set hyper-parameters, as explained in section \ref{sec:HyperParameterOptimization}, were used to train the final model in order to predict the outcome in terms of valence and arousal. The averaged training progress is illustrated in Figure \ref{fig:LearningCurveResults} for the two metrics, RMSE and CORR.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
-  \subfloat[Average RMSE during training and validation]{\includegraphics[width=0.5\textwidth]{Figures/curve_rmse.png}\label{fig:CurveRMSE}}
+  \subfloat[Average RMSE during training and validation]{\includegraphics[width=0.7\textwidth]{Figures/Plot_AblationStudy_MultiPhaseFT.png}\label{fig:CurveRMSE}}
   \hfill
-  \subfloat[Average CORR during training and validation]{\includegraphics[width=0.5\textwidth]{Figures/curve_corr.png}\label{fig:CurveCORR}}
-  \caption[Training cures of the proposed approach]{The plots show the learning progress in terms of RMSE and CORR for both, training and validation. Around epoch 10 the validation metrics start to flatten themselves out, while training is still improving. This indicates a tendency of the model overfitting.}
+  \subfloat[Average CORR during training and validation]{\includegraphics[width=0.7\textwidth]{Figures/Plot_Results_CORR.png}\label{fig:CurveCORR}}
+  \caption[Training cures of the proposed approach]{The plots show the learning progress in terms of RMSE and CORR for both, training and validation. Around epoch 11 the validation metrics start to flatten themselves out, while training is still improving. This indicates a tendency of the model overfitting. (Note the slight difference of the y-axis scale in both plots.)}
   \label{fig:LearningCurveResults}
 \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \subfloat[Valence - RMSE]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1.png}\label{fig:ValenceRMSE}}
-%   \hfill
-%   \subfloat[Valence - CORR]{\includegraphics[width=0.5\textwidth]{Figures/correlation_out1.png}\label{fig:ValenceCORR}}
-%   \caption{Both 'train' curves clearly show ideal and the 'test' curves give further evidence that the model is a good choice as the RMSE loss is pretty low and CORR is continuously rising.
-% .}
-%   \label{fig:LearningCurveResults}
-% \end{figure}
 
 A theoretically ideal learning curve would show an exact match between the curves for training and validation. In practice however, the goal is to minimize the difference between training and validation curve over training time and stop training before they diverge from each other. 
 \newline\newline
 This behaviour can clearly be seen in Figure \ref{fig:LearningCurveResults} as the training and validation curve continuously improve (decrease the RMSE, and increase the CORR) while reducing the distance between them over time. After 3 consecutive epochs, where no improvement was made, the training process gets automatically interrupted and the so far best model is saved. These callbacks are explained in more depth in section \ref{sec:Metrics}.
 \newline\newline
-All in all, it can be said that the trajectory of the curves gives evidence that the proposed model is a good choice for solving this emotion recognition challenge. The optimal hyper-parameters of the model were then used to conduct a final evaluation on the test subset. The results of this evaluation were averaged over valence and arousal, and are clearly presented in Table \ref{tab:Results}.
+All in all, it can be said that the trajectory of the curves gives evidence that the proposed model is a good choice for solving this emotion recognition challenge. The optimal hyper-parameters of the model were then used to conduct a final evaluation on the test subset. The results of this evaluation were averaged over valence and arousal, and are presented in Table \ref{tab:Results}, and its prediction results on the test set are illustrated as a scatter plot in Figure \ref{fig:ScatterPlotValence} and Figure \ref{fig:ScatterPlotArousal}.
 
-\begin{table}[H]
+\begin{table}[htbp]
+\caption[Results of the proposed approach]{This table presents the achieved results with the proposed approach.}
 \begin{center}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 \multicolumn{1}{c}{} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-%\begin{tabular}[c]{@{}l@{}}best result\\ (without 5-fold-CV)\end{tabular} & \textbf{0.24} & \textbf{0.22} & \textbf{0.38} & \textbf{0.46} \\
 \begin{tabular}[c]{@{}l@{}}VGGFace + RNN\\(this work)\\\end{tabular} & \multicolumn{2}{c}{avg. 0.25} & \multicolumn{2}{c}{avg. 0.50} \\ \bottomrule
 \end{tabular}
-\caption[Results of the proposed approach]{The achieved results with the proposed approach beat the baseline results by far.}
 \label{tab:Results}
 \end{center}
 \end{table}
 
-The results achieved by the 'VGGFace + RNN' approach in this work outperform the baseline methods. It outperforms the 'DCNN' \citep{Kossaifi:2017:AFEW-VADatabase} approach by 4.1 for RMSE and 0.29 for CORR, as well as the 'FT-DCNN' \citep{Kossaifi:2017:AFEW-VADatabase} approach by 3.55 for RMSE and 0.215 for CORR. Despite the 'VGGFace + RNN' approach having a higher loss in terms of RMSE, it drastically increases the outcomes in terms of CORR.
-\newline\newline
-For a better illustration of the achieved results, Figure \ref{fig:ScatterPlots} contains a scatter plot that shows how actual labels match the predicted values.
-
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
-  \subfloat[Scatter plot for the prediction of valence on the test set]{\includegraphics[width=0.48\textwidth]{Figures/scatter_plot_pred_valence.png}\label{fig:ScatterPlotValence}}
-  \hfill
-  \subfloat[Scatter plot for the prediction of arousal on the test set]{\includegraphics[width=0.48\textwidth]{Figures/scatter_plot_pred_arousal.png}\label{fig:ScatterPlotArousal}}
-  \caption[Scatter plot for the proposed approach]{While the prediction for valence follows an almost linear trend, the prediction of arousal reveals a lack of the model to accurately recognize high arousal values}
-  \label{fig:ScatterPlots}
+  \includegraphics[width=0.7\textwidth]{Figures/ScatterPlot_Valence.png}
+  \caption[Scatter plot for valence with the proposed approach]{The scatter plot shows the predicted values for valence mapped against its ground truth. The model is able to predict values very closely to their actual ground truth.}
+  \label{fig:ScatterPlotValence}
 \end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{Figures/ScatterPlot_Arousal.png}
+  \caption[Scatter plot for arousal with the proposed approach]{The scatter plot shows the predicted values for arousal mapped against its ground truth. Based on the plot it can be deducted that the model fails to predict accurately for higher ground truth values.}
+  \label{fig:ScatterPlotArousal}
+\end{figure}
+
+\hl{The results achieved by the 'VGGFace + RNN' approach in this work outperform the baseline methods. It outperforms the 'DCNN'} \citep{Kossaifi:2017:AFEW-VADatabase} approach by 4.1 for RMSE and 0.29 for CORR, as well as the 'FT-DCNN' \citep{Kossaifi:2017:AFEW-VADatabase} \hl{approach by 3.55 for RMSE and 0.215 for CORR. Despite the 'VGGFace + RNN' approach having a higher loss in terms of RMSE, it drastically increases the outcomes in terms of CORR.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Comparison to State-Of-The-Art} \label{sec:StateOfTheArtComparison}
@@ -89,6 +81,7 @@ The other two state-of-the-art methods were proposed by \citet{Handrich:2020:Sim
 In Table \ref{tab:StateOfTheArtResults} these state-of-the-art results are compared to the proposed approach, called 'VGGFace + RNN'. It needs to be pointed out that the three authors of the presented results were utilizing different methods for their results evaluation.
 
 \begin{table}[H]
+\caption[State-of-the-art methods]{In the table, state-of-the-art results are compared to the approach of this work. The emotion recognition approach 'CNN+LSTM' proposed by \citet{Theagarajan:2018:DeepDriver} performs best on all selected criteria.}
 \begin{center}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -98,7 +91,6 @@ AFEW-VA DB only \citep{Handrich:2020:SimultaneousPredVA} & 0.26 & 0.25 & 0.39 & 
 Cross-DB validation \citep{Handrich:2020:SimultaneousPredVA} & 0.28 & 0.26 & 0.58 & 0.46 \\
 VGGFace + RNN\\(this work) & \multicolumn{2}{c}{avg. 0.25} & \multicolumn{2}{c}{avg. 0.50} \\ \bottomrule
 \end{tabular}
-\caption[State-of-the-art methods]{In a comparison of state-of-the-art results, the 'CNN+LSTM' \citep{Theagarajan:2018:DeepDriver} approach performs the best for emotion recognition on the AFEW-VA dataset}
 \label{tab:StateOfTheArtResults}
 \end{center}
 \end{table}
@@ -121,6 +113,7 @@ The experiments presented in the following sections were conducted during the se
 The VGGFace dataset is available pre-trained on one of two different architectures, the ResNet50 and VGG16 architecture. Both models have achieved outstanding performance in machine learning competitions. The difference being that ResNet50 is a more deep-layered neural network, while VGG16 contains more parameters to be trained. A comparison of both can be seen in Table \ref{tab:ResNet50vsVGG16}.
 
 \begin{table}[H]
+\caption[Ablation study: ResNet50 vs. VGG16]{The table shows results of the fine-tuning of the VGG16 and ResNet50 architecture. Both architectures performed similar, and can thus be considered equally suitable for emotion recognition}
 \begin{center}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -128,7 +121,6 @@ The VGGFace dataset is available pre-trained on one of two different architectur
 with ResNet50 & 0.21 & 0.20 & 0.15 & 0.21 \\
 with VGG16 & 0.20 & 0.19 & 0.15 & 0.22 \\ \bottomrule
 \end{tabular}
-\caption[Ablation study: ResNet50 vs. VGG16]{Comparison of fine-tuning the neural network with a VGG16 network with a ResNet50 network. Outcomes reveal that both network architectures can be regarded as equally suitable for emotion recognition.}
 \label{tab:ResNet50vsVGG16}
 \end{center}
 \end{table}
@@ -146,16 +138,17 @@ The results achieved in this Master thesis were achieved with the Multi-Phase Fi
 
 \begin{figure}[H]
   \centering
-  \subfloat[Single-Phase FT]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_all.png}\label{fig:SinglePhaseFTall}}
+  \subfloat[Single-Phase FT]{\includegraphics[width=0.7\textwidth]{Figures/Plot_AblationStudy_SinglePhaseFT.png}\label{fig:SinglePhaseFTall}}
   \hfill
-  \subfloat[Multi-Phase FT]{\includegraphics[width=0.5\textwidth]{Figures/multi_phase_step2.png}\label{fig:MultiPhaseStep2}}
-  \caption[Ablation study: Multi-Phase FT loss curves]{Comparison of the RMSE loss curves for Single-Phase FT and Multi-Phase FT. Multi-Phase FT has a better and smoother convergence between training and validation curve.}
+  \subfloat[Multi-Phase FT]{\includegraphics[width=0.7\textwidth]{Figures/Plot_AblationStudy_MultiPhaseFT.png}\label{fig:MultiPhaseStep2}}
+  \caption[Ablation study: Multi-Phase FT loss curves]{The graphs show a comparison of the training and validation RMSE loss curves for Single-Phase FT and Multi-Phase FT. Multi-Phase FT reveals a better and smoother convergence between training and validation curve. (Note the difference of the x-axis and y-axis scale in both plots.)}
   \label{fig:SPFTvsMPFT}
 \end{figure}
 
 It can clearly be seen in the RMSE loss curve for Single-Phase FT that the 'test' curve representing the validation loss is not following the 'train' curve in its downward trend. This is a strong indication for a overfitting behavior as the model is not able to generalize from the training data. Unlike the RMSE loss curve for Multi-Phase FT where the training and validation losses are continuously decreasing and converging with each other. This observation is also reflected in the achieved validation results presented in Table \ref{tab:SPFTvsMPFT}, where the Multi-Phase FT clearly outperforms the Single-Phase FT approach in terms of RMSE and CORR.
 
 \begin{table}[H]
+\caption[Ablation study: Multi-Phase FT results]{The table contains a comparison of the fine-tuning strategies Single-Phase FT with Multi-Phase FT. Validation results confirm that Multi-Phase FT outperforms Single-Phase FT.}
 \begin{center}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -163,7 +156,6 @@ It can clearly be seen in the RMSE loss curve for Single-Phase FT that the 'test
 \begin{tabular}[c]{@{}l@{}}Single-Phase FT \end{tabular} & 0.24 & 0.24 & 0.13 & 0.15 \\
 \begin{tabular}[c]{@{}l@{}}Multi-Phase FT \end{tabular} & 0.24 & \textbf{0.22} & \textbf{0.38} & \textbf{0.46} \\ \bottomrule
 \end{tabular}
-\caption[Ablation study: Multi-Phase FT results]{Comparison of the fine-tuning strategies Single-Phase FT with Multi-Phase FT. Validation results confirm that Multi-Phase FT outperforms Single-Phase FT}
 \label{tab:SPFTvsMPFT}
 \end{center}
 \end{table}
@@ -182,6 +174,7 @@ The pipeline for the usage of the MTCNN module includes the following steps: Fir
 The following table compares training results achieved with the MTCNN model during the search for optimal hyper-parameters.
 
 \begin{table}[H]
+\caption[Ablation study: MTCNN results]{The table compares results from training a neural network with and without the MTCNN module. The model is responsible for detecting a person's face and allowing the face to be extracted. As seen in the table the neural network clearly performs better with MTCNN}
 \begin{center}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -189,44 +182,11 @@ The following table compares training results achieved with the MTCNN model duri
 with MTCNN & 0.24 & \textbf{0.24} & \textbf{0.13} & \textbf{0.15} \\
 without MTCNN & 0.24 & 0.26 & -0.02 & 0.08 \\ \bottomrule
 \end{tabular}
-\caption[Ablation study: MTCNN results]{The table compares results from training a neural network with and without the MTCNN module. The model is responsible for detecting a person's face and allowing the face to be extracted. As seen in the table the neural network clearly performs better with MTCNN.}
 \label{tab:ExperimentMTCNN}
 \end{center}
 \end{table}
 
 In summary, the MTCNN module used for face detection and bounding boxing clearly contributed to the overall improvement of the model's performance. Furthermore, the detection of the bounding box provides a necessary input for the detection of landmark points.
-
-
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \subsection{Data Augmentation}
-% Data Augmentation was chosen as a part of the proposed pipeline due to its merits in increasing the variety of images.
-
-
-% \begin{figure}[H]
-%   \centering
-%   \subfloat[Without Data Augmentation]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_noDataAug.png}\label{fig:NoDataAug}}
-%   \hfill
-%   \subfloat[With Data Augmenation]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_wDataAug.png}\label{fig:WithDataAug}}
-%   \caption{Applying Data Augmentation made the learning process initially harder, but more stable over time.}
-% \end{figure}
-
-
-% \begin{table}[H]
-% \begin{center}
-% \begin{tabular}{@{}lcccc@{}}
-% \toprule
-%  & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-% \begin{tabular}[c]{@{}l@{}}Multi-Phase FT\\ (with Data Aug.)\end{tabular} & \textbf{0.26} & 0.26 & \textbf{0.15} & -0.05 \\
-% \begin{tabular}[c]{@{}l@{}}Multi-Phase FT\\ (no Data Aug.)\end{tabular} & 0.29 & \textbf{0.25} & -0.10 & \textbf{0.12} \\ \bottomrule
-% \end{tabular}
-% \caption{Data Augmentation managed to slightly increase the performance of the neural network.}
-% \label{tab:MPFTDataAug}
-% \end{center}
-% \end{table}
-
-% From the outcomes can be deducted that Data Augmentation is not differentiating itself as an important model. However, this experiment, as well as others during the course of this Master's thesis confirmed that Data Augmentation, when applied, did always have a positive or at least neutral impact on the base model.
-% 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Facial Landmarks}
@@ -234,7 +194,7 @@ Detecting a person's facial landmarks and utilizing them to improve emotion reco
 \newline\newline
 Such an approach could not have satisfied the real-time requirements for in the wild use cases set by PPI AG. Instead an algorithm based on an ensamble of regression trees, introduced by \citet{Kazemi:2014:ShapePredictor}, able to predict 68 facial landmarks in milliseconds was utilized.
 \newline\newline
-Landmarks obtained from the algorithm were fed into the neural network in one of the following four ways: 
+Landmarks obtained from the algorithm were fed into the neural network in one of the following four ways, also illustrated in Figure \ref{fig:LandmarksImages}: 
 \newline\newline
 1. Direct Overlay\newline
 Each landmark point was drawn as an overlay onto the face's image with full opacity.
@@ -249,8 +209,6 @@ Landmark points were converted into a heatmap and applied as an overlay onto the
 Each landmark point is represented on a gray-scale image by a pixel value between 0 and +1. A gaussian filter was applied to blur the image.
 \newline\newline
 Through the application of an overlay on top of the actual image, actual pixels of the face's input image were modified. This wasn't necessary with the 'Separate 2D Mask' approach, as the landmarks are captured in a separate gray-scale image that was fed into a second input stream of the neural network.
-\newline\newline
-All four possibilities are illustrated in Figure \ref{fig:LandmarksImages}.
 
 \begin{figure}[H]
   \begin{center}
@@ -261,7 +219,7 @@ All four possibilities are illustrated in Figure \ref{fig:LandmarksImages}.
   \subfloat[Landmarks as heatmap overlay]{\includegraphics[width=0.4\textwidth]{Figures/landmarks_as_heatmap.png}}
   \hfill
   \subfloat[Separate 2D Mask]{\includegraphics[width=0.4\textwidth]{Figures/landmarks_as_heatmap_in_mask.png}}
-  \caption[Ablation study: Landmark visualizations]{Visual illustration of the possible ways how landmarks could be applied}
+  \caption[Ablation study: Landmark visualizations]{The figure shows various ways of how landmarks were applied to the face image.}
   \label{fig:LandmarksImages}
   \end{center}
 \end{figure}
@@ -270,18 +228,20 @@ An intuitive way of applying facial landmarks to an image is to use the dots as 
 
 \begin{figure}[H]
   \begin{center}
-  \subfloat[Landmarks as dots]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_landmarks.png}}
+  \subfloat[Landmarks as dots]{\includegraphics[width=0.5\textwidth]{Figures/Plot_AblationStudy_LandmarksDots.png}}
   \hfill
-  \subfloat[Landmarks as heatmap overlay]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_heatmap.png}}
+  \subfloat[Landmarks as heatmap overlay]{\includegraphics[width=0.5\textwidth]{Figures/Plot_AblationStudy_LandmarksHeatmap.png}}
   \hfill
-  \subfloat[Landmarks as soft overlay]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_softAttention.png}}
+  \subfloat[Landmarks as soft overlay]{\includegraphics[width=0.5\textwidth]{Figures/Plot_AblationStudy_LandmarksSoftAttention.png}}
   \hfill
-  \caption[Ablation study: Landmark methods loss curves]{The validation loss curves for the RMSE metric indicate that the more of a face covered by landmarks the worse it performs}
+  \subfloat[Landmarks as separate mask]{\includegraphics[width=0.5\textwidth]{Figures/Plot_AblationStudy_LandmarksMask.png}}
+  \caption[Ablation study: Landmark methods loss curves]{The plots show for each landmark method a training and validation loss curve in terms of RMSE. A trend becomes visible: The more of a face is covered by landmarks, the worse the convergence between training and validation curve. (Note the difference of the x-axis and the y-axis scale in all plots.)}
   \label{fig:LandmarksVisualComparison}
   \end{center}
 \end{figure}
 
 \begin{table}[H]
+\caption[Ablation study: Landmark methods results]{The table displays a result comparison between the tested landmark methods. The best performance could be achieved by feeding a separate 2D mask into the neural network.}
 \begin{center}
 \begin{tabular}{lcccc}
 \hline
@@ -291,7 +251,6 @@ An intuitive way of applying facial landmarks to an image is to use the dots as 
 \begin{tabular}[c]{@{}l@{}}Landmarks as soft overlay\end{tabular} & \textbf{0.19} & \textbf{0.20} & 0.08 & 0.07 \\
 \begin{tabular}[c]{@{}l@{}}Landmarks as separate 2D Mask\end{tabular} & 0.24 & 0.24 & \textbf{0.10} & \textbf{0.20} \\ \bottomrule
 \end{tabular}
-\caption[Ablation study: Landmark methods results]{Feeding a separate 2D mask into the neural network outperformed all other possibilities}
 \label{tab:LandmarksComparison}
 \end{center}
 \end{table}
@@ -308,10 +267,10 @@ The following Figure \ref{fig:AblationNoDropout} highlights the effects of a rem
 
 \begin{figure}[H]
   \centering
-  \subfloat[With Dropout]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_noDataAug.png}\label{fig:WithDropout}}
+  \subfloat[With Dropout]{\includegraphics[width=0.7\textwidth]{Figures/Plot_AblationStudy_NoDataAug.png}\label{fig:WithDropout}}
   \hfill
-  \subfloat[No Dropout]{\includegraphics[width=0.5\textwidth]{Figures/rmse_out1_noDropout.png}\label{fig:NoDropout}}
-  \caption[Ablation Study: Dropout loss curve]{Removing the Dropout layers from the classifier resulted in a spike of validation loss (='test' curve)}
+  \subfloat[No Dropout]{\includegraphics[width=0.7\textwidth]{Figures/Plot_AblationStudy_NoDropout.png}\label{fig:NoDropout}}
+  \caption[Ablation Study: Dropout loss curve]{The graphs show loss curves in terms of training and validation RMSE for a) with dropout and b) no dropout. The removal of Dropout from the classifier resulted in a spike in terms of validation loss. (Note the difference of the y-axis scale in both plots.)}
   \label{fig:AblationNoDropout}
 \end{figure}
 
@@ -319,14 +278,14 @@ As expected, due to the missing regularization effect of the Dropout layers, the
 
 
 \begin{table}[H]
+\caption[Ablation study: Dropout results]{The table shows a result comparison between the application of dropout and its removal. It further highlights that the application of dropout leads to a performance increase in all four categories.}
 \begin{center}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 \multicolumn{1}{l}{Methods} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}RMSE $\downarrow$\\ Arousal\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Valence\end{tabular} & \begin{tabular}[c]{@{}c@{}}CORR $\uparrow$\\ Arousal\end{tabular} \\ \midrule
-\begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ (no Data Aug.)\end{tabular} & \textbf{0.29} & \textbf{0.25} & \textbf{-0.10} & \textbf{0.12} \\
+\begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\(with Dropout)\end{tabular} & \textbf{0.29} & \textbf{0.25} & \textbf{-0.10} & \textbf{0.12} \\
 \begin{tabular}[c]{@{}l@{}}Multi-Phased FT\\ without Dropout\end{tabular} & 0.47 & 0.49 & -0.11 & 0.03 \\ \bottomrule
 \end{tabular}
-\caption[Ablation study: Dropout results]{Evaluation results confirm that the removal of dropout leads to a performance decrease in all four metrics.}
 \label{tab:MPFTDropout}
 \end{center}
 \end{table}
@@ -336,8 +295,8 @@ Figure \ref{fig:AblationNoBatchNorm} illustrates the effects of a removal of the
 
 \begin{figure}[H]
   \begin{center}
-  \includegraphics[angle=0, width=0.6\textwidth]{Figures/rmse_out1_noBatchNorm.png}
-  \caption[Ablation study: BatchNormalization loss curve]{Removing Batch Normalization leads to a very erratic behavior of the validation loss curve.}
+  \includegraphics[angle=0, width=0.7\textwidth]{Figures/Plot_AblationStudy_BatchNorm.png}
+  \caption[Ablation study: BatchNormalization loss curve]{The graph depicts the training and validation loss curves in terms of RMSE for the removal of Batch Normalization. Due to this the validation loss curve behaviour turned out to be very erratic.}
   \label{fig:AblationNoBatchNorm}
   \end{center}
 \end{figure}         
@@ -345,6 +304,7 @@ Figure \ref{fig:AblationNoBatchNorm} illustrates the effects of a removal of the
 Due to the erratic behavior of the validation loss in terms of RMSE and the general upward trend of the validation loss already indicate a bad performance. The expected performance degradation is presented in Table \ref{tab:MPFTNoBatchNorm}
 
 \begin{table}[H]
+\caption[Ablation study: BatchNormalization results]{The table compares the results achieved with the application of BatchNormalization with its removal. It emphasises that BatchNormalization can increase the overall performance of the neural network.}
 \begin{center}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -352,7 +312,6 @@ Due to the erratic behavior of the validation loss in terms of RMSE and the gene
 \begin{tabular}[c]{@{}l@{}}With BatchNormalization\end{tabular} & \textbf{0.29} & \textbf{0.25} & -0.10 & \textbf{0.12} \\
 \begin{tabular}[c]{@{}l@{}}Without BatchNormalization\end{tabular} & 0.50 & 0.69 & \textbf{-0.08} & 0.00 \\ \bottomrule
 \end{tabular}
-\caption[Ablation study: BatchNormalization results]{Removing Batch Normalization clearly reduces the overall performance of the neural network.}
 \label{tab:MPFTNoBatchNorm}
 \end{center}
 \end{table}

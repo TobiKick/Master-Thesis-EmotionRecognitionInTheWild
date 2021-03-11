@@ -15,6 +15,7 @@ Since the research conducted during this Master's thesis is intended to serve as
 The AFEW-VA dataset is made up of 600 video clips, each consisting of multiple frames that make up the video clip. Further statistics about the video-clips, frames and subjects of the dataset are presented in Table \ref{tab:DatasetStatistics}. Furthermore, each frame is then annotated in terms of valence and arousal. Both values have an annotation level ranging from -10 to +10 in full integer values. This results in a total of 21 levels.\citep{Kossaifi:2017:AFEW-VADatabase} 
 
 \begin{table}[H]
+\caption[AFEW-VA dataset statistics]{The table below shows statistics gathered about the AFEW-VA dataset, in terms of video-clips, frames and subjects.}
 \begin{center}
 \begin{tabular}{@{}lc@{}}
 \toprule
@@ -28,7 +29,6 @@ max. no. of frames per video & 145 \\
 avg. no. of frames per video & 50.1 \\
 median no. of frames per video & 45.5 \\ \bottomrule
 \end{tabular}
-\caption[AFEW-VA dataset statistics]{Gathered statistics about the no. of video-clips, frames and subjects in the AFEW-VA database.}
 \label{tab:DatasetStatistics}
 \end{center}
 \end{table}
@@ -40,73 +40,23 @@ median no. of frames per video & 45.5 \\ \bottomrule
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=1.0\textwidth]{Figures/resnet50.png}
-  \citep{Dwivedi:2019:ResNetInKeras}
-  \caption[ResNet50 architecture overview]{The original ResNet50 \citep{He:2015:DeepResidualLearningForImageRecognition} architecture is a very deep-layered architecture consisting of multiple layers inside each of the five stages.}
+  \caption[ResNet50 architecture overview]{This figure, taken from \citep{Dwivedi:2019:ResNetInKeras}, depicts the original ResNet50 \citep{He:2015:DeepResidualLearningForImageRecognition} architecture composed of five major stages. Each stage contains multiple convolutional layers which results in a very deep-layered architecture.}
   \label{fig:ResNet50Architecture}
   \end{center}
 \end{figure}
 
-The chosen ResNet50 model \citep{He:2015:DeepResidualLearningForImageRecognition} consists of 50 layers, combined in 5 stages, and includes over 23 million trainable parameters. It was one of the very first deep-layered neural networks that introduced a solution to the notorious vanishing gradient problem by its 'skip connection' concept.
+The chosen ResNet50 \citep{He:2015:DeepResidualLearningForImageRecognition} model consists of 50 layers, combined in 5 stages, and includes over 23 million trainable parameters. It was one of the very first deep-layered neural networks that introduced a solution to the notorious vanishing gradient problem by its 'skip connection' concept.
 \newline\newline
 'Skip connection' is done by adding a shortcut from the input to the output of a 'CONV' or 'ID' block, allowing the gradient to flow through. This behaviour, as illustrated in Figure \ref{fig:ResNet50ConvBlock}, makes sure that the subsequent block performs at least as well as the previous. An overview of the composition of all blocks in ResNet50 is presented in Figure \ref{fig:ResNet50Architecture}. 
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.9\textwidth]{Figures/ResNet50_ConvBlock.png}
-  \citep{Dwivedi:2019:ResNetInKeras}
-  \caption[ResNet50 skip connection]{In a Convolutional block of ResNet50 \citep{He:2015:DeepResidualLearningForImageRecognition}, additionally to adding the result, a convolution is performed on the original input.}
+  \caption[ResNet50 skip connection]{The figure, taken from \citep{Dwivedi:2019:ResNetInKeras}, depicts the skip connection approach introduced in the ResNet50 \citep{He:2015:DeepResidualLearningForImageRecognition} architecture. Next to adding the original input to the output, a convolution + BatchNorm is performed on the shortcut connection.}
   \label{fig:ResNet50ConvBlock}
   \end{center}
 \end{figure}
 
-
-% ResNet50 is defined by a very deep-layered neural network which traditionally posed a difficult challenge to researchers, as the training process got worse the deeper the neural network due to the notorious vanishing gradient problem. The vanishing gradient leads to a rapid saturation of the model's weights which results in a degradation of the overall model performance. To fight this problem, ResNet introduced a novel concept, named skip connection, where the results of a block are added together with the original input before applying an activation function. \citep{Dwivedi:2019:ResNetInKeras}
-% \newline\newline
-% This concept is also illustrated in the following Figure \ref{fig:ResNet50IdentityBlock} for the identity block:
-
-%\begin{figure}[H]
-%  \begin{center}
-%  \includegraphics[angle=0, width=0.9\textwidth]{Figures/ResNet50_IdentityBlock.png}
-%   \caption{In an Identity block of ResNet50 \citep{Dwivedi:2019:ResNetInKeras}, a shortcut is added by adding the results to the original input.}
-%   \label{fig:ResNet50IdentityBlock}
-%   \end{center}
-% \end{figure}
-
-% However, this operation is only possible when the two inputs for the addition have the same shape. Due to the layout of the ResNet50 architecture, this is inherently the case for the Identity Block. For the Convolution Block a further operation is needed to transform the block's original input into the same shape as the outcome of the Convolutional layers. As can be seen in Figure \ref{fig:ResNet50ConvBlock}, this was done by applying a separate Convolutional plus Batch Normalization layer to the original input and choosing its hyperparameters in a way that the output will be in the same shape as the outcome of the Convolutional layers.
-
-% \citet{Dwivedi:2019:ResNetInKeras} argued that this approach is helpful in mitigating the problem of vanishing gradients, as its skip connection concept provided an alternate shortcut path for gradients to flow through. This ensured that the subsequent block will perform at least as well as the previous.
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \begin{figure}[H]
-%   \begin{center}
-%   \includegraphics[angle=0, width=1.0\textwidth]{Figures/model_architecture.PNG}
-%   \caption{The neural network architecture is constructed by loading the pre-trained VGGFace model and adding a custom classifier.}
-%   \label{fig:NNArchitecture}
-%   \end{center}
-% \end{figure}
-
-% Figure \ref{fig:NNArchitecture} describes the architecture of the neural network with the following elements:
-
-% \begin{itemize}
-%     \item Line \#2: the pre-trained VGGFace model is being loaded with 'resnet50' as its neural network architecture. With the parameter 'include\_top' set to False allows to exclude the classifier of the pre-trained network on face detection.
-%     \item Line \#5 to line \#10: The VGGFace model is either set to trainable or non-trainable. For the first three epochs of fune-tuning, the model gets set to non-trainable. Afterwards it is set to trainable, and allows the model to update its weights.
-%     \item Line \#12: The output of the VGGFace model is being accessed and in line \#13 reduced in dimensionality in order to fit the input requirements for the following layer.
-%     \item Line \#15 to line \#18 contains the classifier consisting of a Dense layer (1024 units), together with two Dropout and a Batch Normalization layer in order to improve generalization capabilities.
-%     \item Line \#20 and \#21: The output for each evaluation metric is defined individually. This makes it possible to neatly visualize the outcomes separately. The 'tanh' activation function resized the output to a floating-point number in the range of -1 to +1.
-% \end{itemize}
-
-% The choice of using only a single Dense layer in the classifier was based on a comparison of fine-tuning strategies by \citep{Pittaras:2017:FineTuningStrategiesComparison}. Through this comparison of fine-tuning strategies on pre-trained neural networks, they could show that
-% \begin{quote}
-%     increasing the depth of a pre-trained network with one more fully-connected layer and fine-tuning the rest of the layers on the target dataset can improve the network’s concept detection accuracy compared to other fine-tuning approaches. \citep[~p. 103]{Pittaras:2017:FineTuningStrategiesComparison}
-% \end{quote}
-
-% Moreover, \citet{Pittaras:2017:FineTuningStrategiesComparison} could obtained their best results with a fine-tuning approach that replaced the pre-trained classifier of a network with a single Dense layer containing a high number of neurons.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Training} \label{sec:Training&Regularization}
 \subsubsection{Pre-trained network}
@@ -122,8 +72,8 @@ In the second fine-tuning step, the pre-trained neural network was allowed to tr
 
 \begin{figure}[H]
   \begin{center}
-  \includegraphics[angle=0, width=0.8\textwidth]{Figures/MultiPhaseFT.PNG}
-  \caption[Multi-Phase Fine-Tuning overview]{Multi-Phase Fine-Tuning (FT) leads to greater accuracy in fewer training epochs in comparison to Single-Phase FT.}
+  \includegraphics[angle=0, width=0.8\textwidth]{Figures/MultiPhaseFT.pdf}
+  \caption[Multi-Phase Fine-Tuning overview]{The image explains the Multi-Phase Fine-Tuning (FT) \citep{Sarhan:2020:MultiPhaseFineTuning} approach. In comparison to Single-Phase FT where layers are unfrozen at once, Multi-Phase FT unfreezes layers in multiple phases. This leads to a greater accuracy in fewer training epochs.}
   \label{fig:MultiPhaseFT}
   \end{center}
 \end{figure}
@@ -139,25 +89,22 @@ For the here proposed machine learning model it was not possible to increase the
 % Therefore, the custom layers were reduced to a single Dense layer, which was proposed in a similar way by \citet{Pittaras:2017:FineTuningStrategiesComparison}, 
 
 \subsubsection{Dropout}
-Dropout is a very commonly used regularization technique that introduces noise during training by randomly setting a certain percentage of the layer's output values to zero. The Dropout applied in the proposed architecture was determined through extensive experimentation and was applied before and after the single Fully-Connected (=Dense) layer with a rate of 0.5 and 0.5 respectively. The following Figure shows an example with a dropout rate of 0.5.
+Dropout is a very commonly used regularization technique that introduces noise during training by randomly setting a certain percentage of the layer's output values to zero. The Dropout applied in the proposed architecture was determined through extensive experimentation and was applied before and after the single Fully-Connected (=Dense) layer with a rate of 0.5 and 0.5 respectively. Figure \ref{fig:Dropout} shows an example where a dropout rate of 0.5 was applied. Applying such a dropout rate allows a network to purposefully forget some information, which makes the learning process harder, but merits a better generalization.
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.7\textwidth]{Figures/dropout.PNG}
-  \caption[Dropout regularization]{The applied dropout sets a defined percentage share of the parameters of an activation matrix to zero.\citep{Chollet:2017:DeepLearningPython}}.
+  \caption[Dropout regularization]{The figure illustrates the application of dropout on a matrix. The applied dropout sets a defined percentage of parameters in an activation matrix to zero \citep{Chollet:2017:DeepLearningPython}. This can increase the generalization ability of a model through increasing the training difficulty.}
   \label{fig:Dropout}
   \end{center}
 \end{figure}
 
-Applying such a dropout rate allows a network to purposefully forget some information, which makes the learning process harder, but merits a better generalization.
+
+
 
 \subsubsection{Data Augmentation}
 
-
-%%%%%%%%%%%%%
-\section{Data Augmentation}
-
-\begin{figure}[H]
+\begin{figure}[htpb]
   \centering
   \subfloat[V: 0.0, A: +0.5]{\includegraphics[width=0.5\textwidth]{Figures/001/001_6_00000.png}}
   \hfill
@@ -170,7 +117,7 @@ Applying such a dropout rate allows a network to purposefully forget some inform
   \subfloat[V: -0.5, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_6_00000.png}}
   \hfill
   \subfloat[V: -0.6, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_6_00011.png}}
-  \caption[Data Augmentation]{Visualization of augmented faces and their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) and +1 (V: very positive; A: very exciting)}
+  \caption[Data Augmentation]{These images visualize the augmentation of extracted faces, together with their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) and +1 (V: very positive; A: very exciting)}
   \label{fig:MethodologyDataAugmentation}
 \end{figure}
 
@@ -199,40 +146,21 @@ Along with the effects of the initial learning rate on improving generalization 
 \subsection{Evaluation} \label{sec:TrainValTestSplit}
 Since the AFEW-VA dataset has no official validation and testing set, the AFEW-VA paper proposed by \citet{Kossaifi:2017:AFEW-VADatabase} and the simultaneous VA prediction paper proposed by \citet{Handrich:2020:SimultaneousPredVA} evaluate their models through splitting the AFEW-VA dataset into five disjoint, subject-independent folds. Subsequently, they performed a 5-fold-cross-validation for the prediction of valence and arousal values. 
 \newline\newline
-Due to time, complexity and resource constraints, it was chosen that this Master's thesis would not use the 5-fold-cross-validation evaluation approach. Instead, it makes use of the more prevalent method for machine learning model evaluation, namely the split of the dataset into a training, validation and testing subset. The training and validation subset were used during training to determine the optimal hyper-parameter settings. As these settings influence the performance on the validation subset, a third, independent subset was needed: the testing subset. This subset was used for a final performance evaluation after the optimal hyper-parameter were found.
-\newline\newline
-The following Figure \ref{fig:TrainValTestSplit} illustrates the chosen evaluation approach:
+Due to time, complexity and resource constraints, it was chosen that this Master's thesis would not use the 5-fold-cross-validation evaluation approach. Instead, it makes use of the more prevalent method for machine learning model evaluation, namely the split of the dataset into a training, validation and test subset. This technique is illustrated in Figure \ref{fig:TrainValTestSplit}. The training and validation subset were used during training to determine the optimal hyper-parameter settings. As these settings influence the performance on the validation subset, a third, independent subset was needed: the testing subset. This subset was used for a final performance evaluation after the optimal hyper-parameter were found.
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.7\textwidth]{Figures/TrainValTestSplit.png}
-  \caption[Dataset training-validation-test split]{The dataset was split into a training, validation and testing subset. While training and validation were used for the determination of optimal hyper-parameter settings, the testing subset was set aside for a final evaluation of the best performing model.}
+  \caption[Dataset training-validation-test split]{The figure shows how the dataset was split into a training, validation and test subset. While training and validation were used for the determination of optimal hyper-parameter settings, the test subset was set aside for a final evaluation of the best performing model.}
   \label{fig:TrainValTestSplit}
   \end{center}
 \end{figure}
 
-% \begin{figure}[H]
-%   \begin{center}
-%   \includegraphics[angle=0, width=0.7\textwidth]{Figures/TrainTestSplit.png}
-%   \caption{For the determination of optimal hyper-parameter settings, the dataset was split into a training, validation and testing subset.}
-%   \label{fig:TrainTestSplit}
-%   \end{center}
-% \end{figure}
-
-% As soon as optimal hyper-parameter settings were found during the training of the model, a 5-fold-cross-validation was conducted in order to make results comparable with the benchmark. For this 5-fold-cross-validation, previously determined optimal hyper-parameter settings were utilized for training and testing the model five times. As illustrated in Figure \ref{fig:CrossValidationSplit}, each time the model is trained during cross-validation, a different combination of folds was selected as training and testing subset.\newline
-
-% \begin{figure}[H]
-%   \begin{center}
-%   \includegraphics[angle=0, width=0.7\textwidth]{Figures/CrossValSplit.png}
-%   \caption{The dataset is split into five equal and subject-independent folds. Cross-Validation is performed by alternating the folds for training, validation and testing.}
-%   \label{fig:CrossValidationSplit}
-%   \end{center}
-% \end{figure}
-
 \subsection{Metrics} \label{sec:Metrics}
 Considering the nature of the problem at hand, predicting the values for valence and arousal is better solved through regression, hence a metric such as accuracy, albeit common, will not provide useful information to reflect the performance of the system. Therefore, we stick to the measures used by \citet{Kossaifi:2017:AFEW-VADatabase}, namely root-mean-square error (RMSE) and Pearson product-moment correlation coefficient (CORR). 
 \newline\newline
-RMSE (eq. \ref{eq:RMSE}) is useful in giving the observer a notion of how close the predicted values are to the actual values, while CORR (eq. \ref{eq:CORR}) tells how strong the relationship between the prediction and the actual label is \citep{2020:RMSE} \citep{2020:PearsonCorrelation}.
+RMSE (eq. \ref{eq:RMSE}) is useful in giving the observer a notion of how close the predicted values are to the actual values, while CORR (eq. \ref{eq:CORR}) tells how strong the relationship between the prediction and the actual label is \citep{Chai:2014:RMSE} \citep{Kirch:2008:PearsonCorrelation}.
+  
   
 \begin{equation} \label{eq:RMSE}
 RMSE = \sqrt{(\frac{1}{n})\sum_{i=1}^{n}(y_{i} - x_{i})^{2}}
@@ -254,13 +182,12 @@ where
 The RMSE is additionally used as the loss function for the optimization during training.
 
 \subsection{Observation}
-% Early Stopping & Model Checkpoint?
 In order to find optimal hyper-parameter settings during training, the aforementioned metrics were continuously observed through an early stopping callback, as well as a model checkpoint callback. These callbacks made sure that the last best model, in terms of validation loss, was automatically backed up and that training was stopped as soon as the model successively failed to improve. The callbacks for this work are clearly defined in Figure \ref{fig:EarlyStopping} and \ref{fig:ModelCheckpoint}.
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.8\textwidth]{Figures/EarlyStopping.PNG}
-  \caption[EarlyStoping callback]{The early stopping callback stops the training process as soon as there has not been any learning progress after a set period of epochs.}
+  \caption[EarlyStoping callback]{The figure depicts the definition of the early stopping callback, which stops the training process as soon as there has not been any learning progress after a set period of epochs.}
   \label{fig:EarlyStopping}
   \end{center}
 \end{figure}
@@ -268,7 +195,7 @@ In order to find optimal hyper-parameter settings during training, the aforement
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.8\textwidth]{Figures/ModelCheckpoint.PNG}
-  \caption[Model checkpoint callback]{The model checkpoint callback tracks the best performing epoch according to a defined metric and automatically saves the weights of the best model.}
+  \caption[Model checkpoint callback]{The figure shows the definition of the model checkpoint callback, that tracks and automatically saves the weights of the model for the best performing training epoch.}
   \label{fig:ModelCheckpoint}
   \end{center}
 \end{figure}

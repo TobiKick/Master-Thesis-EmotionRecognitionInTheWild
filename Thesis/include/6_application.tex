@@ -11,7 +11,7 @@ The first prototype was constructed as a local application that takes its video 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.8\textwidth]{Figures/webcam_foto.PNG}
-  \caption[Prototype application]{The prototype application allows to recognize emotions in terms of valence and arousal in real-time.}
+  \caption[Prototype application]{The photo shows a screenshot taken from the prototype application. The application allows to recognize emotions in terms of valence and arousal in real-time from a webcam stream.}
   \label{fig:PrototypeRealTime}
   \end{center}
 \end{figure}
@@ -73,6 +73,7 @@ For the analysis of the participants interest, the webcam video stream was neede
 For such an implementation there were multiple considerations about the setup type. The possible options are presented in the following table, where a 'X' indicates the non-fulfillment of an indispensable quality of an setup, while '/' indicates a constraint and ':)' indicates that the quality is fully fulfilled by the setup.
 
 \begin{table}[H]
+\caption[Application comparison for user experiment]{The table compares various options for the implementation of a user experiment application. The depicted ratings speak in favor of a web-based frontend application based on ReactJS.}
 \begin{center}
 \begin{tabular}{cccccc}
 \hline
@@ -83,7 +84,6 @@ For such an implementation there were multiple considerations about the setup ty
 \textbf{\begin{tabular}[c]{@{}c@{}}Web-based Server Appl.\\ (e.g. w/ PythonAnywhere)\end{tabular}} & high & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
 \textbf{\begin{tabular}[c]{@{}c@{}}Web-based Client Appl.\\ (e.g. w/ ReactJS)\end{tabular}} & high & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FFC702} \textbf{/}} \\ \hline
 \end{tabular}
-\caption[Application comparison for user experiment]{Implementing a web-based frontend application with ReactJS was the favorite choice for conducting a user experiment.}
 \label{tab:appExperiment}
 \end{center}
 \end{table}
@@ -97,8 +97,8 @@ The user interface for the developed application is comprised of the presented v
 \begin{center}
 \begin{figure}[H]
   \begin{center}
-  \includegraphics[angle=0, width=1.0\textwidth]{Figures/UserExperiment.PNG}
-  \caption[Implemented UI for the user experiment]{The experiment's user interface allows to watch commercials, while it captures at the same time the webcam stream, and allows the user to continuously indicate the current level of interest.}
+  \includegraphics[angle=0, width=0.9\textwidth]{Figures/UserExperiment.PNG}
+  \caption[Implemented UI for the user experiment]{The figure shows the experiment's user interface. It allows users to watch commercials and to continuously indicate his/her current level of interest. At the same time the webcam stream from the user's webcam is recorded and provided as a download afterwards.}
   \label{fig:InterfaceUserExperiment}
   \end{center}
 \end{figure}

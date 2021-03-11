@@ -9,6 +9,7 @@
 % For APA referencing style
 %\usepackage[natbibapa]{apacite}
 %\bibliographystyle{apacite}
+
 \usepackage[numbers]{natbib}
 \bibliographystyle{plainnat}
 
@@ -25,9 +26,7 @@
 \usepackage[acronym,nomain]{glossaries}
 \usepackage{enumitem}
 \usepackage{pdflscape}
-
-\specialcomment{tobi}{\begingroup\sffamily\color{blue}\commentstyle=\color{codegreen},}{\endgroup}
-\specialcomment{shan}{\begingroup\sffamily\color{red}}{\endgroup}
+\usepackage{url}  % to break the line in long links in bibliography
 
 % for the legend of the conditions
 \usepackage{array,tabularx}
@@ -132,6 +131,7 @@ A recommended next step to this thesis's work is the utilization of more trainin
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \backmatter
+
 %Zum Einbinden des BibTeX Files:
 \bibliography{literature.bib}{\nocite{*}}
 
