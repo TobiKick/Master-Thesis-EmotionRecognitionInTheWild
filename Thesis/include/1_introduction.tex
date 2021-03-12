@@ -1,7 +1,7 @@
 
 \chapter{Introduction}
 % What makes this topic so important?
-Emotion Recognition is the process of identifying human emotions through the use of technology. In this thesis, the process comprises the extraction of RGB images from video-clips and analyzing them with deep learning techniques in order to predict the emotion of a person's face. An emotion is expressed by a value for valence (= how positive or negative) and arousal (= how calming or exciting). 
+Emotion Recognition is the process of identifying human emotions through the use of technology. In this thesis, the process comprises the extraction of RGB images from video-clips and analyzing them with deep learning techniques in order to predict the emotion of a person's face. An emotion is expressed by a value for valence (= how positive or negative) and arousal (= how calming or exciting). \noha{It would be great if you can insert a figure here from the dataset \& refer the reader to it to give an example of how different emotions look like in images.}
 \newline\newline
 Deep learning aims to imitate the functioning of a human brain by utilizing raw input and processing it through a high number of layers in a neural network. While \citet{Kossaifi:2017:AFEW-VADatabase} saw in 2017 various algorithms perform better than deep learning, a few years later state-of-the-art architectures all exclusively focused on deep learning techniques, like \citet{Theagarajan:2018:DeepDriver} in 2018 and \citet{Handrich:2020:SimultaneousPredVA} in 2020. Due to the increasing complexity of deep learning, such networks are commonly pre-trained on a huge dataset. These pre-trained networks can then be used as a starting point for further fine-tuning on a specific challenge.
 \newline\newline
@@ -15,7 +15,7 @@ The current gaps in the research within this field are the following:\newline
 \begin{itemize}
     \item As supported by \citet{Salah:2018:VideoBasedER} emotions are inherently cultural and personal, making the task of universally interpreting them very difficult. Even if emotions were universal, there is still the conflict of representing emotions for machine learning systems. On the one hand, these representations should carry higher information, but should on the other hand also be easily interpretable by humans.
     \item Another problem with current research is that most research is done in laboratories, under controlled and predictable conditions (e.g., a perfectly-illuminated face of a person).
-    \item There is a significant lack of knowledge about fine-tuning Deep Convolution Neural Networks (DCNN). While \citet{Kossaifi:2017:AFEW-VADatabase} found that DCNNs performed worst under all their examined approaches, \citet{Handrich:2020:SimultaneousPredVA}, on the other hand, are showcasing results in favor of FT-DCNNs.
+    \item There is a significant lack of knowledge about fine-tuning Deep Convolution Neural Networks (DCNN) for emotion recognition. While \citet{Kossaifi:2017:AFEW-VADatabase} found that DCNNs performed worst under all their examined approaches, \citet{Handrich:2020:SimultaneousPredVA}, on the other hand, are showcasing results in favor of FT-DCNNs.
     \item It is unclear which modules and frameworks work specifically for recognizing emotions with in-the-wild data.
     \item The lack of focus on business opportunities with emotion recognition can also be seen as a research gap, as more research is needed on how to utilize emotions for more commercial purposes.
 \end{itemize}
@@ -24,7 +24,7 @@ While it is possible to recognize emotions from various input signals \citep{Akc
 \newline\newline
 The main objective of this Master's thesis is to implement a prototype that is able to visually recognize human emotions in the wild. In order to proof that, the outcomes of the implemented prototype application will be compared objectively to state-of-the-art results in current literature.
 \newline\newline
-Additionally, implemented design choices will be examined separately on whether they contribute positively towards the overall performance of the trained neural network (i.e. ablation study). Among others, different fine-tuning approaches will be compared; most notably Multi-Phased Fine-Tuning (Multi-Phased FT). Instead of training the whole pre-trained network from the beginning (here denoted as Single-Phased Fine-Tuning), the Multi-Phased FT starts off with training only a few layers and adds to them step-wise more layers.
+Additionally, implemented design choices will be examined separately on whether they contribute positively towards the overall performance of the trained neural network (i.e. ablation study). Among others, different fine-tuning approaches will be compared; most notably Multi-Phased Fine-Tuning (FT) \citep{Sarhan:2020:MultiPhaseFineTuning}. Instead of training the whole pre-trained network from the beginning (here denoted as Single-Phased Fine-Tuning), the Multi-Phased FT starts off with training only a few layers and adds to them step-wise more layers.
 \newline\newline
 Another area of special scientific interest are facial landmarks and its ensuing performance changes for emotion recognition. Detected landmarks will be applied in various ways, ranging from a fully-visible overlay to a separate mask that is fed as a fourth image channel into the neural network.
 \newline\newline

@@ -45,7 +45,7 @@ median no. of frames per video & 45.5 \\ \bottomrule
   \end{center}
 \end{figure}
 
-The chosen ResNet50 \citep{He:2015:DeepResidualLearningForImageRecognition} model consists of 50 layers, combined in 5 stages, and includes over 23 million trainable parameters. It was one of the very first deep-layered neural networks that introduced a solution to the notorious vanishing gradient problem by its 'skip connection' concept.
+\noindent The chosen ResNet50 \citep{He:2015:DeepResidualLearningForImageRecognition} model consists of 50 layers, combined in 5 stages, and includes over 23 million trainable parameters. It was one of the very first deep-layered neural networks that introduced a solution to the notorious vanishing gradient problem by its 'skip connection' concept.
 \newline\newline
 'Skip connection' is done by adding a shortcut from the input to the output of a 'CONV' or 'ID' block, allowing the gradient to flow through. This behaviour, as illustrated in Figure \ref{fig:ResNet50ConvBlock}, makes sure that the subsequent block performs at least as well as the previous. An overview of the composition of all blocks in ResNet50 is presented in Figure \ref{fig:ResNet50Architecture}. 
 
@@ -64,7 +64,6 @@ A pre-trained network is a saved neural network that has previously learned spat
 
 \subsubsection{Fine-tuning}
 In order to be able to fine-tune a pre-trained network, it first had to be adapted to the current challenge. Therefore, in this work the classifier got replaced with a Fully-Connected plus two RNN layers. These RNN layers help to capture the tempo-spatial information between frames of a video-clip. The design decision for the classifier was based on previous experiments conducted by \citet{Kollias:2019:AffWild}.
-% This decision was based on a comparison of fine-tuning strategies conducted by \citet{Pittaras:2017:FineTuningStrategiesComparison} who found out that they achieved the best results fine-tuning results when only adding a single Dense layer with a high number of neurons.
 \newline\newline
 Due to the random initialization of the custom added classifier, the first step when fine-tuning the model was to train the classifier for a few epochs. At the same time, all other layers from the pre-trained model were not allowed to train and adapt to the new challenge (=frozen). This prevents the error stemming from the random initialization to propagate through the whole network.\citep{Chollet:2017:DeepLearningPython}
 \newline\newline
@@ -86,7 +85,6 @@ An intuitive way to prevent overfitting is to use more training data, as this ex
 
 \subsubsection{Feature removal}
 For the here proposed machine learning model it was not possible to increase the amount of training data, as this would make an objective comparison with benchmark paper impossible. Thus, further regularization techniques were applied. The first choice was also to reduce the network's size. The pre-trained VGGFace network already provides a big stack of layers that cannot be removed without losing valuable information. Therefore, the convolution network for the mask, as well as the shared layers at the end of the network were kept at a minimal size.
-% Therefore, the custom layers were reduced to a single Dense layer, which was proposed in a similar way by \citet{Pittaras:2017:FineTuningStrategiesComparison}, 
 
 \subsubsection{Dropout}
 Dropout is a very commonly used regularization technique that introduces noise during training by randomly setting a certain percentage of the layer's output values to zero. The Dropout applied in the proposed architecture was determined through extensive experimentation and was applied before and after the single Fully-Connected (=Dense) layer with a rate of 0.5 and 0.5 respectively. Figure \ref{fig:Dropout} shows an example where a dropout rate of 0.5 was applied. Applying such a dropout rate allows a network to purposefully forget some information, which makes the learning process harder, but merits a better generalization.
@@ -121,7 +119,7 @@ Dropout is a very commonly used regularization technique that introduces noise d
   \label{fig:MethodologyDataAugmentation}
 \end{figure}
 
-Data Augmentation is another technique that is used to increase noise during training by randomly transforming existing training samples into slightly different looking images. In that way, the model will see more slightly different images and increases its ability to better generalize from training data. Even though data augmentation was applied during training to both, the face and it's corresponding mask, Figure \ref{fig:MethodologyDataAugmentation} only presents examples from augmented faces.
+\noindent Data Augmentation is another technique that is used to increase noise during training by randomly transforming existing training samples into slightly different looking images. In that way, the model will see more slightly different images and increases its ability to better generalize from training data. Even though data augmentation was applied during training to both, the face and it's corresponding mask, Figure \ref{fig:MethodologyDataAugmentation} only presents examples from augmented faces.
 \newline\newline
 The Data Augmentation applied in the here proposed solution augmented the images randomly with the following parameters:
 
@@ -182,7 +180,7 @@ where
 The RMSE is additionally used as the loss function for the optimization during training.
 
 \subsection{Observation}
-In order to find optimal hyper-parameter settings during training, the aforementioned metrics were continuously observed through an early stopping callback, as well as a model checkpoint callback. These callbacks made sure that the last best model, in terms of validation loss, was automatically backed up and that training was stopped as soon as the model successively failed to improve. The callbacks for this work are clearly defined in Figure \ref{fig:EarlyStopping} and \ref{fig:ModelCheckpoint}.
+In order to find optimal hyper-parameter settings during training, the aforementioned metrics were continuously observed through an early stopping callback, as well as a model checkpoint callback. These callbacks made sure that the last best model, in terms of validation loss, was automatically backed up and that training was stopped as soon as the model successively failed to improve. The callbacks for this work are clearly defined in Figure \ref{fig:EarlyStopping} and \ref{fig:ModelCheckpoint}.\newline
 
 \begin{figure}[H]
   \begin{center}
@@ -200,4 +198,4 @@ In order to find optimal hyper-parameter settings during training, the aforement
   \end{center}
 \end{figure}
 
-In summary, these callbacks reduce overfitting by stopping the learning process when no improvement on validation data was detected. Additionally, they allow to objectively compare different hyperparameter-settings of a model's architecture with one another.
+\noindent In summary, these callbacks reduce overfitting by stopping the learning process when no improvement on validation data was detected. Additionally, they allow to objectively compare different hyperparameter-settings of a model's architecture with one another.

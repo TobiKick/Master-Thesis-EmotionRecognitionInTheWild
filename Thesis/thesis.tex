@@ -35,6 +35,9 @@
    \tabularx{\columnwidth}{>{$}l<{$} @{\ : } >{\raggedright\arraybackslash}X}}
   {\endtabularx\par\vspace{\belowdisplayskip}}
   
+% Added by Noha for commenting
+\usepackage{xcolor}
+\newcommand{\noha}[1]{{\color{red}[Noha: #1]}}
   
   
 
@@ -103,9 +106,6 @@ For this, the Acted Facial Expressions in The Wild - Valence Arousal (AFEW-VA) d
 The best results in this work were obtained through the utilization of a pre-trained Convolutional Neural Network (CNN), called VGGFace, in combination with a Recurrent Neural Network (RNN). This combination makes it possible to use the CNN for the extraction of facial features and leverage the RNN architecture for capturing tempo-spatial information in frames of a video-clip. Moreover, the thesis will shed a light on the most important design choices, such as the inclusion of an external face detection and landmark detection module. All the outcomes of this work resulted in a prototype application that can recognize emotions in real-time from a computer's webcam stream.
 \newline\newline
 An important practical aspect of this thesis is the application of results in the real-life business use case of video consultations. Therefore, a mapping mechanism was devised from emotional valence to interest, and an user experiment was set up in order to validate this approach. It could be proven that there exists a statistically significant correlation of 0.35 between a subject's indicated interest and the identified interest based on emotion recognition. This leads to the conclusion that this Master's thesis could confirm that it is possible to recognized emotions based on facial features, and to map them effectively to a measure of human interest.
-\newline\newline
-A recommended next step to this thesis's work is the utilization of more training data from one or more additional databases in order to increase the model's generalization capability.
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -113,8 +113,6 @@ A recommended next step to this thesis's work is the utilization of more trainin
 \listoffigures% Abbildungsverzeichnis
 \listoftables% Tabellenverzeichnis
 
-\glsaddall
-\printglossary
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -5,10 +5,11 @@ For PPI AG, the goal is to use the research conducted during this Master thesis 
 Firstly, a prototype was developed to prove that emotion recognition is a viable option for real-time predictions from a webcam stream. Secondly, a more meaningful interpretation of emotions was needed to provide consultants or customers with a more actionable metric. Interest was chosen to be the metric used to identify a customer's intention. Thus, an user experiment was conducted that compares the predicted interest based on emotions recognized from facial expressions with the stated level of interest by participants.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Prototype}
 The first prototype was constructed as a local application that takes its video input from the PC's webcam. When the user presses the 'SPACE' key, the program extracts the current frame of the video stream, detects the human face, recognizes its emotion in terms of valence and arousal, and prints the results onto the screen. A snapshot of this is provided in Figure \ref{fig:PrototypeRealTime}. 
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \begin{center}
   \includegraphics[angle=0, width=0.8\textwidth]{Figures/webcam_foto.PNG}
   \caption[Prototype application]{The photo shows a screenshot taken from the prototype application. The application allows to recognize emotions in terms of valence and arousal in real-time from a webcam stream.}
@@ -16,8 +17,7 @@ The first prototype was constructed as a local application that takes its video 
   \end{center}
 \end{figure}
 
-\textbf{Landmarks}\newline
-It was from special interest to PPI AG whether such an approach would be suitable for real-time usage, especially in regards to utilizing landmarks. 
+\noindent It was from special interest to PPI AG whether such an approach would be suitable for real-time usage, especially in regards to utilizing landmarks. 
 \newline\newline
 A small test of 10 probes indicated that it took on average 0.7 seconds to perform emotion recognition without any landmarks in production. In comparison to that, additionally detecting landmarks with the dlib shape predictor \citep{Kazemi:2014:ShapePredictor} and feeding them into the model did not result in any delay, as it also took on average 0.7 seconds. Such a low number, with less than 1 second, proves that this approach is definitely suitable for real-time use cases. 
 \newline\newline
@@ -37,7 +37,7 @@ There herein presented approach for identifying interest was based on the ideas 
 
 % Even though their actual interval duration is not known, the FaceReader \citep{Noldus:2020:Facereader} application, a commercial solution that was tested during this Master thesis, already offers a calculation for 'Interest' that was based on a interval length of 2 seconds. Moreover, \citet{Kamaruddin:2016:MeasuringCustomerSatisfaction} introduced a threshold for determining a neutral emotion category.
 
-Inspired by these approaches, the prototype application imitates some of this behaviour and based its 'Interest' measurement solely on valence. For each frame extracted every second from the video stream, valence is predicted. Interest was calculated by averaging the predicted values of valence for the last 5 frames.
+\noindent Inspired by these approaches, the prototype application imitates some of this behaviour and based its 'Interest' measurement solely on valence. For each frame extracted every second from the video stream, valence is predicted. Interest was calculated by averaging the predicted values of valence for the last 5 frames.
 % If the value of valence is below the threshold of -0.2 it is counted as 'negative', if it is above +0.2 it is counted as 'positive' and if it is inside those two threshold values it is regarded as 'neutral'. Depending on ratio of the number of emotions that were classified as 'positive' vs 'negative', the 'Interest' is determined with a range from 0 to +1.
 % \newline\newline
 % \textbf{Example calculation:}
@@ -72,30 +72,32 @@ For the analysis of the participants interest, the webcam video stream was neede
 \newline\newline
 For such an implementation there were multiple considerations about the setup type. The possible options are presented in the following table, where a 'X' indicates the non-fulfillment of an indispensable quality of an setup, while '/' indicates a constraint and ':)' indicates that the quality is fully fulfilled by the setup.
 
-\begin{table}[H]
+\begin{table}[htpb]
 \caption[Application comparison for user experiment]{The table compares various options for the implementation of a user experiment application. The depicted ratings speak in favor of a web-based frontend application based on ReactJS.}
 \begin{center}
-\begin{tabular}{cccccc}
+\begin{tabular}{lccccc}
 \hline
-\textbf{} & Effort & \begin{tabular}[c]{@{}c@{}}Web-Cam\\ Video\end{tabular} & \begin{tabular}[c]{@{}c@{}}Continuous\\ interest rating\end{tabular} & \begin{tabular}[c]{@{}c@{}}Easily\\ deployable\end{tabular} & \begin{tabular}[c]{@{}c@{}}Results\\ retrievable\end{tabular} \\ \hline
-\textbf{\begin{tabular}[c]{@{}c@{}}Questionnaire\\ (e.g. w/ Google Forms)\end{tabular}} & low & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
-\textbf{\begin{tabular}[c]{@{}c@{}}Advanced survey tool\\ (e.g. w/ Phonic)\end{tabular}} & low & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FFC702} \textbf{/}} \\
-\textbf{\begin{tabular}[c]{@{}c@{}}Packaged Local Appl.\\ (e.g. w/ Python)\end{tabular}} & high & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{FFC702} \textbf{/}} \\
-\textbf{\begin{tabular}[c]{@{}c@{}}Web-based Server Appl.\\ (e.g. w/ PythonAnywhere)\end{tabular}} & high & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
-\textbf{\begin{tabular}[c]{@{}c@{}}Web-based Client Appl.\\ (e.g. w/ ReactJS)\end{tabular}} & high & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FFC702} \textbf{/}} \\ \hline
+\textbf{} & Effort & \begin{tabular}[c]{@{}c@{}}Web-Cam\\ Video\end{tabular} & \begin{tabular}[c]{@{}c@{}}Continuous\\interest\\rating\end{tabular} & \begin{tabular}[c]{@{}c@{}}Easily\\ deployable\end{tabular} & \begin{tabular}[c]{@{}c@{}}Results\\ retrievable\end{tabular} \\ \hline
+\textbf{\begin{tabular}[c]{@{}l@{}}Questionnaire\\ (e.g. Google Forms)\end{tabular}} & low & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
+\textbf{\begin{tabular}[c]{@{}l@{}}Advanced survey tool\\ (e.g. Phonic)\end{tabular}} & low & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FFC702} \textbf{/}} \\
+\textbf{\begin{tabular}[c]{@{}l@{}}Packaged Local Appl.\\ (e.g. Python)\end{tabular}} & high & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{FFC702} \textbf{/}} \\
+\textbf{\begin{tabular}[c]{@{}l@{}}Web-based Server Appl.\\ (e.g. PythonAnyw.)\end{tabular}} & high & {\color[HTML]{FE0000} \textbf{X}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} \\
+\textbf{\begin{tabular}[c]{@{}l@{}}Web-based Client Appl.\\ (e.g. ReactJS)\end{tabular}} & high & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{32CB00} \textbf{:)}} & {\color[HTML]{FFC702} \textbf{/}} \\ \hline
 \end{tabular}
 \label{tab:appExperiment}
 \end{center}
 \end{table}
 
-The setups mentioned in Table \ref{tab:appExperiment} were verified from top to bottom. First, the questionnaire and survey tools were investigated, because they, on the one hand, allowed for a quick implementation, but also did not allow room for the required customization to conduct this experiment. A locally-run, stand-alone application would have accommodated all of this. However, due to its nature and size, it would be difficult to provide the participants with the program needed for the experiment and to retrieve its results. The best choice identified in this work was to develop a web-based application.
+\vspace{1cm}
+
+\noindent The setups mentioned in Table \ref{tab:appExperiment} were verified from top to bottom. First, the questionnaire and survey tools were investigated, because they, on the one hand, allowed for a quick implementation, but also did not allow room for the required customization to conduct this experiment. A locally-run, stand-alone application would have accommodated all of this. However, due to its nature and size, it would be difficult to provide the participants with the program needed for the experiment and to retrieve its results. The best choice identified in this work was to develop a web-based application.
 \newline\newline
 A web-based server application hosted by PythonEverywhere would have fulfilled all the requirements, however, hooking onto participants’ webcams did not prove to be possible. As a result, it was decided to develop a browser-based standalone web-application with ReactJS. It allowed for the needed customization and only posed a constraint in terms of results retrieval (the participants had to download the results and send them manually back).
 \newline\newline
 The user interface for the developed application is comprised of the presented video to be watched by the participant, as well as another smaller video that captures and records the webcam of the participant. There is also a slider for the indication of the current interest level of the participant, as well as a 'Start', 'Stop' and 'Download' button. The following figure shows the default screen when accessing the web page:
 
 \begin{center}
-\begin{figure}[H]
+\begin{figure}[htbp]
   \begin{center}
   \includegraphics[angle=0, width=0.9\textwidth]{Figures/UserExperiment.PNG}
   \caption[Implemented UI for the user experiment]{The figure shows the experiment's user interface. It allows users to watch commercials and to continuously indicate his/her current level of interest. At the same time the webcam stream from the user's webcam is recorded and provided as a download afterwards.}
@@ -104,7 +106,7 @@ The user interface for the developed application is comprised of the presented v
 \end{figure}
 \end{center}
 
-There are three video clips from YouTube embedded into the web page. These video clips are successful commercial ads that are supposed to induce a moderate range of emotions in participants.
+\noindent There are three video clips from YouTube embedded into the web page. These video clips are successful commercial ads that are supposed to induce a moderate range of emotions in participants.
 \newline\newline
 For participants to watch those video clips and indicate their currently experienced level of interest, they had to follow the following instructions:
 
@@ -123,7 +125,7 @@ For participants to watch those video clips and indicate their currently experie
     \item Finally, send the results, consisting of a *.webm and *.csv file for each video clip, back to tkick93@gmail.com (totalling 6 files). Alternatively, drop the files in the following Google Driver folder (link was attached) and indicate your name.
 \end{enumerate}
 
-After the participant conducted all these tasks, a *.webm and *.csv file was received for each video. The *.webm files had to be converted to MP4 with an Online Converter (frame rate of 24 per second). After that the VLC media player was used to filter frames so that it returned a frame for each second of the video.
+\noindent After the participant conducted all these tasks, a *.webm and *.csv file was received for each video. The *.webm files had to be converted to MP4 with an Online Converter (frame rate of 24 per second). After that the VLC media player was used to filter frames so that it returned a frame for each second of the video.
 \newline\newline
 In the next step, these frames were read into a Python program that predicted the values for valence and arousal for each frame and calculated a measure of interest based on the previously presented approach. The results were then compared to the stated interest in the *.csv file.
 
