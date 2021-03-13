@@ -29,7 +29,7 @@ There are entirely different approaches arguing that the two dimensional affecti
 % The valence-arousal model is insufficient to represent emotions accurately. Thus, they introduce a 3D model, called Valence-Arousal-Dominance.
 % \citep{Verma:2017:3D-VAD}
 \newline\newline
-\citet{Gunes:2011:EmotionRepresentationContinuous} pointed out that a major challenge for utilizing affective data is the annotation process, as there existed no agreed upon universal annotation scheme. Therefore, it cannot be excluded that the annotations possess a personal biases that lean towards the human annotator's personal context and cultural background. Developing an unbiased annotation scheme poses a difficult challenge in practice, as it would need to be unambiguous and facilitate inter-observer agreement.
+\citet{Gunes:2011:EmotionRepresentationContinuous} pointed out that a major challenge for utilizing affective data is the annotation process, as there existed no agreed upon universal annotation scheme. Therefore, it cannot be excluded that the annotations possess personal biases that lean towards the human annotator's personal context and cultural background. Developing an unbiased annotation scheme poses a difficult challenge in practice, as it would need to be unambiguous and facilitate inter-observer agreement.
 % A major challenge in affective data annotation is the fact that there is no coding scheme that is agreed upon and used by all researchers in the field that can accommodate all possible communicative cues and modalities. Development of an easy to use, unambiguous and intuitive annotation scheme that is able to incorporate inter-observer agreement levels will indeed ease the heavy burden of the annotation task. Obtaining high inter-observer agreement is another challenge in affect data annotation, especially when (continuous) dimensional approach is adopted.
 % \citep{Gunes:2011:EmotionRepresentationContinuous}
 \newline\newline
@@ -68,19 +68,9 @@ Furthermore, facial expressions are interpreted differently by various cultures.
 Despite all the aforementioned considerations about recognizing emotions from facial expressions, researchers are striving to come up with better ways to improve algorithms and their recognition results.
 \newline\newline
 A notable example is the Facial Action Coding System (FACS) proposed by \citet{Ekman:2002:FACS} which is a way of describing visually discernible facial movements, and is composed of a set of codes, also called Action Units (AUs). These AUs describe the presence and intensity of facial muscle movements. FACS, however, is purely descriptive, it is blind about whether these AUs express any emotions. The descriptive nature of this system can help researchers to better interpret facial expressions.
-
-% In fact, our review of the scientific evidence indicates
-% hat very little is known about how and why certain
-% acial movements express instances of emotion, par
-% cularly at a level of detail sufficient for such conclu
-% ions to be used in important, real-world applications.
-% \citet{Barrett:2019:EmotionalFromFacialMovements}
-
-% Facial Action Coding System, or FACS (Ekman, Friesen, & Hager, 2002), is a systematic approach to describe what a face looks like when facial muscle movements have occurred. FACS codes describe the presence and intensity of facial movements. FACS is purely descriptive and is therefore agnostic about whether those movements might express emotions or any other mental event.11 Human coders train for many weeks to reliably identify specific movements called action units (AUs). Each AU is hypothesized to correspond to the contraction of a distinct facial muscle or a distinct grouping of muscles that is visible as a specific facial movement.
-% \citep{Barrett:2019:EmotionalFromFacialMovements}
-
-\noha{fix paragraph indentation.} Emotion recognition is always based on the observation of subjects in order to attribute them an emotional state. In an optimal scenario, researchers would be able to observe the subjects' thoughts directly. However, the closest researchers got to observing thoughts, is the observation of brain activity through an \noha{Write what EEG is before using the abbreviation} EEG analysis. \citet{Xing:2019:EEGAudioVisual} did exactly this experiment: they showed video clips to participants, measured the brain activity and fused those measurements with video and audio data. \citet{Xing:2019:EEGAudioVisual} stated that they were able to achieve their best results through this approach.
-\newline
+\newline\newline
+Emotion recognition is always based on the observation of subjects in order to attribute them an emotional state. In an optimal scenario, researchers would be able to observe the subjects' thoughts directly. However, the closest researchers got to observing thoughts, is the observation of brain activity through an electroencephalogram (EEG) analysis. \citet{Xing:2019:EEGAudioVisual} did exactly this experiment: they showed video clips to participants, measured the brain activity and fused those measurements with video and audio data. \citet{Xing:2019:EEGAudioVisual} stated that they were able to achieve their best results through this approach.
+\newline\newline
 While this approach is very promising, the authors pointed out that there was, at the time, no dataset available that obtains EEG signals about emotion activity from participants through video stimulation. Because an EEG is required to produce such a dataset, it would contain no in-the-wild specimens. Needless to say, it would be very difficult to apply such models in real-life situations, as an EEG is not readily available in every household.
 \newline\newline
 Current researchers base their predictions on more information in an effort to focus on improving the expressiveness of their emotion recognition models. One of the most common approaches that researchers take is finding the best combination of signal fusion (e.g., audio-video and mouse movements). These signal combinations are often supported with extracted features, which help to efficiently characterize the emotional content of the chosen signals. A way of extracting features from video signals could, for example, be the usage of AUs to describe facial muscle movements. 
@@ -91,7 +81,7 @@ Prior to feature extraction in emotion recognition, it is essential to perform f
 % \citep{Zhang:2016:MTCCN}
 \newline\newline
 Combining various signals by fusing them before feeding them into a machine learning model is a common trend in emotion recognition research. The most obvious choice is to combine audio with visual signals, as was done by \citet{Yan:2016:MultiClueFusion} and \citet{Hossain:2019:AudioVisualER}. \citet{Xing:2019:EEGAudioVisual} combined their visual and audio signals with signals from an EEG analysis. All of them argued that their approach achieved significantly better results than their comparison baseline.
-\newline\newline % Noha: fixed paragraph here
+\newline\newline
 Even though it is currently very common that signal fusion happens with video and audio signals, \citet{Akcay:2020:SpeechEmotionRecognition(SER)} pointed out that audio signals could be combined with a wide variety of signals such as visual signals, physiological signals, linguistic features, mouse movements and keystroke dynamics.
 
 
@@ -102,9 +92,9 @@ The ultimate intention of this research is to apply the obtained results from em
 \newline\newline
 It is of special interest then, for such an application, to be able to identify human intentions. As research is really sparse in that specific area, all the current research related to the identification of human intentions will be presented in the following paragraphs:
 \newline\newline
-\citet{Dong:2012:UnderstandHumanImplicitIntention} did an experiment where they let participants agree or disagree with a statement. The participants were subjected to an \gls{EEG} analysis in order to measure brain activity. The authors were able to tell by a person’s brain activity whether they agreed or disagreed with a statement even before the person actually vocalized it. Even though the results were very convincing, such an approach would not  be plausible in a real-life setting.
+\citet{Dong:2012:UnderstandHumanImplicitIntention} did an experiment where they let participants agree or disagree with a statement. The participants were subjected to an EEG analysis in order to measure brain activity. The authors were able to tell by a person’s brain activity whether they agreed or disagreed with a statement even before the person actually vocalized it. Even though the results were very convincing, such an approach would not  be plausible in a real-life setting.
 \newline\newline
-Another interesting approach was taken by \citet{Esser:2018:LandmarkDetection}. He used facial emotion recognition to visualize the experience of a patient's pain. He made us of an \gls{AAM} for feature extraction in order to better predict the AUs of a person's face. \citeauthor{Esser:2018:LandmarkDetection} was able to measure pain by determining the presence of specific pain-related AUs in a face.
+Another interesting approach was taken by \citet{Esser:2018:LandmarkDetection}. He used facial emotion recognition to visualize the experience of a patient's pain. He made us of an Active Appearance Model (AAM) for feature extraction in order to better predict the AUs of a person's face. \citeauthor{Esser:2018:LandmarkDetection} was able to measure pain by determining the presence of specific pain-related AUs in a face.
 \newline\newline
 Identification of customer satisfaction is another practical application of emotion recognition. \citet{Ren:2012:ERforCustomerSatisfaction} ran customers' words and comments through emotion recognition in order to predict emotions and measure the customer satisfaction. While the researchers succeeded in showing the viability of measuring customer satisfaction, it has to be pointed out that they were working under the assumption that accurate emotion recognition results can be directly translated into customer satisfaction.
 % Paper from 2012 used customer words and comments to detect customer satisfaction through emotion recognition in this information:
@@ -123,7 +113,7 @@ Identification of customer satisfaction is another practical application of emot
 \begin{figure}[htpb]
   \begin{center}
   \includegraphics[angle=0, width=0.6\textwidth]{Figures/Satisfaction_from_VA.PNG}
-  \caption[Interpretation of emotions]{This graph shows four emotional categories based on valence and arousal, as well as a categorisation in satisfied and unsatisfied. \citet{Kamaruddin:2016:MeasuringCustomerSatisfaction} categorize satisfaction solely based on valence (i.e. how positive or negative an emotion is) \noha{removed the = and changed it to i.e.}.}
+  \caption[Interpretation of emotions]{This graph shows four emotional categories based on valence and arousal, as well as a categorisation in satisfied and unsatisfied. \citet{Kamaruddin:2016:MeasuringCustomerSatisfaction} categorize satisfaction solely based on valence (i.e. how positive or negative an emotion is).}
   \label{fig:SatisfactionFromVA}
   \end{center}
 \end{figure}
@@ -131,21 +121,16 @@ Identification of customer satisfaction is another practical application of emot
 \noindent \citet{Kamaruddin:2016:MeasuringCustomerSatisfaction} realized that using a threshold for defining a 'neutral' region between satisfied and unsatisfied actually performed better in terms of accuracy. However, they admitted that their results were still weak, with 40 \% accuracy for satisfaction determination and 58 \% accuracy for neutral emotion determination. Furthermore, by restricting the outcome to three classes (satisfied, unsatisfied, and neutral) the problem was fairly simplified, but at the same time looses a lot of information.
 % In another approach by \citet{Kamaruddin:2016:MeasuringCustomerSatisfaction}, they built upon the hypothesis that the customer is satisfied if he/she is experiencing happiness and neutral emotion whereas if he/she is experiencing sadness or anger, the customer is dissatisfied. They were using Valence and Arousal values and split them up into four emotional values, including one for neutral emotion. They made use of a threshold to define the neutral emotion class. From these classes they directly inferred whether the customer was satisfied or not. Their accuracy stems from the correct prediction of this classes and is with 39 percent accuracy much better than random guessing with 25 percent.
 \newline\newline
-\citet{Poirier:2016:AdsFacialExpression} measured the effectiveness of ads by analyzing facial expressions. \citet{Poirier:2016:AdsFacialExpression} claimed that the emotional journey is the strongest predictor of ad appreciation. The authors predicted the emotional values for valence and arousal, and focused at the curve/profile created by values for valence. Their assumption seemed to be that a certain profile of the valence curve is the main determinant of whether an ad was successful. While this sounds promising, it also raises the question of whether these ad appreciation in commercial ads also converts into actual positive ratings, or even product sales.
+\citet{Poirier:2016:AdsFacialExpression} measured the effectiveness of ads by analyzing facial expressions. \citet{Poirier:2016:AdsFacialExpression} claimed that the emotional journey is the strongest predictor of ad appreciation. The authors predicted the emotional values for valence and arousal, and focused at the curve/profile created by values for valence. Their assumption seemed to be that a certain profile of the valence curve is the main determinant of whether an ad was successful. While this sounds promising, it also raises the question of whether the ad appreciation in commercial ads also converts into actual positive ratings, or even product sales.
 % \citet{Poirier:2016:AdsFacialExpression}, the authors measured the effectiveness of ads through facial expressions.
 % \begin{quote}
 %     emotional journey, which relates to the positive or negative emotional variation  (valence between -1 and 1 where -1: 100\% negative expression, 1: 100\% positive expression and 0: neutral expression), remains the most powerful predictor of ad appreciation 
 % \end{quote}
 \newline\newline
 \citet{Yeasin:2006:MeasurmentOfInterestFromVideo} presented a spatio-temporal approach where they categorized emotions in six classes based on visual data. They mapped those predicted classes to a 3D affect space, and computed the level of interest by calculating L = W x I.  The weight "W" stands for the relative number of images where most motion is concentrated. "I" represents the intensity of an emotion which is calculated by summing up the values for valence, arousal, and stance (3D affect space).
-
-\noha{Include a summary paragraph at the end of each chatper.}
 % presents a spatio–temporal approach in recognizing six universal facial expressions from visual data and using them to compute levels of interest. 
 % Recognized emotions and used them to calculate a level of interest L, which is calculated as follows: L = W x I. Where I stands for the intensity of an emotion and is calculated through summing up all values from valence, arousal and stance (in a 3D affect space) and mapping these to a range of -5 to +5.
 % The weight W is represented by a number in the range of 0 to +1 and measures the relative number of images in a sequence that concentrate most of a motion. The lower the number, the closer the coefficient to 1. \citep{Yeasin:2006:MeasurmentOfInterestFromVideo}
-
-
-
 % The FaceReader application \citep{Noldus:2020:Facereader} from Noldus bases their 'Interest' calculation on certain action units instead of recognized emotion values. These action units include:
 % \begin{itemize}
 %     \item 01 - Inner Brow Raiser
@@ -156,3 +141,5 @@ Identification of customer satisfaction is another practical application of emot
 %     \item 26 - Jaw Drop
 % \end{itemize}
 % For the analysis the following time interval is used: Interest - 2 seconds.
+\newline\newline
+To summarize, the related work provided insights into the current state-of-the-art literature on emotion recognition, its underlying assumptions, as well as the identification of human intentions based on emotions. While there are many new techniques for honing emotion recognition, such as the fusion of multiple input signals (e.g. audio and video), it should be considered that the validity of such ER results based on visual cues is dependent on various contexts (e.g. cultural background, individual differences, etc.).

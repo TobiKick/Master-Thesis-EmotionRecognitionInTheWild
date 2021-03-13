@@ -7,7 +7,7 @@ Firstly, a prototype was developed to prove that emotion recognition is a viable
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Prototype}
-The first prototype was constructed as a local application that takes its video input from the PC's webcam. When the user presses the 'SPACE' key, the program extracts the current frame of the video stream, detects the human face, recognizes its emotion in terms of valence and arousal, and prints the results onto the screen. A snapshot of this is provided in Figure \ref{fig:PrototypeRealTime}. 
+The first prototype was constructed as a local application that takes its video input from the PC's webcam. When the user presses the 'SPACE' key, the program extracts the current frame of the video stream, detects the human face, recognizes its emotion in terms of valence and arousal, and prints the results onto the screen. A snapshot of this is provided in Figure \ref{fig:PrototypeRealTime}. \newline
 
 \begin{figure}[htbp]
   \begin{center}
@@ -17,9 +17,7 @@ The first prototype was constructed as a local application that takes its video 
   \end{center}
 \end{figure}
 
-\noindent It was from special interest to PPI AG whether such an approach would be suitable for real-time usage, especially in regards to utilizing landmarks. 
-\newline\newline
-A small test of 10 probes indicated that it took on average 0.7 seconds to perform emotion recognition without any landmarks in production. In comparison to that, additionally detecting landmarks with the dlib shape predictor \citep{Kazemi:2014:ShapePredictor} and feeding them into the model did not result in any delay, as it also took on average 0.7 seconds. Such a low number, with less than 1 second, proves that this approach is definitely suitable for real-time use cases. 
+\noindent It was from special interest to PPI AG whether such an approach would be suitable for real-time usage, especially in regards to utilizing landmarks. A small test of 10 probes indicated that it took on average 0.7 seconds to perform emotion recognition on a single image, without processing sequences and without considering landmarks. Additionally detecting landmarks with the dlib shape predictor \citep{Kazemi:2014:ShapePredictor} and feeding them into the model did not result in any delay, as it also took on average 0.7 seconds. Such a low number, with less than 1 second, proves that this approach is definitely suitable for real-time use cases. Further results on the real-time viability of processing sequences of data with an RNN are presented in the outcomes of the user experiment in Section \ref{sec:UserExperimentOutcomes}.
 \newline\newline
 However, it needs to be pointed out that this could only be achieved with the dlib shape predictor, unlike an Active Appearance Model which would likely need more time to be constructed. Furthermore, it is to be expected that the average duration of 0.7 seconds further decreases when taking into account that the prediction be performed on a powerful server with GPU support instead of a laptop computer.
 
@@ -66,11 +64,11 @@ There herein presented approach for identifying interest was based on the ideas 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Experiment Design}
-The goal of this experiment is to compare the test person's perceived subjective interest with the interest predicted by the before mentioned approach. In order to make this experiment objective and comparable between different participants, it was chosen that instead of direct interaction, participants get to watch commercial ads. Through these ads it was expected to get the objectivel comparable results which are still somewhat similar to real-life video calls, for example during a product presentation.
+The goal of this experiment is to compare the test person's perceived subjective interest with the interest predicted by the before mentioned approach. In order to make this experiment objective and comparable between different participants, it was chosen that instead of direct interaction, participants get to watch commercial ads. Through these ads it was expected to create a context that allows for an objective comparison, while still keeping the scenario somewhat similar to real-life video calls, such as a product presentation.
 \newline\newline
 For the analysis of the participants interest, the webcam video stream was needed to be recorded exactly at the same time when the video was played. Additionally, a mechanism had to be devised to calculate a level of interest from the recognized emotions. For this, an experiment had to be implemented that could be given to participants, and that allows them to indicate their own current level of interest.
 \newline\newline
-For such an implementation there were multiple considerations about the setup type. The possible options are presented in the following table, where a 'X' indicates the non-fulfillment of an indispensable quality of an setup, while '/' indicates a constraint and ':)' indicates that the quality is fully fulfilled by the setup.
+For such an implementation there were multiple considerations about the setup type. The possible options are presented in Table \ref{tab:appExperiment}, where a 'X' indicates the non-fulfillment of an indispensable quality of an setup, while '/' indicates a constraint and ':)' indicates that the quality is fully fulfilled by the setup.
 
 \begin{table}[htpb]
 \caption[Application comparison for user experiment]{The table compares various options for the implementation of a user experiment application. The depicted ratings speak in favor of a web-based frontend application based on ReactJS.}
@@ -94,13 +92,13 @@ For such an implementation there were multiple considerations about the setup ty
 \newline\newline
 A web-based server application hosted by PythonEverywhere would have fulfilled all the requirements, however, hooking onto participants’ webcams did not prove to be possible. As a result, it was decided to develop a browser-based standalone web-application with ReactJS. It allowed for the needed customization and only posed a constraint in terms of results retrieval (the participants had to download the results and send them manually back).
 \newline\newline
-The user interface for the developed application is comprised of the presented video to be watched by the participant, as well as another smaller video that captures and records the webcam of the participant. There is also a slider for the indication of the current interest level of the participant, as well as a 'Start', 'Stop' and 'Download' button. The following figure shows the default screen when accessing the web page:
+The user interface for the developed application is comprised of the presented video to be watched by the participant, as well as another smaller video that captures and records the webcam of the participant. There is also a slider for the indication of the current interest level of the participant, as well as a 'Start', 'Stop' and 'Download' button. Figure \ref{fig:InterfaceUserExperiment} shows the default screen when accessing the web page.
 
 \begin{center}
 \begin{figure}[htbp]
   \begin{center}
   \includegraphics[angle=0, width=0.9\textwidth]{Figures/UserExperiment.PNG}
-  \caption[Implemented UI for the user experiment]{The figure shows the experiment's user interface. It allows users to watch commercials and to continuously indicate his/her current level of interest. At the same time the webcam stream from the user's webcam is recorded and provided as a download afterwards.}
+  \caption[Implemented UI for the user experiment]{The figure shows the experiment's user interface. It allows users to watch commercials and to continuously indicate their current level of interest. At the same time the webcam stream from the user's webcam is recorded and provided as a download afterwards.}
   \label{fig:InterfaceUserExperiment}
   \end{center}
 \end{figure}
@@ -118,11 +116,11 @@ For participants to watch those video clips and indicate their currently experie
     \item Start the video with a click on 'Start Capture'. This will also activate the recording of your face.
     \item Watch the video and simultaneously indicate your current level of interest by setting the slider on the appropriate level (from 0 to +10)
     \item Adjust your interest continuously. You can pause and resume the video/recording.
-    \item When video finished: Download results by clicking on 'Download results'
+    \item When the video is finished: Download the results by clicking on 'Download results'
     \item In case of a pop-up: Allow the download of multiple files at the same time. It should download one .csv file and a .webm file
     \item Go on to the next video by clicking on the button 'Next video'
     \item Start the same process again for the next video by clicking the button 'Start Capture'
-    \item Finally, send the results, consisting of a *.webm and *.csv file for each video clip, back to tkick93@gmail.com (totalling 6 files). Alternatively, drop the files in the following Google Driver folder (link was attached) and indicate your name.
+    \item Finally, send the results, consisting of a *.webm and *.csv file for each video clip, back to tkick93@gmail.com (totalling 6 files). Alternatively, drop the files in the following Google Driver folder (\emph{\underline{link was attached}}) and indicate your name.
 \end{enumerate}
 
 \noindent After the participant conducted all these tasks, a *.webm and *.csv file was received for each video. The *.webm files had to be converted to MP4 with an Online Converter (frame rate of 24 per second). After that the VLC media player was used to filter frames so that it returned a frame for each second of the video.
@@ -130,8 +128,8 @@ For participants to watch those video clips and indicate their currently experie
 In the next step, these frames were read into a Python program that predicted the values for valence and arousal for each frame and calculated a measure of interest based on the previously presented approach. The results were then compared to the stated interest in the *.csv file.
 
 
-\subsection{Experiment Outcomes}
-The goal of the experiment was to compare the indicated level of interest of all participants with a calculated value of interest which was based on predictions from the proposed model architecture in this thesis.
+\subsection{Experiment Outcomes} \label{sec:UserExperimentOutcomes}
+The goal of the experiment was to compare the indicated level of interest of all participants with a calculated value of interest based on emotion recognition.
 \newline\newline
 Due to different video conditions between participant's web camera, as well as the discrepancy between discretely stated interest by participants and continuously predicted interest, the model is not expected to be able to match the subjectively stated level of interest exactly. However, the underlying hypothesis is that there exists a trend between subjectively stated interest and continuously predicted interest, even though the magnitude might be different.
 \newline\newline
@@ -143,9 +141,11 @@ The metric for the experiment is the average Pearson correlation. The gathered d
 \newline\newline
 Next to the actual result, the experiment gave way to further insights:\newline
 \begin{itemize}
-    \item \textbf{Emotional valence:} The emotional valence predicted by the neural network is not varying a lot (e.g. values bigger than +5 or smaller than -5 are very rare). This might indicate that the expression of emotions is really low during this experiment where participants were watching commercial ads. This is insight that should be kept in mind, as database usually contain material with high emotional content, while real-life data might generally be lower in emotional content.
-    \item \textbf{Processing time for interest identification:} A sample of 151 frames was taken to conduct a probe on the processing time for interest identification. This probe revealed that the preparation of these frames, including the face detection, cropping and sequencing, took in total 17.21 seconds - 0.11 seconds per frame. The actual prediction of interest for these frames, that were fed into the model as one sequence, took in total 13.16 seconds - 0.09 seconds per frame (The analysis was conducted on a fairly standard laptop with a Intel Core i5-5200U CPU processor).
+    \item \textbf{Emotional valence:} The emotional valence predicted by the neural network is not varying a lot (e.g. values bigger than +5 or smaller than -5 are very rare). This might indicate that the expression of emotions is really low during this experiment where participants were watching commercial ads. This is an insight that should be kept in mind, as various datasets usually contain material with high emotional content, while real-life data might generally be lower in emotional content.
+    \item \textbf{Processing time for interest identification:} A sample of 151 frames was taken to conduct a probe on the processing time for interest identification. This probe revealed that the preparation of these frames, including the face detection, cropping and sequencing, took in total 17.21 seconds - on average 0.11 seconds per frame. The actual prediction of interest for these frames, that were fed into the model as one sequence, took in total 13.16 seconds - on average 0.09 seconds per frame (The analysis was conducted on a fairly standard laptop with a Intel Core i5-5200U CPU processor).
 \end{itemize}
+
+\noindent In summary, the application of emotion recognition in a prototype application confirmed the real-time viability of the proposed approach for the use case of video call consultations. Furthermore, the user experiment conducted could prove that there was a statistically significant correlation between the identified interest based on emotion recognition and the indicated interest by individual subjects.
 
 % \textbf{Viability in real-time video calls}
 % especially focus on the time aspect for detecting the bounding box + landmark detection/shape model construction.

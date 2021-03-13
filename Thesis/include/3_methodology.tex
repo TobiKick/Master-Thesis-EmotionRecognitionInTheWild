@@ -1,4 +1,4 @@
-\chapter{Methodology}
+\chapter{Methodology} \label{chap:Methodology}
 
 \begin{figure}[htbp]
   \begin{center}
@@ -8,16 +8,14 @@
   \end{center}
 \end{figure}
 
-\noindent This chapter covers the proposed emotion recognition approach in detail. First, the components of the pipeline are highlighted briefly, afterwards, each component is described in detail along with justification for the design choices in the following sections. 
-\newline\newline
-Figure \ref{fig:MachineLearningModelMethods} illustrates the emotion recognition pipeline in this Master's thesis that consists of two stages. The first stage is separate as it is performed initially on the whole dataset, while the methods in the training stage are applied on a per batch basis during the optimization of the neural network.
+\noindent This chapter covers the proposed emotion recognition approach in detail. Figure \ref{fig:MachineLearningModelMethods} illustrates the emotion recognition pipeline in this Master's thesis. While step \#1 to step \#5 were performed initially on the whole dataset, step \#6 was applied on a per batch basis during the optimization of the neural network. First, the components of the pipeline are highlighted briefly, afterwards, each component is described in detail along with justification for the design choices in the following sections. 
 
 \begin{enumerate}
-    \item Video frames and their labels were imported, grouped by subject and assigned to either the training, validation or testing subset. This ensured the creation of subject-independent folds/data.
+    \item Video frames and their labels were imported, grouped by subject and assigned to either the training, validation or test subset. This ensured the creation of subject-independent folds/data.
     \item For each frame the face was detected and a bounding box was determined using a pre-trained network optimized for face detection, namely MTCNN \citep{Zhang:2016:MTCCN}.
-    \item Landmarks were detected based on the previously determined bounding box. These landmarks were then saved as a mask in a 2-dimensional image for the usage as an input for machine learning model.
-    \item the face was extracted from the image by cropping it along the borders of the bounding box. The resulting extract was then resized to a 224x224 format.
-    \item The extracted face were put into a sequence of 45 frames for each video-clip.
+    \item Landmarks were detected based on the previously determined bounding box. These landmarks were then saved as a mask in a 2-dimensional image for the usage as an input for the machine learning model.
+    \item The face was extracted from the image by cropping it along the borders of the bounding box. The resulting extract was then resized to a 224x224 format.
+    \item The extracted faces were put into a sequence of 45 frames for each video-clip.
     \item Data was passed into the machine learning model, consisting of a the pre-trained VGGFace \citep{Cao:2018:VGGFace2} neural network that was extended with a Recurrent Neural Network (RNN) as a custom classifier. In this way, the output features of the VGGFace network for each frame in a video-clip are combined and fed into the RNN which then learns  tempo-spatial aspects of a video-clip. The VGGFace network will be discussed in more details in section \ref{sec:Training&Regularization}.
 \end{enumerate}
 
@@ -25,11 +23,11 @@ Figure \ref{fig:MachineLearningModelMethods} illustrates the emotion recognition
 
 %%%%%%%%%%%%%%%%%%%%%%%
 \section{Data Preprocessing}
-The very first step in the proposed pipeline, as shown in Figure \ref{fig:MachineLearningModelMethods}, is data preprocessing. Here, the input images/frames were imported and converted into the right format. Their corresponding labels, originally in the scale of -10 to +10, were re-scaled from -1 to +1 in order to fit the chosen 'tanh' activation function of the machine learning model.
+The very first step in the proposed pipeline, as shown in Figure \ref{fig:MachineLearningModelMethods}, is data preprocessing. Here, the input images/frames were imported and converted into the right format. Their corresponding labels, originally in the scale of -10 to +10, were re-scaled to a scale of -1 to +1 in order to fit the chosen 'tanh' activation function of the machine learning model.
 \newline\newline
 Samples of the input images and their corresponding output labels are shown in Figure \ref{fig:MethodologyPreprocess}. Output labels consist of valence (=expression of how positive or negative an emotion is) and arousal (=expression of how strong or weak an emotion is).
 \newline\newline
-Furthermore, for the later performed video sampling, frames were already grouped by video-clips and by subject. With this, a subject's video-clips could be assigned to either the training, validation or testing subset in a subject-independent manner. 
+Furthermore, for the later performed video sampling, frames were already grouped by video-clips and by subject. With this, a subject's video-clips could be assigned to either the training, validation or test subset in a subject-independent manner. 
 
 \begin{figure}[htbp]
   \centering
@@ -44,7 +42,7 @@ Furthermore, for the later performed video sampling, frames were already grouped
   \subfloat[V: -0.5, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_1_00000.png}}
   \hfill
   \subfloat[V: -0.6, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_1_00011.png}}
-  \caption[ER pipeline step \#1: Preprocessing]{This figure illustrates frames after step \#1 Preprocessing: Frames were preprocessed and samples are displayed together with their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) and +1 (V: very positive; A: very exciting)}
+  \caption[ER pipeline step \#1: Preprocessing]{This figure illustrates frames after step \#1 Preprocessing: Frames were preprocessed and samples are displayed together with their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) to +1 (V: very positive; A: very exciting)}
   \label{fig:MethodologyPreprocess}
 \end{figure}
 
@@ -65,7 +63,7 @@ Furthermore, for the later performed video sampling, frames were already grouped
   \subfloat[V: -0.5, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_2_00000.png}}
   \hfill
   \subfloat[V: -0.6, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_2_00011.png}}
-  \caption[ER pipeline step \#2: Face detection \& bounding box]{These images shows samples from step \#2 Face detection \& bounding box: The bounding box detected by the MTCNN \citep{Zhang:2016:MTCCN} face detection module is visualized together with their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) and +1 (V: very positive; A: very exciting)}
+  \caption[ER pipeline step \#2: Face detection \& bounding box]{These images show samples from step \#2 Face detection \& bounding box: The bounding box detected by the MTCNN \citep{Zhang:2016:MTCCN} face detection module is visualized together with their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) to +1 (V: very positive; A: very exciting)}
   \label{fig:MethodologyBoundingBox}
 \end{figure}
 
@@ -76,11 +74,11 @@ The MTCNN \citep{Zhang:2016:MTCCN} model is a pre-trained neural network optimiz
 \vspace{0.5cm}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Landmark Detection}
-The third step in the proposed pipeline involves the detection of facial landmarks in each frame. This is a preliminary step for the generation of two-dimensional mask, as it is based on the coordinates of the landmark points.
+The third step in the proposed pipeline involves the detection of facial landmarks in each frame. This is a preliminary step for the generation of a two-dimensional mask, as it is based on the coordinates of the landmark points.
 \newline\newline
 This was done using a 'Face Landmark Detection' algorithm based on the work done by \citet{Kazemi:2014:ShapePredictor}. The algorithm is based on an ensemble of regression trees which successively aligns the constructed shape model to the specific features of the the face at hand.
 \newline\newline
-The input of the algorithm consists of the frame, as well as coordinates of the face's bounding box. The algorithm's output is made up of 68 facial landmarks of a person's face. Examples of this successful operation are shown in Figure \ref{fig:MethodologyLandmarks} by overlaying the landmark dots on the input image.
+The input required for the algorithm consists of the frame, as well as coordinates of the face's bounding box. The algorithm's output is made up of 68 facial landmarks of a person's face. Examples of this successful operation are shown in Figure \ref{fig:MethodologyLandmarks} by overlaying the landmark dots on the input image.
 \newline\newline
 These landmarks were then used to generate a two-dimensional mask. This mask can then be fed as a separate input, next to the image, into the neural network. Such a mask would then enable the network to learn to differentiate the importance of areas in an input image. Results of the generated landmark mask can be seen in Figure \ref{fig:MethodologyMask}.
 
@@ -97,7 +95,7 @@ These landmarks were then used to generate a two-dimensional mask. This mask can
   \subfloat[V: -0.5, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_3_00000.png}}
   \hfill
   \subfloat[V: -0.6, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_3_00011.png}}
-  \caption[ER pipeline step \#3: Landmark detection]{These pictures show sample outputs of step \#3 Landmark detection: Visualization of the landmarks detected by the pre-trained 'Face Landmark Detection' algorithm \citep{Kazemi:2014:ShapePredictor} and their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) and +1 (V: very positive; A: very exciting)}
+  \caption[ER pipeline step \#3: Landmark detection]{These pictures show sample outputs of step \#3 Landmark detection: Visualization of the landmarks detected by the pre-trained 'Face Landmark Detection' algorithm \citep{Kazemi:2014:ShapePredictor} and their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) to +1 (V: very positive; A: very exciting)}
   \label{fig:MethodologyLandmarks}
 \end{figure}
 
@@ -114,7 +112,7 @@ These landmarks were then used to generate a two-dimensional mask. This mask can
   \subfloat[V: -0.5, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_4_00000.png}}
   \hfill
   \subfloat[V: -0.6, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_4_00011.png}}
-  \caption[ER pipeline step \#3: Mask]{This figures illustrates the outcome of step \#3 Landmark detection: Visualization of the generated mask based on detected landmark points and their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) and +1 (V: very positive; A: very exciting)}
+  \caption[ER pipeline step \#3: Mask]{These figures illustrate the outcome of step \#3 Landmark detection: Visualization of the generated mask based on detected landmark points and their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) to +1 (V: very positive; A: very exciting)}
   \label{fig:MethodologyMask}
 \end{figure}
 
@@ -135,7 +133,7 @@ These landmarks were then used to generate a two-dimensional mask. This mask can
   \subfloat[V: -0.5, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_5_00000.png}}
   \hfill
   \subfloat[V: -0.6, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_5_00011.png}}
-  \caption[ER pipeline step \#4: Face extraction]{The images show the faces as part of step \#4 Face extraction: Visualization of the extracted face and their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) and +1 (V: very positive; A: very exciting)}
+  \caption[ER pipeline step \#4: Face extraction]{The images show the faces as part of step \#4 Face extraction: Visualization of the extracted face and their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) to +1 (V: very positive; A: very exciting)}
   \label{fig:MethodologyExtraction}
 \end{figure}
 
@@ -152,19 +150,19 @@ These landmarks were then used to generate a two-dimensional mask. This mask can
   \subfloat[V: -0.5, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_5_2_00000.png}}
   \hfill
   \subfloat[V: -0.6, A: +0.3]{\includegraphics[width=0.5\textwidth]{Figures/576/576_5_2_00011.png}}
-  \caption[ER pipeline step \#4: Mask extraction]{The figures display the masks as port of step \#4 Mask extraction: Visualization of the extracted mask and their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) and +1 (V: very positive; A: very exciting)}
+  \caption[ER pipeline step \#4: Mask extraction]{The figures display the masks as port of step \#4 Mask extraction: Visualization of the extracted mask and their corresponding labels, expressed by valence (V) and arousal (A) as values ranging from -1 (V: very negative; A: very calming) to +1 (V: very positive; A: very exciting)}
   \label{fig:MethodologyExtractionMask}
 \end{figure}
 
-\noindent In this step faces are extracted from the original input image based on the face's bounding box. The same extraction is performed for the mask containing the landmarks. This is valuable as it removes unimportant information/features of the image's background which could otherwise negatively affect the learning process.
+\noindent In this step, faces are extracted from the original input image based on the face's bounding box. The same extraction is performed for the mask containing the landmarks. This is valuable as it removes unimportant information/features of the image's background which could otherwise negatively affect the learning process.
 \newline\newline
-This step was conducted by simply cropping the face along the border lines of the face's bounding box. The output is again a image with a dimensions of 224x224 pixels that displays the inner area of the bounding box, namely the person's face. Example outputs are illustrated in Figure \ref{fig:MethodologyExtraction}. At the same time, also the mask had to be cropped in along the same border lines of the face's bounding box. Results of this are presented in Figure \ref{fig:MethodologyExtractionMask}.
+This step was conducted by simply cropping the face along the border lines of the face's bounding box. The output is again a image with a dimension of 224x224 pixels that displays the inner area of the bounding box, namely the person's face. Example outputs are illustrated in Figure \ref{fig:MethodologyExtraction}. At the same time, also the mask had to be cropped along the same border lines of the face's bounding box. Results of this are presented in Figure \ref{fig:MethodologyExtractionMask}.
 
 
 
 %%%%%%%%%%%%%
 \section{Video Sampling}
-Video-clips for each data subset (train, validation and test) were sampled by duplicating or removing frames so that each video-clip contains exactly 45 frames with successfully extracted faces. This step is important, as it allows the input to be fed into a RNN which is then able to extract information from tempo-spatial changes.
+Video-clips for each data subset (train, validation and test) were sampled by duplicating or removing frames so that each video-clip contained exactly 45 frames with successfully extracted faces. This step is important, as it allows the input to be fed into a Recurrent Neural Network (RNN) which is then able to extract information from tempo-spatial changes.
 \newline\newline
 The number of 45 frames per video-clip was chosen slightly below the median number of frames per video-clip (= 45.5). Video Sampling was done by duplicating or removing frames at a regular interval depending on the ratio between the actual number of frames per video-clip and the desired sequence length of 45. The same actions were also applied to the corresponding face masks.
 \newline\newline
@@ -180,13 +178,18 @@ The VGGFace model architecture, is based on the famous ResNet-50 convolutional n
 \begin{figure}[htbp]
   \begin{center}
   \makebox[\textwidth][c]{\includegraphics[width=0.8\textwidth]{Figures/MachineLearningModel.png}}
-  \caption[ER pipeline step \#6: Machine learning model]{The figure shows a machine learning model consisting of a pre-trained VGGFace network and a custom added RNN. The face's masks is processed through a parallel Convolutional Neural Network. Both outputs are connected and contribute toward the recognition of valence and arousal.}
+  \caption[ER pipeline step \#6: Machine learning model]{The figure shows a machine learning model consisting of a pre-trained VGGFace network and a custom added RNN. The face's mask is processed through a parallel Convolutional Neural Network. Both outputs are connected and contribute toward the recognition of valence and arousal.}
   \label{fig:MachineLearningModel}
   \end{center}
 \end{figure}
 
 \noindent The utilization of a pre-trained neural network is often referred to as transfer learning. Instead of training the model from scratch, transfer learning allows to start the training process from patterns that have already been learned by solving a different problem \citep{Pan:2010:SurveyOnTransferLearning}.
 \newline\newline
-In this work, a version of the VGGFace model that was pre-trained on the VGGFace2 dataset \citep{Cao:2018:VGGFace2} for the task of face identification has been used. The pre-trained model was then further fine-tuned on the AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase}. In this way, learnt patterns about facial features from the face identification task were used to kick-start the learning for emotion recognition from there. 
+In this work, a version of the VGGFace model was used that had been pre-trained on the VGGFace2 dataset \citep{Cao:2018:VGGFace2} for the task of face identification. The pre-trained model was then further fine-tuned on the AFEW-VA dataset \citep{Kossaifi:2017:AFEW-VADatabase}. In this way, learnt patterns about facial features from the face identification task were used to kick-start the learning for emotion recognition from there. 
 \newline\newline
 A noteworthy architectural change was the removal of the last fully-connected layers at the end of VGGFace. For this work, these layers were replaced with another classifier in order to learn the correlation between facial features and their target labels for the emotion recognition task. The architecture of the newly added classifier, as shown in Figure \ref{fig:MachineLearningModel}, includes a Recurrent Neural Network (RNN) for capturing tempo-spatial information.
+\newline\newline
+In summary, this chapter presented the methods of the proposed approach that are required to predict the emotional values of valence and arousal from a raw input image. Before training a machine learning model on the emotion recognition challenge at hand, an image had to pass through the following steps: Data preprocessing, face detection, landmark detection, face extraction, and video sampling. A highlight of this approach is the utilization of landmarks in the form of a two dimensional mask which was then fed into the machine learning model as a separate input.
+
+
+

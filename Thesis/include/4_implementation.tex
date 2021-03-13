@@ -1,6 +1,6 @@
 \chapter{Implementation}
 \section{Experimental Setup}
-In order to conduct the training process described in the previous chapter, it was necessary to have a computer with a powerful GPU in order to speed up training. For this Master thesis, the experiments/training were conducted on a Nvidia Titan X (Pascal) GPU with 12 GB of memory. 
+In order to conduct the training process described in the previous chapter, it was necessary to have a computer with a powerful GPU in order to speed up training. For this Master thesis, the training was conducted on a Nvidia Titan X (Pascal) GPU with 12 GB of memory. 
 \newline\newline
 For the ease of reproducibility of this work, frameworks and major libraries are hightlighted as follows: For machine learning, Keras 2.2.5 with TensorFlow 1.14.0 as a backend. In addition to that, Keras-VggFace 0.6, MTCNN 0.1.0 and OpenCV 4.1 were used. The entire code was implemented in a Python 3.6 environment.
 
@@ -15,7 +15,7 @@ Since the research conducted during this Master's thesis is intended to serve as
 The AFEW-VA dataset is made up of 600 video clips, each consisting of multiple frames that make up the video clip. Further statistics about the video-clips, frames and subjects of the dataset are presented in Table \ref{tab:DatasetStatistics}. Furthermore, each frame is then annotated in terms of valence and arousal. Both values have an annotation level ranging from -10 to +10 in full integer values. This results in a total of 21 levels.\citep{Kossaifi:2017:AFEW-VADatabase} 
 
 \begin{table}[H]
-\caption[AFEW-VA dataset statistics]{The table below shows statistics gathered about the AFEW-VA dataset, in terms of video-clips, frames and subjects.}
+\caption[AFEW-VA dataset statistics]{The table below shows the gathered statistics about the AFEW-VA dataset in terms of video-clips, frames and subjects.}
 \begin{center}
 \begin{tabular}{@{}lc@{}}
 \toprule
@@ -87,12 +87,12 @@ An intuitive way to prevent overfitting is to use more training data, as this ex
 For the here proposed machine learning model it was not possible to increase the amount of training data, as this would make an objective comparison with benchmark paper impossible. Thus, further regularization techniques were applied. The first choice was also to reduce the network's size. The pre-trained VGGFace network already provides a big stack of layers that cannot be removed without losing valuable information. Therefore, the convolution network for the mask, as well as the shared layers at the end of the network were kept at a minimal size.
 
 \subsubsection{Dropout}
-Dropout is a very commonly used regularization technique that introduces noise during training by randomly setting a certain percentage of the layer's output values to zero. The Dropout applied in the proposed architecture was determined through extensive experimentation and was applied before and after the single Fully-Connected (=Dense) layer with a rate of 0.5 and 0.5 respectively. Figure \ref{fig:Dropout} shows an example where a dropout rate of 0.5 was applied. Applying such a dropout rate allows a network to purposefully forget some information, which makes the learning process harder, but merits a better generalization.
+Dropout is a very commonly used regularization technique that introduces noise during training by randomly setting a certain percentage of the layer's output values to zero. The Dropout applied in the proposed architecture was determined through extensive experimentation and was applied four times with a rate of 0.5, as illustrated in Figure \ref{fig:MachineLearningModel}. Figure \ref{fig:Dropout} shows an example where a dropout rate of 0.5 was applied to an activation matrix. Applying such a dropout rate allows a network to purposefully forget some information, which makes the learning process harder, but merits a better generalization.
 
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.7\textwidth]{Figures/dropout.PNG}
-  \caption[Dropout regularization]{The figure illustrates the application of dropout on a matrix. The applied dropout sets a defined percentage of parameters in an activation matrix to zero \citep{Chollet:2017:DeepLearningPython}. This can increase the generalization ability of a model through increasing the training difficulty.}
+  \caption[Dropout regularization]{The figure illustrates the application of dropout on a matrix. The applied dropout sets a defined percentage of parameters in an activation matrix to zero \citep{Chollet:2017:DeepLearningPython}. This can increase the generalization ability of a model by increasing the training difficulty.}
   \label{fig:Dropout}
   \end{center}
 \end{figure}
@@ -119,9 +119,9 @@ Dropout is a very commonly used regularization technique that introduces noise d
   \label{fig:MethodologyDataAugmentation}
 \end{figure}
 
-\noindent Data Augmentation is another technique that is used to increase noise during training by randomly transforming existing training samples into slightly different looking images. In that way, the model will see more slightly different images and increases its ability to better generalize from training data. Even though data augmentation was applied during training to both, the face and it's corresponding mask, Figure \ref{fig:MethodologyDataAugmentation} only presents examples from augmented faces.
+\noindent Data augmentation is another technique that is used to increase noise during training by randomly transforming existing training samples into slightly different looking images. In that way, the model will see more slightly different images which increases its ability to better generalize from training data. Even though data augmentation was applied during training to both, the face and it's corresponding mask, Figure \ref{fig:MethodologyDataAugmentation} only presents examples from augmented faces.
 \newline\newline
-The Data Augmentation applied in the here proposed solution augmented the images randomly with the following parameters:
+The data augmentation applied in the here proposed solution augmented the images randomly with the following parameters:
 
 \begin{itemize}
     \item rotation range from 0 to 15 degrees
@@ -132,9 +132,9 @@ The Data Augmentation applied in the here proposed solution augmented the images
 \end{itemize}
 
 \subsubsection{Hyper-parameter optimization} \label{sec:HyperParameterOptimization}
-Optimization of important hyper-parameters also greatly reduces the effects of overfitting. Two of the most impactful parameters are the learning rate and the batch size.
+The ptimization of important hyper-parameters also greatly reduces the effects of overfitting. Two of the most impactful parameters are the learning rate and the batch size.
 \newline\newline
-An analysis conducted by \citet{Yuanzhi:2019:RegularizationInitialLargeLearningRate} on Initial Learning Rates confirmed that an initially large learning rate can have a regularization effect on the training process. Even though a small initial learning rate might allow for better performance initially, it will not be able to generalize as well as initially large learning rates. The training performed in this Master's thesis made use of an initial learning rate of 0.0001 for the first 3 epochs. Afterwards the training was also started off with a rate of 0.0001, but continuously decreased with each epoch by a factor of 0.95 through a learning rate scheduler.
+An analysis conducted by \citet{Yuanzhi:2019:RegularizationInitialLargeLearningRate} on initial learning rates confirmed that an initially large learning rate can have a regularization effect on the training process. Even though a small initial learning rate might allow for better performance initially, it will not be able to generalize as well as initially large learning rates. The training performed in this Master's thesis made use of an initial learning rate of 0.0001 for the first 3 epochs. Afterwards the training was also started off with a rate of 0.0001, but continuously decreased with each epoch by a factor of 0.95 through a learning rate scheduler.
 \newline\newline
 Along with the effects of the initial learning rate on improving generalization and reducing the effects of overfitting, \citet{Keskar:2016:LargeBatchTrainingGeneralization} posited that choosing small-batch methods consistently generalize better than large batch methods. Due to memory constraints it was not possible to experiment with large batch sizes, which is why for the here proposed approach a batch size of 2 was chosen. This translates into each batch consisting of two times the sequence length of 45.
 
@@ -144,7 +144,7 @@ Along with the effects of the initial learning rate on improving generalization 
 \subsection{Evaluation} \label{sec:TrainValTestSplit}
 Since the AFEW-VA dataset has no official validation and testing set, the AFEW-VA paper proposed by \citet{Kossaifi:2017:AFEW-VADatabase} and the simultaneous VA prediction paper proposed by \citet{Handrich:2020:SimultaneousPredVA} evaluate their models through splitting the AFEW-VA dataset into five disjoint, subject-independent folds. Subsequently, they performed a 5-fold-cross-validation for the prediction of valence and arousal values. 
 \newline\newline
-Due to time, complexity and resource constraints, it was chosen that this Master's thesis would not use the 5-fold-cross-validation evaluation approach. Instead, it makes use of the more prevalent method for machine learning model evaluation, namely the split of the dataset into a training, validation and test subset. This technique is illustrated in Figure \ref{fig:TrainValTestSplit}. The training and validation subset were used during training to determine the optimal hyper-parameter settings. As these settings influence the performance on the validation subset, a third, independent subset was needed: the testing subset. This subset was used for a final performance evaluation after the optimal hyper-parameter were found.
+Due to time, complexity and resource constraints, it was chosen that this Master's thesis would not use the 5-fold-cross-validation evaluation approach. Instead, it makes use of the more prevalent method for machine learning model evaluation, namely the split of the dataset into a training, validation and test subset. This technique is illustrated in Figure \ref{fig:TrainValTestSplit}. The training and validation subset were used during training to determine the optimal hyper-parameter settings. As these settings influence the performance on the validation subset, a third, independent subset was needed: the testing subset. This subset was used for a final performance evaluation after the optimal hyper-parameters were found.
 
 \begin{figure}[H]
   \begin{center}
@@ -155,7 +155,7 @@ Due to time, complexity and resource constraints, it was chosen that this Master
 \end{figure}
 
 \subsection{Metrics} \label{sec:Metrics}
-Considering the nature of the problem at hand, predicting the values for valence and arousal is better solved through regression, hence a metric such as accuracy, albeit common, will not provide useful information to reflect the performance of the system. Therefore, we stick to the measures used by \citet{Kossaifi:2017:AFEW-VADatabase}, namely root-mean-square error (RMSE) and Pearson product-moment correlation coefficient (CORR). 
+Considering the nature of the problem at hand, predicting the values for valence and arousal is better solved through regression, hence a metric such as accuracy, albeit common, will not provide useful information to reflect the performance of the system. Therefore, we stick to the measures used by \citet{Kossaifi:2017:AFEW-VADatabase}, namely root-mean-squared error (RMSE) and Pearson's product-moment correlation coefficient (CORR). 
 \newline\newline
 RMSE (eq. \ref{eq:RMSE}) is useful in giving the observer a notion of how close the predicted values are to the actual values, while CORR (eq. \ref{eq:CORR}) tells how strong the relationship between the prediction and the actual label is \citep{Chai:2014:RMSE} \citep{Kirch:2008:PearsonCorrelation}.
   
@@ -185,7 +185,7 @@ In order to find optimal hyper-parameter settings during training, the aforement
 \begin{figure}[H]
   \begin{center}
   \includegraphics[angle=0, width=0.8\textwidth]{Figures/EarlyStopping.PNG}
-  \caption[EarlyStoping callback]{The figure depicts the definition of the early stopping callback, which stops the training process as soon as there has not been any learning progress after a set period of epochs.}
+  \caption[EarlyStopping callback]{The figure depicts the definition of the early stopping callback, which stops the training process as soon as there has not been any learning progress after a set period of epochs.}
   \label{fig:EarlyStopping}
   \end{center}
 \end{figure}
@@ -198,4 +198,6 @@ In order to find optimal hyper-parameter settings during training, the aforement
   \end{center}
 \end{figure}
 
-\noindent In summary, these callbacks reduce overfitting by stopping the learning process when no improvement on validation data was detected. Additionally, they allow to objectively compare different hyperparameter-settings of a model's architecture with one another.
+\noindent In essence, these callbacks reduce overfitting by stopping the learning process when no improvement on validation data was detected. Additionally, they allow to objectively compare different hyperparameter-settings of a model's architecture with one another.
+\newline\newline
+To sum it up, this chapter covered important underlying concepts/techniques for the training and evaluation success of the machine learning model on the AFEW-VA dataset. It is important to point out the combination of the pre-trained VGGFace network with Multi-Phase fine-tuning which facilitated a fast convergence of the training process.
